@@ -1146,20 +1146,25 @@ const SVG_HOST='';
 function joinUrl(){return /^https?:/.test(location.protocol)&&!Cam.blocked()?location.origin+location.pathname+'#join':''}
 function joinText(){const u=joinUrl();return `Битва контейнеров — заходи!\n${u?u+'\n':''}Код комнаты: ${S.room.code}\n\n${u?'Открой ссылку':'Открой игру (файл «Битва контейнеров.html» в Chrome) и нажми «Я участник»'}, впиши код комнаты и выбери свою команду.`}
 function showWelcome(){$('#welcome').hidden=false;renderWelcome()}
-function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl();
-  w.innerHTML=rc&&welcomeRoom?`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Комната создана</div>
+let freshRoom=false;
+function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl(),g=S.game,cont=g.started&&g.phase!=='final'&&!freshRoom;
+  w.innerHTML=rc&&welcomeRoom?`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">${freshRoom?'Комната создана':'Твоя комната'}</div>
     <div class="rcard"><span class="rb-k">Код комнаты</span><div class="rb-code">${rc}</div>
     ${u?`<span class="rb-k">Ссылка для участников</span><div class="row-flex"><input class="inp mono" readonly value="${esc(u)}" style="flex:1;min-width:0"><button class="btn primary" data-w="copy">Скопировать</button></div>`
       :`<div class="warn">Ссылка появится, когда игра открыта на сайте по https. Сейчас отправьте участникам файл игры и этот код.</div><div class="row-flex" style="justify-content:center"><button class="btn primary" data-w="copy">Скопировать код</button></div>`}
     <p class="note">Участники открывают ссылку, вписывают код и выбирают команду. Кто зашёл в команду первым — место 1 и может её переименовать.</p></div>
-    <button class="btn primary jgo wgo" data-w="go">Перейти к игре</button></div>`
+    <button class="btn primary jgo wgo" data-w="go">${cont?`Продолжить игру · контейнер ${g.index+1}`:'Начать игру'}</button>
+    <div class="wstack" style="margin-top:14px"><button class="linkbtn" data-w="create">Создать новую комнату (новая игра)</button><button class="linkbtn" data-w="solo">Играть без комнаты</button></div></div>`
   :`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Панель ведущего</div>
-    <div class="wstack"><button class="btn primary jgo wbig" data-w="create">Создать комнату</button><button class="linkbtn" data-w="solo">Играть без комнаты</button><button class="linkbtn" data-w="player">Я участник — войти по коду</button></div></div>`}
+    <div class="wstack"><button class="btn primary jgo wbig" data-w="create">Создать комнату</button>
+    ${g.started&&g.phase!=='final'?`<button class="btn" data-w="cont">Продолжить прошлую игру · контейнер ${g.index+1}</button>`:''}
+    <button class="linkbtn" data-w="solo">Играть без комнаты</button><button class="linkbtn" data-w="player">Я участник — войти по коду</button></div></div>`}
 $('#welcome').addEventListener('click',async e=>{const b=e.target.closest('[data-w]');if(!b)return;const a=b.dataset.w;Sfx.init();
-  if(a==='create'){S.role='host';createRoom();welcomeRoom=true;renderWelcome()}
+  if(a==='create'){S.role='host';createRoom();freshRoom=true;welcomeRoom=true;renderWelcome()}
   else if(a==='copy')copyText(joinText());
-  else if(a==='go'){$('#welcome').hidden=true;if(!S.game.started)await newGame();else renderAll()}
-  else if(a==='solo'){S.role='host';save();$('#welcome').hidden=true;openMenu('game')}
+  else if(a==='go'){$('#welcome').hidden=true;if(freshRoom||!S.game.started||S.game.phase==='final'){freshRoom=false;await newGame(true)}else renderAll()}
+  else if(a==='cont'){$('#welcome').hidden=true;renderAll()}
+  else if(a==='solo'){S.role='host';if(S.room&&S.room.code)closeRoom();save();$('#welcome').hidden=true;if(S.game.started&&S.game.phase!=='final')renderAll();else openMenu('game')}
   else if(a==='player'){location.hash='join';location.reload()}});
 
 // ===== host: seats (first come — seat 1) =====
@@ -1482,8 +1487,8 @@ function tabSettings(){const s=S.settings;const ck=(k,t,d)=>`<label class="chk">
   <div class="fld"><span>Импорт: вставьте сохранённый текст</span><textarea class="inp" id="impTa" style="min-height:120px;font:12px 'PT Mono',monospace" placeholder='{"containers": [...]}'></textarea><div class="row-flex"><button class="btn" data-m="imp">Загрузить</button></div></div></div>
   <div class="sec" style="margin-top:26px">Сброс</div><div class="row-flex"><button class="btn danger" data-m="resetc">Вернуть 20 стандартных контейнеров</button><button class="btn danger" data-m="resetall">Сбросить всё</button></div>`}
 
-async function newGame(){
-  if(S.game.started&&!(await ask('Начать игру заново? Балансы, выручка и история обнулятся. Команды и контейнеры останутся.','Начать заново')))return;
+async function newGame(force){
+  if(!force&&S.game.started&&!(await ask('Начать игру заново? Балансы, выручка и история обнулятся. Команды и контейнеры останутся.','Начать заново')))return;
   S.teams.forEach(t=>{t.balance=+S.settings.capital||0;t.revenue=0});S.game=freshGame();S.game.started=true;save();
   $('#menu').hidden=true;$('#final').classList.remove('show');setBusy(false);
   buildTeams();setDoor(false);buildScene();renderAll();
@@ -1567,7 +1572,7 @@ function boot(){
   if(g.phase==='final')showFinal();
   if(!g.started){const ex=$('#exterior');ex.classList.add('flicker')}
   if(location.hash==='#join')showJoin();
-  else if(!g.started){welcomeRoom=!!(S.room&&S.room.code);showWelcome()}
+  else{welcomeRoom=!!(S.room&&S.room.code);showWelcome()}
 }
 addEventListener('hashchange',()=>{if((location.hash==='#join')!==PLAYER)location.reload()});
 boot();
