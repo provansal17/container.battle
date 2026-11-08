@@ -177,7 +177,9 @@ body.nonames .item .nm{display:none}
 .door::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;background:linear-gradient(180deg,#4d5358,#2a2e32);border-top:2px solid #16191c}
 .door .handle{position:absolute;bottom:30px;left:50%;width:90px;height:12px;margin-left:-45px;border-radius:3px;background:linear-gradient(#bfc5ca,#5a6066);box-shadow:0 3px 4px rgba(0,0,0,.5)}
 .door.up{transform:translateY(-101%)}
-.stencil{position:absolute;left:0;right:0;top:46%;transform:translateY(-50%);text-align:center;color:rgba(18,22,26,.62);mix-blend-mode:multiply;pointer-events:none}
+.stencil{position:absolute;left:0;right:0;top:46%;transform:translateY(-50%);text-align:center;color:rgba(20,44,78,.86);mix-blend-mode:multiply;pointer-events:none}
+.stencil .dtitle{font:700 58px/1.02 Oswald;text-transform:uppercase;letter-spacing:.03em;margin:18px auto 0;max-width:86%}
+.stencil .dleg{font:500 27px/1.32 Oswald;max-width:78%;margin:22px auto 0;letter-spacing:.01em}
 .stencil .s1{font:600 30px/1 Oswald;letter-spacing:.5em;text-transform:uppercase;padding-left:.5em}
 .stencil .s2{font:700 220px/1 Oswald;letter-spacing:.06em;margin-top:6px}
 .stencil .s3{font:500 20px/1 Oswald;letter-spacing:.4em;margin-top:6px;padding-left:.4em}
@@ -445,6 +447,40 @@ body.spect #dock,body.spect #dockShow,body.spect #menu{display:none!important}
 #specWait[hidden]{display:none}
 #specWait b{font:600 22px Oswald;letter-spacing:.05em;text-transform:uppercase}
 #specWait span{color:#9aa6b2;font-size:14px;line-height:1.5}
+#hostPushBox{position:fixed;left:14px;bottom:14px;width:270px;z-index:610;background:#141920;border:1px solid #3a4550;border-radius:10px;padding:10px;display:none;flex-direction:column;gap:8px;box-shadow:0 18px 40px rgba(0,0,0,.6);transition:transform .35s}
+#hostPushBox.on{display:flex}
+#hostPushBox.park{transform:translateX(calc(-100% - 40px));pointer-events:none}
+.hpb-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hpb-h b{font:600 14px Oswald;letter-spacing:.05em;text-transform:uppercase}
+#hpbSt{font:500 13px Oswald;color:#9aa6b2;white-space:nowrap}
+#hpbSt.ok{color:#5fd38a}
+#hpbFrame{aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden}
+#hpbFrame iframe{width:100%;height:100%;border:0;display:block}
+.hpb-n{font-size:12px;line-height:1.4;color:#7f8b97}
+.rcard{background:#141920;border:1px solid #3a4550;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px;text-align:left;max-width:560px;margin:0 auto}
+.rcard .rb-code{text-align:center;font-size:80px}
+.wstack{display:flex;flex-direction:column;align-items:center;gap:12px}
+.wbig{font-size:24px!important;padding:20px 46px!important}
+.wgo{margin-top:20px;padding:14px 40px!important}
+.jwait{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:20px 0}
+.jwait b{font:600 20px Oswald;letter-spacing:.04em;text-transform:uppercase}
+.jwait span{color:#9aa6b2;font-size:14px}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid #2d3640;border-top-color:#f2c230;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.tp{background:#0f1419;border:1px solid #2d3640;border-top:6px solid var(--tc);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;transition:transform .15s,border-color .15s}
+.tp:hover{transform:translateY(-3px);border-color:var(--tc)}
+.tp b{font:700 22px Oswald;text-transform:uppercase;letter-spacing:.04em;color:#fff}
+.tp span{font-size:14px;color:#c8d1da}.tp i{color:#5b6670}
+.tp em{font:500 13px Oswald;letter-spacing:.08em;text-transform:uppercase;color:var(--tc);font-style:normal;margin-top:4px}
+.tp.full{opacity:.4}.tp.pend{border-color:#f2c230}.tp.mine{box-shadow:0 0 0 2px var(--tc)}
+.tchip{border-left:4px solid var(--tc)!important;color:#fff!important}
+.rb-t2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:center;background:#0f1419;border:1px solid #2d3640;border-left:6px solid var(--tc);border-radius:7px;padding:9px 10px}
+.rb-t2 b{font:600 16px Oswald;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seat{font-size:14px;color:#6f7b87;display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seat.busy{color:#5fd38a}
+.x2{background:none;border:1px solid #3a2a2a;color:#e57f75;border-radius:4px;font-size:11px;padding:1px 5px;flex:none}
+#join.mini .jrename,#join.mini .jmode,#join.mini .jimg{display:none}
 .toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-30px);opacity:0;z-index:800;background:#f2c230;color:#111;font:600 15px Oswald;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;border-radius:6px;transition:.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
@@ -493,6 +529,7 @@ body.spect #dock,body.spect #dockShow,body.spect #menu{display:none!important}
 <div id="dock"></div>
 <button class="btn icon" id="dockShow" title="Показать пульт (H)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 15l6-6 6 6"/></svg></button>
 <div id="menu" hidden></div>
+<div id="hostPushBox" class="park"><div class="hpb-h"><b>Ваша камера для участников</b><span id="hpbSt">○ ждём зрителей</span></div><div id="hpbFrame"></div><div class="hpb-n">Если видите кнопку Start — нажмите её. Окошко прячется, когда меню закрыто, но камера продолжает идти участникам.</div></div>
 <div id="specBar" hidden></div>
 <div id="specWait" hidden><b>Подключаемся к ведущему…</b><span>Обычно это занимает несколько секунд</span></div>
 <div id="welcome" hidden></div>
@@ -651,7 +688,7 @@ function defaults(){return{
 let S=defaults();
 try{const raw=localStorage.getItem(KEY);if(raw){const p=JSON.parse(raw);if(p&&p.teams&&p.containers){S={...defaults(),...p,settings:{...defaults().settings,...p.settings},game:{...freshGame(),...p.game},cams:p.cams||{},room:p.room||{code:null},join:{code:'',name:'',seat:1,mic:false,...(p.join||{})}}}}}catch(e){}
 let saveWarned=false;
-function save(){if(SPECT)return;broadcastSoon();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){if(!saveWarned){saveWarned=true;toast('Не удалось сохранить прогресс в браузере')}}}
+function save(){if(SPECT||PLAYER)return;broadcastSoon();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){if(!saveWarned){saveWarned=true;toast('Не удалось сохранить прогресс в браузере')}}}
 
 const cur=()=>S.containers[S.game.index];
 const T=id=>S.teams.find(t=>t.id===id);
@@ -744,6 +781,7 @@ function pushUrl(c,k){const id=linkId(c);if(!id)return '';return `https://vdo.ni
 function camNote(el,txt){el.querySelector('.camnote')?.remove();const n=document.createElement('div');n.className='camnote';n.textContent=txt;el.appendChild(n)}
 function camErr(e){const n=e&&e.name;return n==='NotAllowedError'?'Доступ к камере запрещён. Разрешите его в адресной строке браузера.':n==='NotReadableError'?'Камера занята другой программой (OBS, Discord…). Используйте OBS Virtual Camera.':n==='OverconstrainedError'||n==='NotFoundError'?'Камера не найдена. Выберите другую в меню «Камеры».':'Не удалось включить камеру.'}
 function syncCam(el){
+  if(PLAYER&&!SPECT)return;
   const k=el.dataset.key;if(!k)return;const c=camCfg(k);
   const url=camUrl(k,c);
   const sig=c.src==='local'?`l|${c.device}|${c.mirror}`:c.src==='image'?`i|${c.img?(c.h||(c.h=hashStr(c.img))):''}`:url?`u|${url}`:'n';
@@ -757,11 +795,11 @@ function syncCam(el){
     Cam.get(c.device).then(s=>{if(el.dataset.sig!==sig)return;v.srcObject=s;v.play().catch(()=>{})}).catch(e=>{if(el.dataset.sig===sig)camNote(el,camErr(e))});
   }else if(url){
     const f=document.createElement('iframe');f.className='feed';f.allow='autoplay; camera; microphone; fullscreen; display-capture';f.src=url;el.prepend(f);
-    if(c.src==='room'){const w=document.createElement('div');w.className='camwait';w.innerHTML=`Ждём игрока · код <b>${teamCodeOf(k)}</b> · место ${+k.split(':')[1]+1}`;el.appendChild(w)}
+    if(c.src==='room'){const w=document.createElement('div');w.className='camwait';w.innerHTML=`Ждём игрока · место <b>${+k.split(':')[1]+1}</b>`;el.appendChild(w)}
     if(framesBlocked)camNote(el,'Здесь видео по ссылке не показывается — откройте файл игры в Chrome');
   }
 }
-function syncAllCams(){document.querySelectorAll('.cam[data-key]').forEach(syncCam);if(!SPECT){Cam.prune();ensureHub();broadcastSoon()}}
+function syncAllCams(){document.querySelectorAll('.cam[data-key]').forEach(syncCam);if(!SPECT&&!PLAYER){Cam.prune();ensureHub();broadcastSoon()}}
 let framesBlocked=false;
 document.addEventListener('securitypolicyviolation',e=>{if(/vdo\.ninja|^https?:/.test(e.blockedURI||'')&&/frame/.test(e.violatedDirective||e.effectiveDirective||'')){
   framesBlocked=true;document.querySelectorAll('.cam.live').forEach(el=>{if(el.querySelector('iframe.feed'))camNote(el,'Здесь видео по ссылке не показывается — откройте файл игры в Chrome')})}});
@@ -810,7 +848,7 @@ function buildScene(){
   const st=$('#stencil');
   if(!S.game.started)st.innerHTML=`<div class="s1">Склад №7 · ворота 3</div><div class="s2" style="font-size:118px;line-height:.95;margin-top:18px">БИТВА<br>КОНТЕЙНЕРОВ</div>`;
   else if(S.game.phase==='final')st.innerHTML=`<div class="s1">Склад закрыт</div><div class="s2" style="font-size:170px">ИТОГИ</div>`;
-  else st.innerHTML=`<div class="s1">Контейнер</div><div class="s2">${pad(S.game.index+1)}</div><div class="s3">Не кантовать</div>`;
+  else{const c0=cur();st.innerHTML=`<div class="s1">Контейнер ${pad(S.game.index+1)}</div>${c0&&c0.title?`<div class="dtitle">${esc(c0.title)}</div>`:''}${c0&&c0.legend?`<div class="dleg">${esc(c0.legend)}</div>`:''}`}
   if(!c)return;
   c.items.forEach(it=>{
     const d=document.createElement('div');d.className='item';d.dataset.id=it.id;
@@ -902,7 +940,7 @@ async function openDoor(){
   $('#door').classList.add('up');
   await wait(1050);const dk=$('#dark');dk.className='dark';void dk.offsetWidth;dk.classList.add('on');Sfx.lights();
   await wait(850);$('#exterior').classList.add('gone');$('#interior').classList.remove('far');
-  S.game.phase='preview';S.game.legend=true;bcPhase=null;save();
+  S.game.phase='preview';S.game.legend=false;bcPhase=null;save();
   await wait(500);renderAll();
   await wait(600);dk.className='dark lit';setBusy(false);
 }
@@ -1035,8 +1073,8 @@ function setConn(el,k,on){
   if(roomState[k]===on)return;roomState[k]=on;el.classList.toggle('conn',on);
   const st=document.querySelector(`[data-st="${k}"]`);if(st){const p=slotPos(k),t=S.teams[p.ti];st.classList.toggle('on',on);st.textContent=`${on?'●':'○'} ${p.seat+1}: ${on?((t&&t.members[p.seat])||'в эфире'):'ждём'}`}
 }
-function applyLabel(k,label){
-  if(k==='host')return;label=String(label).trim().slice(0,24);if(!label||label==='false'||label==='null')return;
+function applyLabel(k,label,force){
+  if(k==='host'||(!force&&S.room&&S.room.seats&&S.room.seats[k]))return;label=String(label).trim().slice(0,24);if(!label||label==='false'||label==='null')return;
   const p=slotPos(k),t=S.teams[p.ti];if(!t)return;t.members=t.members||['',''];
   if(t.members[p.seat]!==label){t.members[p.seat]=label;save();buildTeams()}
 }
@@ -1052,16 +1090,18 @@ addEventListener('message',e=>{
   if(on!==null)setConn(el,k,on);if(label)applyLabel(k,label);
 });
 setInterval(()=>{document.querySelectorAll('.cam[data-key] iframe.feed').forEach(f=>{try{f.contentWindow.postMessage({getStreamIDs:true},'*')}catch(e){}})},4000);
-function createRoom(){S.room={code:newRoomCode()};S.teams.forEach(t=>[0,1].forEach(n=>{camCfg(`${t.id}:${n}`).src='room'}));save();syncAllCams()}
-function closeRoom(){S.room={code:null};Object.values(S.cams||{}).forEach(c=>{if(c.src==='room')c.src='none'});save();syncAllCams()}
-function inviteText(i){const t=S.teams[i];return `Битва контейнеров — подключи камеру!\nКоманда: ${t.name}\nКод приглашения: ${S.room.code}-${i+1}\n\n1. Открой игру (файл «Битва контейнеров.html» в Chrome или ссылку от ведущего)\n2. Нажми «Я участник»\n3. Введи код, своё имя и место в команде (1 или 2)\n4. Включи камеру (или поставь картинку) и жми «Перейти к игре» — увидишь всю битву`}
-function inviteAll(){return `Битва контейнеров — подключаем камеры!\n\n${S.teams.map((t,i)=>`${t.name}: ${S.room.code}-${i+1}`).join('\n')}\n\nОткрой игру (файл «Битва контейнеров.html» в Chrome или ссылку от ведущего), нажми «Я участник», введи код своей команды, имя и место (1 или 2). Включи камеру или поставь картинку — и смотри битву вместе со всеми.`}
+function createRoom(){S.room={code:newRoomCode(),seats:{}};S.teams.forEach(t=>{t.members=['',''];[0,1].forEach(n=>{const c=camCfg(`${t.id}:${n}`);c.src='room';if(c.fromPlayer){c.img=null;c.fromPlayer=false}})});save();buildTeams();syncAllCams()}
+function closeRoom(){S.room={code:null,seats:{}};Object.values(S.cams||{}).forEach(c=>{if(c.src==='room')c.src='none'});save();syncAllCams()}
+const siteUrl=()=>/^https?:/.test(location.protocol)&&!Cam.blocked()?location.origin+location.pathname:'';
+const openLine=()=>siteUrl()?`Открой игру: ${siteUrl()}`:'Открой игру (файл «Битва контейнеров.html» в Chrome или ссылку от ведущего)';
+function inviteText(i){const t=S.teams[i];return `Битва контейнеров — подключи камеру!\nКоманда: ${t.name}\nКод приглашения: ${S.room.code}-${i+1}\n\n1. ${openLine()}\n2. Нажми «Я участник»\n3. Введи код, своё имя и место в команде (1 или 2)\n4. Включи камеру (или поставь картинку) и жми «Перейти к игре» — увидишь всю битву`}
+function inviteAll(){return `Битва контейнеров — подключаем камеры!\n\n${S.teams.map((t,i)=>`${t.name}: ${S.room.code}-${i+1}`).join('\n')}\n\n${openLine()}\nНажми «Я участник», введи код своей команды, имя и место (1 или 2). Включи камеру или поставь картинку — и смотри битву вместе со всеми.`}
 async function copyText(v){try{await navigator.clipboard.writeText(v);toast('Скопировано')}catch(e){
   const m=$('#modal');m.innerHTML=`<div class="mbox"><p>Скопируйте текст (Ctrl+C):</p><textarea class="inp" style="min-height:160px;font-size:13px">${esc(v)}</textarea><div class="row-flex" style="margin-top:12px"><button class="btn primary" data-r="1">Готово</button></div></div>`;
   m.hidden=false;m.onclick=ev=>{if(ev.target.closest('[data-r]')||ev.target===m)m.hidden=true};const ta=m.querySelector('textarea');ta.focus();ta.select()}}
 
 // ===== hub: data channel host <-> spectators (VDO.Ninja &datamode) =====
-let bcPhase=null,RS=null,imgCache={},hubEl=null,hostPushEl=null,bcT=null,spectSeen={};
+let hostLive=false,bcPhase=null,RS=null,imgCache={},hubEl=null,hostPushEl=null,bcT=null,spectSeen={};
 function hashStr(s){let h=5381;for(let i=0;i<s.length;i+=7)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)+s.length.toString(36)}
 function findKb(o,d=0){if(typeof o==='string'&&d<2&&o[0]==='{'){try{o=JSON.parse(o)}catch(e){return null}}
   if(!o||typeof o!=='object'||d>5)return null;if(typeof o.kb==='string')return o;for(const k in o){const r=findKb(o[k],d+1);if(r)return r}return null}
@@ -1073,110 +1113,169 @@ function slotSpec(k){const c=camCfg(k),code=S.room&&S.room.code;
   if(c.src==='image'&&c.img)return{t:'img',h:c.h||(c.h=hashStr(c.img))};
   if(c.src==='room'&&code&&k!=='host'){const p=slotPos(k);if(p.ti>=0)return{t:'url',u:specView(roomStream(code,p.ti+1,p.seat+1))}}
   if(c.src==='link'){const v=(c.link||'').trim();if(/^https?:/i.test(v))return{t:'url',u:v};if(v)return{t:'url',u:specView(v.replace(/[^\w-]/g,''))}}
-  if(k==='host'&&c.src==='local'&&c.share&&code)return{t:'url',u:specView(hostStream(code))};
+  if(k==='host'&&c.src==='local'&&c.share!==false&&code)return{t:'url',u:specView(hostStream(code))};
   return{t:'none'}}
 function stateMsg(phase){const g=S.game,c=cur(),ph=phase||bcPhase||g.phase,shown=id=>g.revealed.includes(id)||ph==='summary';
   return{kb:'state',room:S.room.code,hostName:S.hostName,showNames:S.settings.showNames,total:S.containers.length,
   teams:S.teams.map(t=>({id:t.id,name:t.name,color:t.color,members:t.members,balance:t.balance,revenue:t.revenue})),
   game:{started:g.started,index:g.index,phase:ph,bid:g.bid,count:g.count,buyer:g.buyer,price:g.price,revealed:g.revealed,legend:g.legend,history:g.history,finalShown:g.finalShown},
   cont:c?{id:c.id,title:c.title,origin:c.origin,legend:c.legend,start:c.start,step:c.step,items:c.items.map(i=>({id:i.id,icon:i.icon,name:i.name,size:i.size,value:shown(i.id)?i.value:null,img:i.img&&i.img.length<40000?i.img:null}))}:null,
+  seats:Object.fromEntries(Object.entries(S.room.seats||{}).map(([k,v])=>[k,{n:v.n,c:v.c}])),
   slots:Object.fromEntries(allSlotKeys().map(k=>[k,slotSpec(k)]))}}
+function hpbUpdate(){const b=$('#hostPushBox');b.classList.toggle('on',!!hostPushEl);b.classList.toggle('park',$('#menu').hidden);
+  $('#hpbSt').textContent=hostLive?'● зрители видят':'○ ждём зрителей';$('#hpbSt').classList.toggle('ok',hostLive)}
 function ensureFrame(cur,want,allow){if(cur&&cur.dataset.u===want)return cur;if(cur)cur.remove();if(!want)return null;
   const f=document.createElement('iframe');f.className='hubframe';f.dataset.u=want;f.allow=allow;f.src=want;document.body.appendChild(f);return f}
 function ensureHub(){
-  const host=!SPECT&&S.role!=='player'&&S.room&&S.room.code&&!Cam.blocked();
+  const host=!SPECT&&!PLAYER&&S.room&&S.room.code&&!Cam.blocked();
   hubEl=ensureFrame(hubEl,host?`https://vdo.ninja/?push=${hubId(S.room.code)}&datamode`:'','autoplay');
   const c=camCfg('host'),dev=Cam.devices.find(d=>d.deviceId===c.device);
-  hostPushEl=ensureFrame(hostPushEl,host&&c.src==='local'&&c.share?`https://vdo.ninja/?push=${hostStream(S.room.code)}&webcam&autostart&audiodevice=0${dev&&dev.label?'&videodevice='+encodeURIComponent(dev.label):''}`:'','autoplay; camera');
+  const hw=host&&c.src==='local'&&c.share!==false?`https://vdo.ninja/?push=${hostStream(S.room.code)}&webcam&autostart&audiodevice=0&label=${encodeURIComponent(S.hostName||'Ведущий')}${dev&&dev.label?'&videodevice='+encodeURIComponent(dev.label):''}`:'';
+  if(!hostPushEl||hostPushEl.dataset.u!==hw){if(hostPushEl)hostPushEl.remove();hostPushEl=null;hostLive=false;
+    if(hw){const f=document.createElement('iframe');f.dataset.u=hw;f.allow='autoplay; camera; microphone';f.src=hw;$('#hpbFrame').appendChild(f);hostPushEl=f}}
+  hpbUpdate();
 }
-function hubSend(o){const f=SPECT?specHub:hubEl;if(!f)return;try{f.contentWindow.postMessage({sendData:o,type:'pcs'},'*')}catch(e){}}
+function hubSend(o){const f=PLAYER?specHub:hubEl;if(!f)return;try{f.contentWindow.postMessage({sendData:o,type:'pcs'},'*')}catch(e){}}
 function broadcastSoon(){if(SPECT||!hubEl)return;clearTimeout(bcT);bcT=setTimeout(()=>hubSend(stateMsg()),120)}
 function sendImages(){allSlotKeys().forEach(k=>{const c=camCfg(k);if(c.src==='image'&&c.img)hubSend({kb:'img',h:c.h||(c.h=hashStr(c.img)),d:c.img})})}
 setInterval(()=>{if(!SPECT&&hubEl)hubSend(stateMsg())},4000);
 const spectCount=()=>Object.values(spectSeen).filter(t=>Date.now()-t<30000).length;
+// ===== host welcome: one button "create room" =====
+let welcomeRoom=false;
+const SVG_HOST='';
+function joinUrl(){return /^https?:/.test(location.protocol)&&!Cam.blocked()?location.origin+location.pathname+'#join':''}
+function joinText(){const u=joinUrl();return `Битва контейнеров — заходи!\n${u?u+'\n':''}Код комнаты: ${S.room.code}\n\n${u?'Открой ссылку':'Открой игру (файл «Битва контейнеров.html» в Chrome) и нажми «Я участник»'}, впиши код комнаты и выбери свою команду.`}
+function showWelcome(){$('#welcome').hidden=false;renderWelcome()}
+function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl();
+  w.innerHTML=rc&&welcomeRoom?`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Комната создана</div>
+    <div class="rcard"><span class="rb-k">Код комнаты</span><div class="rb-code">${rc}</div>
+    ${u?`<span class="rb-k">Ссылка для участников</span><div class="row-flex"><input class="inp mono" readonly value="${esc(u)}" style="flex:1;min-width:0"><button class="btn primary" data-w="copy">Скопировать</button></div>`
+      :`<div class="warn">Ссылка появится, когда игра открыта на сайте по https. Сейчас отправьте участникам файл игры и этот код.</div><div class="row-flex" style="justify-content:center"><button class="btn primary" data-w="copy">Скопировать код</button></div>`}
+    <p class="note">Участники открывают ссылку, вписывают код и выбирают команду. Кто зашёл в команду первым — место 1 и может её переименовать.</p></div>
+    <button class="btn primary jgo wgo" data-w="go">Перейти к игре</button></div>`
+  :`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Панель ведущего</div>
+    <div class="wstack"><button class="btn primary jgo wbig" data-w="create">Создать комнату</button><button class="linkbtn" data-w="solo">Играть без комнаты</button><button class="linkbtn" data-w="player">Я участник — войти по коду</button></div></div>`}
+$('#welcome').addEventListener('click',async e=>{const b=e.target.closest('[data-w]');if(!b)return;const a=b.dataset.w;Sfx.init();
+  if(a==='create'){S.role='host';createRoom();welcomeRoom=true;renderWelcome()}
+  else if(a==='copy')copyText(joinText());
+  else if(a==='go'){$('#welcome').hidden=true;if(!S.game.started)await newGame();else renderAll()}
+  else if(a==='solo'){S.role='host';save();$('#welcome').hidden=true;openMenu('game')}
+  else if(a==='player'){location.hash='join';location.reload()}});
+
+// ===== host: seats (first come — seat 1) =====
+const seatOf=cid=>Object.keys(S.room.seats||{}).find(k=>S.room.seats[k].c===cid);
+function refreshRoomUI(){if(!$('#menu').hidden&&menuTab==='cams'&&!document.activeElement?.matches('input,textarea,select'))renderTab()}
+function freeSeat(k){const s=S.room.seats||{};if(!s[k])return;delete s[k];const p=slotPos(k),t=S.teams[p.ti];if(t){t.members=t.members||['',''];t.members[p.seat]=''}
+  const c=camCfg(k);if(c.fromPlayer){c.img=null;c.h=null;c.fromPlayer=false}if(S.room.code)c.src='room'}
+function onClaim(m){
+  const t=S.teams[(+m.ti||0)-1];if(!t||!m.cid)return;const seats=S.room.seats||(S.room.seats={}),now=Date.now(),cur=seatOf(m.cid);
+  if(cur&&cur.startsWith(t.id+':')){seats[cur].at=now;hubSend(stateMsg());return}
+  const n=[0,1].find(x=>{const s=seats[`${t.id}:${x}`];return !s||now-s.at>45000});
+  if(n==null)return hubSend({kb:'deny',cid:m.cid});
+  if(cur)freeSeat(cur);
+  const k=`${t.id}:${n}`;if(seats[k])freeSeat(k);
+  seats[k]={c:m.cid,n:String(m.name||'Игрок').trim().slice(0,24)||'Игрок',at:now};t.members=t.members||['',''];t.members[n]=seats[k].n;camCfg(k).src='room';
+  spectSeen[m.cid]=now;save();buildTeams();syncAllCams();hubSend(stateMsg());refreshRoomUI();
+}
+function onRename(m){const k=seatOf(m.cid);if(!k||!k.endsWith(':0'))return;const t=S.teams[slotPos(k).ti],nm=String(m.name||'').trim().slice(0,20);if(!t||!nm)return;
+  t.name=nm;save();buildTeams();renderAll();hubSend(stateMsg());refreshRoomUI()}
 function onHello(m){
-  const t=S.teams[(+m.ti||0)-1],seat=+m.seat;if(!t||!(seat===1||seat===2))return;const k=`${t.id}:${seat-1}`,c=camCfg(k);
-  spectSeen[k]=Date.now();
-  if(m.name)applyLabel(k,m.name);
-  if(m.mode==='image'&&m.img&&typeof m.img==='string'&&m.img.startsWith('data:image/')){const h=hashStr(m.img);if(c.h!==h||c.src!=='image'){c.src='image';c.img=m.img;c.h=h;c.fromPlayer=true;save();syncAllCams()}}
-  else if(m.mode==='camera'&&c.src==='image'&&c.fromPlayer){c.src='room';c.fromPlayer=false;save();syncAllCams()}
-  if(!m.has||m.full)sendImages();hubSend(stateMsg());
+  if(!m.cid)return;spectSeen[m.cid]=Date.now();const k=seatOf(m.cid);
+  if(k){const s=S.room.seats[k],c=camCfg(k);s.at=Date.now();
+    if(m.name&&m.name!==s.n){s.n=String(m.name).slice(0,24);applyLabel(k,s.n,true)}
+    if(m.mode==='image'&&typeof m.img==='string'&&m.img.startsWith('data:image/')){const h=hashStr(m.img);if(c.h!==h||c.src!=='image'){c.src='image';c.img=m.img;c.h=h;c.fromPlayer=true;save();syncAllCams()}}
+    else if(m.mode==='camera'&&c.src==='image'&&c.fromPlayer){c.src='room';c.fromPlayer=false;save();syncAllCams()}}
+  if(!m.has)sendImages();hubSend(stateMsg());
   const rb=document.querySelector('[data-spc]');if(rb)rb.textContent=spectCount();
 }
 
-// ===== welcome & player screens =====
-const SVG_HOST='<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="17" y="5" width="14" height="24" rx="7"/><path d="M11 22a13 13 0 0 0 26 0M24 35v8M16 43h16"/></svg>';
-const SVG_CAMI='<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="13" width="28" height="22" rx="4"/><path d="M33 21l10-6v18l-10-6"/><circle cx="19" cy="24" r="5"/></svg>';
-function showWelcome(){const w=$('#welcome');w.hidden=false;w.innerHTML=`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Кто ты в этой игре?</div><div class="wcards">
-  <button class="wcard" data-w="host"><i>${SVG_HOST}</i><b>Я ведущий</b><span>Создаю комнату, настраиваю команды и контейнеры, веду аукцион</span></button>
-  <button class="wcard" data-w="player"><i>${SVG_CAMI}</i><b>Я участник</b><span>Ввожу код от ведущего, подключаю камеру или картинку и смотрю игру</span></button></div></div>`}
-$('#welcome').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(!b)return;S.role=b.dataset.w;save();$('#welcome').hidden=true;
-  if(S.role==='host'){document.body.classList.remove('player');openMenu('game')}else showJoin()});
-let jStep=1;
-function showJoin(){document.body.classList.add('player');$('#menu').hidden=true;$('#join').hidden=false;jStep=1;renderJoin()}
+// ===== participant: #join =====
+let PLAYER=false,LS=null,me=null,jStep=1,pending=null,J=null,specHub=null,helloT=null,joinT=null;
+const CID=(()=>{try{let c=sessionStorage.getItem('kb-cid');if(!c){c=Math.random().toString(36).slice(2,12);sessionStorage.setItem('kb-cid',c)}return c}catch(e){return Math.random().toString(36).slice(2,12)}})();
+function loadJoin(){const d={code:'',name:'',mode:'camera',img:null,mic:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('kb-join')||'{}'))}catch(e){return d}}
+function saveJoin(){try{localStorage.setItem('kb-join',JSON.stringify(J))}catch(e){}}
+const roomCodeOk=v=>/^[A-Z0-9]{5}$/.test(v);
+function showJoin(){PLAYER=true;J=loadJoin();document.body.classList.add('player');$('#menu').hidden=true;$('#welcome').hidden=true;$('#join').hidden=false;jStep=1;renderJoin()}
+const logoH='<div class="logo">Битва <span>контейнеров</span></div>';
 function renderJoin(){
-  const J=S.join=Object.assign({code:'',name:'',seat:1,mic:false,mode:'camera',img:null},S.join||{}),j=$('#join'),p=parseCode(J.code);
-  if(jStep===1||!p){j.innerHTML=`<div class="jbox"><div class="logo">Битва <span>контейнеров</span></div><div class="wsub" style="margin:6px 0 22px">Вход участника</div>
-    <label class="fld"><span>Код приглашения от ведущего</span><input class="inp jcode" id="jCode" placeholder="QW7KD-1" value="${esc(J.code)}" maxlength="9" autocomplete="off" spellcheck="false"></label>
+  const j=$('#join');
+  if(jStep===1){j.innerHTML=`<div class="jbox">${logoH}<div class="wsub" style="margin:6px 0 22px">Вход участника</div>
+    <label class="fld"><span>Код комнаты</span><input class="inp jcode" id="jCode" placeholder="QW7KD" value="${esc(J.code)}" maxlength="6" autocomplete="off" spellcheck="false"></label>
     <label class="fld"><span>Твоё имя — его увидят на экране</span><input class="inp" id="jName" maxlength="24" value="${esc(J.name)}" placeholder="Например, Ростик"></label>
-    <div class="fld"><span>Место в команде</span><div class="seg big">${[1,2].map(n=>`<button class="${J.seat===n?'on':''}" data-j="seat" data-n="${n}">Место ${n}</button>`).join('')}</div><span class="note">Договоритесь внутри команды, кто первый, а кто второй.</span></div>
-    <div class="fld"><span>Что показывать в твоём слоте</span><div class="seg big">${[['camera','Камеру'],['image','Картинку']].map(([v,l])=>`<button class="${J.mode===v?'on':''}" data-j="mode" data-v="${v}">${l}</button>`).join('')}</div></div>
-    ${J.mode==='image'?`<div class="jimg"><div class="jav">${J.img?`<img src="${J.img}" alt="">`:'<span>нет картинки</span>'}</div><div style="display:flex;flex-direction:column;gap:8px"><button class="btn" data-j="pick">${J.img?'Другая картинка':'Выбрать картинку'}</button><span class="note">Любая картинка: аватарка, мем, фото. Будет показана вместо камеры.</span></div><input type="file" id="jFile" accept="image/*" hidden></div>`
-      :`<label class="mini"><input type="checkbox" id="jMic" ${J.mic?'checked':''}> Передавать звук с микрофона</label>`}
-    <button class="btn primary jgo" data-j="go">${J.mode==='image'?'Войти в игру':'Дальше — включить камеру'}</button><button class="linkbtn" data-j="host">Я ведущий</button></div>`;return}
-  const url=roomPushUrl(p.room,p.team,J.seat,J.name,J.mic),blocked=Cam.blocked();
-  j.innerHTML=`<div class="jbox wide"><div class="jhead"><div class="logo">Битва <span>контейнеров</span></div><div class="chips"><span>Комната <b>${p.room}</b></span><span>Команда <b>${p.team}</b></span><span>Место <b>${J.seat}</b></span><span>${esc(J.name)}</span></div><button class="btn icon jmin" data-j="min" title="Свернуть">${SVG.down}</button></div>
-    ${blocked?`<div class="jopen"><p>В этом окне браузер не даёт включить камеру и смотреть игру. Скачай файл игры у ведущего и открой его в Chrome. Пока можно включить только камеру — в новой вкладке:</p><a class="btn primary jgo" href="${esc(url)}" target="_blank" rel="noopener">Открыть камеру в новой вкладке</a></div>`
-    :`<div class="jframe"><iframe src="${esc(url)}" allow="autoplay; camera; microphone; fullscreen; display-capture"></iframe></div>
-      <p class="note jhint" style="font-size:14px">1. Выбери камеру и нажми <b>Start</b>. 2. Когда увидишь себя — жми «Перейти к игре». Камера продолжит работать в маленьком окошке. Если окно выше не работает, <a href="${esc(url)}" target="_blank" rel="noopener">открой камеру в отдельной вкладке</a>.</p>`}
-    <div class="row-flex jbtns"><button class="btn" data-j="back">Назад</button>${blocked?'':`<button class="btn primary" data-j="watch">Перейти к игре</button><button class="btn" data-j="noimg">Камера не работает — поставить картинку</button>`}</div></div>`;
+    <button class="btn primary jgo" data-j="go">Войти</button></div>`;return}
+  if(jStep==='wait'){j.innerHTML=`<div class="jbox">${logoH}<div class="jwait"><i class="spin"></i><b>Подключаемся к комнате ${esc(J.code)}…</b><span id="jwHint">Это занимает несколько секунд</span></div><button class="btn" data-j="back">Назад</button></div>`;return}
+  if(jStep===2){const st=LS;j.innerHTML=`<div class="jbox wide">${logoH}<div class="chips" style="margin-top:-6px"><span>Комната <b>${esc(J.code)}</b></span><span>${esc(J.name)}</span></div>
+    <div class="sec" style="margin:4px 0 0">Выбери свою команду</div><div class="tpick">${st.teams.map((t,i)=>{const s=[0,1].map(n=>(st.seats||{})[t.id+':'+n]),mine=s.some(x=>x&&x.c===CID),full=s[0]&&s[1]&&!mine;
+      return `<button class="tp ${full?'full':''} ${pending===i+1?'pend':''} ${mine?'mine':''}" style="--tc:${t.color}" data-j="team" data-i="${i+1}" ${full?'disabled':''}><b>${esc(t.name)}</b>${s.map((x,n)=>`<span>${n+1}. ${x?esc(x.n):'<i>свободно</i>'}</span>`).join('')}<em>${pending===i+1?'Занимаем место…':full?'Команда заполнена':mine?'Ты в этой команде':s[0]?'Будешь вторым':'Будешь первым'}</em></button>`}).join('')}</div>
+    <div class="row-flex"><button class="btn" data-j="back">Назад</button>${me?'<button class="btn primary" data-j="tostep3">Дальше</button>':''}</div></div>`;return}
+  const t=LS.teams[me.ti-1]||{name:'?',color:'#999'},blocked=Cam.blocked(),url=roomPushUrl(J.code,me.ti,me.seat,J.name,J.mic);
+  j.innerHTML=`<div class="jbox wide"><div class="jhead">${logoH}<div class="chips"><span>Комната <b>${esc(J.code)}</b></span><span class="tchip" style="--tc:${t.color}">${esc(t.name)}</span><span>Место <b>${me.seat}</b></span><span>${esc(J.name)}</span></div><button class="btn icon jmin" data-j="min" title="Свернуть">${SVG.down}</button></div>
+    ${me.first?`<div class="fld jrename"><span>Ты первый в команде — можешь её переименовать</span><div class="row-flex"><input class="inp" id="jTeam" maxlength="20" value="${esc(t.name)}" style="flex:1"><button class="btn" data-j="rename">Сохранить</button></div></div>`:''}
+    <div class="fld jmode"><span>Что показывать в твоём слоте</span><div class="seg big">${[['camera','Камеру'],['image','Картинку']].map(([v,l])=>`<button class="${J.mode===v?'on':''}" data-j="mode" data-v="${v}">${l}</button>`).join('')}</div></div>
+    ${J.mode==='image'?`<div class="jimg"><div class="jav">${J.img?`<img src="${J.img}" alt="">`:'<span>нет картинки</span>'}</div><div style="display:flex;flex-direction:column;gap:8px"><button class="btn" data-j="pick">${J.img?'Другая картинка':'Выбрать картинку'}</button><span class="note">Любая картинка: аватарка, мем, фото. Её покажут вместо камеры.</span></div><input type="file" id="jFile" accept="image/*" hidden></div>`
+      :blocked?`<div class="jopen"><p>Здесь браузер не даёт включить камеру. Открой игру по ссылке ведущего в Chrome.</p></div>`
+      :`<div class="jframe"><iframe src="${esc(url)}" allow="autoplay; camera; microphone; fullscreen; display-capture"></iframe></div><p class="note jhint" style="font-size:14px">Выбери камеру и нажми <b>Start</b>. Когда увидишь себя — жми «Перейти к игре», камера продолжит работать в маленьком окошке. Камера не работает? Переключись на «Картинку».</p>`}
+    <div class="row-flex jbtns"><button class="btn" data-j="change">Сменить команду</button><button class="btn primary" data-j="watch">Перейти к игре</button></div></div>`;
 }
-function readJoin(){const J=S.join;const c=$('#jCode'),n=$('#jName'),m=$('#jMic');if(c)J.code=c.value.trim().toUpperCase();if(n)J.name=n.value.trim();if(m)J.mic=m.checked}
-$('#join').addEventListener('click',e=>{const b=e.target.closest('[data-j]');if(!b)return;const a=b.dataset.j,J=S.join;
-  if(a==='seat'){readJoin();J.seat=+b.dataset.n;save();renderJoin()}
-  else if(a==='mode'){readJoin();J.mode=b.dataset.v;save();renderJoin()}
-  else if(a==='pick'){readJoin();$('#jFile').click()}
-  else if(a==='go'){readJoin();save();if(!parseCode(J.code))return toast('Код выглядит так: QW7KD-1');if(!J.name)return toast('Напиши своё имя');
-    if(J.mode==='image'){if(!J.img)return toast('Выбери картинку');if(Cam.blocked())return toast('Режим зрителя работает только в файле игры, открытом в Chrome');enterSpectator(false)}else{jStep=2;renderJoin()}}
-  else if(a==='back'){jStep=1;renderJoin()}
-  else if(a==='noimg'){J.mode='image';jStep=1;save();renderJoin()}
-  else if(a==='watch')enterSpectator(true);
-  else if(a==='min')$('#join').classList.toggle('collapsed');
-  else if(a==='host'){S.role='host';save();document.body.classList.remove('player');$('#join').hidden=true;openMenu('game')}});
-$('#join').addEventListener('change',async e=>{if(e.target.id!=='jFile')return;const f=e.target.files[0];if(!f)return;readJoin();
-  try{S.join.img=await loadImage(f,320);save();renderJoin()}catch(err){toast('Не удалось открыть картинку')}});
-$('#join').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();$('#join [data-j="go"]')?.click()}});
+function readJoin(){const c=$('#jCode'),n=$('#jName');if(c)J.code=c.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(n)J.name=n.value.trim()}
+function helloMsg(){const k=me&&LS?`${(LS.teams[me.ti-1]||{}).id}:${me.seat-1}`:null,sl=k&&LS.slots?LS.slots[k]:null;
+  const needImg=me&&J.mode==='image'&&J.img&&!(sl&&sl.t==='img'&&sl.h===hashStr(J.img));
+  return{kb:'hello',cid:CID,name:J.name,mode:me?J.mode:null,img:needImg?J.img:null,has:!!LS}}
+function sendHello(){hubSend(helloMsg())}
+function connectHub(){disconnectHub();specHub=document.createElement('iframe');specHub.className='hubframe';specHub.allow='autoplay';specHub.src=`https://vdo.ninja/?view=${hubId(J.code)}&datamode`;document.body.appendChild(specHub);
+  helloT=setInterval(sendHello,4000);setTimeout(sendHello,800)}
+function disconnectHub(){if(specHub)specHub.remove();specHub=null;clearInterval(helloT);clearTimeout(joinT);LS=null;me=null}
+function updateMe(){const st=LS;me=null;if(!st)return;Object.entries(st.seats||{}).forEach(([k,v])=>{if(v.c===CID){const[id,n]=k.split(':'),ti=st.teams.findIndex(t=>t.id===id);if(ti>=0)me={ti:ti+1,seat:+n+1,first:n==='0'}}})}
+$('#join').addEventListener('click',e=>{const b=e.target.closest('[data-j]');if(!b)return;const a=b.dataset.j;
+  if(a==='go'){readJoin();saveJoin();if(!roomCodeOk(J.code))return toast('Код комнаты — 5 символов, например QW7KD');if(!J.name)return toast('Напиши своё имя');
+    if(Cam.blocked())return toast('Открой игру по ссылке ведущего в Chrome — здесь подключение не работает');
+    jStep='wait';renderJoin();connectHub();joinT=setTimeout(()=>{const h=$('#jwHint');if(jStep==='wait'&&h)h.textContent='Комната не отвечает. Проверь код и что у ведущего открыта игра.'},12000)}
+  else if(a==='back'){disconnectHub();pending=null;jStep=1;renderJoin()}
+  else if(a==='team'){pending=+b.dataset.i;hubSend({kb:'claim',cid:CID,name:J.name,ti:pending});renderJoin();setTimeout(()=>{if(pending===+b.dataset.i){pending=null;if(jStep===2)renderJoin()}},8000)}
+  else if(a==='tostep3'&&me){jStep=3;renderJoin()}
+  else if(a==='rename'){const v=$('#jTeam').value.trim();if(!v)return;hubSend({kb:'rename',cid:CID,name:v});toast('Название команды отправлено')}
+  else if(a==='mode'){J.mode=b.dataset.v;saveJoin();renderJoin();sendHello()}
+  else if(a==='pick')$('#jFile').click();
+  else if(a==='change'){jStep=2;renderJoin()}
+  else if(a==='watch'){if(J.mode==='image'&&!J.img)return toast('Выбери картинку');enterSpectator(J.mode==='camera'&&!Cam.blocked())}
+  else if(a==='min')$('#join').classList.toggle('collapsed')});
+$('#join').addEventListener('change',async e=>{if(e.target.id!=='jFile')return;const f=e.target.files[0];if(!f)return;
+  try{J.img=await loadImage(f,320);saveJoin();renderJoin();sendHello()}catch(err){toast('Не удалось открыть картинку')}});
+$('#join').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();const g=$('#join [data-j="go"]')||$('#join [data-j="rename"]');g&&g.click()}});
+function joinOnState(){
+  const had=!!me;updateMe();
+  if(jStep==='wait'){clearTimeout(joinT);jStep=me?3:2;renderJoin();return}
+  if(jStep===2){if(pending&&me){pending=null;jStep=3}renderJoin();return}
+  if(jStep===3&&!me){toast('Ведущий освободил твоё место — выбери команду');jStep=2;renderJoin();return}
+  if(jStep===3&&had&&me){const tc=$('#join .tchip');const t=LS.teams[me.ti-1];if(tc&&t)tc.textContent=t.name}
+}
 
 // ===== spectator mode =====
-let specHub=null,specJ=null,specGot=false,helloT=null;
 function enterSpectator(withCam){
-  save();specJ={...S.join};const p=parseCode(specJ.code);
-  SPECT=true;const d=defaults();S={...d,settings:{...d.settings,sound:false},teams:[],cams:{},room:{code:p.room},join:specJ,role:'player'};
+  SPECT=true;const d=defaults();S={...d,settings:{...d.settings,sound:false},teams:[],cams:{},room:{code:J.code},role:'player'};
   document.body.classList.remove('player');document.body.classList.add('spect');
-  if(withCam){$('#join').classList.add('mini')}else $('#join').hidden=true;
-  $('#specBar').hidden=false;$('#specBar').innerHTML=`<span class="sb-dot"></span><b>Зритель</b><span>Комната ${p.room}</span><span>Команда ${p.team} · место ${specJ.seat}</span><span>${esc(specJ.name)}</span><button class="btn" data-sb="exit">Выйти</button>`;
-  $('#specWait').hidden=false;
+  if(withCam)$('#join').classList.add('mini');else $('#join').hidden=true;
+  const t=LS&&me?LS.teams[me.ti-1]:null;
+  $('#specBar').hidden=false;$('#specBar').innerHTML=`<span class="sb-dot"></span><b>Зритель</b><span>Комната ${esc(J.code)}</span><span>${t?esc(t.name)+' · место '+me.seat:''}</span><span>${esc(J.name)}</span><button class="btn" data-sb="exit">Выйти</button>`;
   fit();buildTeams();buildScene();setDoor(false);renderAll();
-  specHub=document.createElement('iframe');specHub.className='hubframe';specHub.allow='autoplay';specHub.src=`https://vdo.ninja/?view=${hubId(p.room)}&datamode`;document.body.appendChild(specHub);
-  const hello=()=>{const my=RS&&RS.slots?RS.slots[`${(RS.teams[p.team-1]||{}).id}:${specJ.seat-1}`]:null;
-    const needImg=specJ.mode==='image'&&specJ.img&&!(my&&my.t==='img'&&my.h===hashStr(specJ.img));
-    hubSend({kb:'hello',ti:p.team,seat:specJ.seat,name:specJ.name,mode:specJ.mode,img:needImg?specJ.img:null,has:!!RS,full:!RS})};
-  hello();helloT=setInterval(hello,specGot?10000:3000);specHello=hello;
-  setTimeout(()=>{if(!specGot)$('#specWait').innerHTML=`<b>Ждём ведущего…</b><span>Ведущий должен открыть игру в Chrome и создать комнату с кодом ${p.room}. Если код неверный — нажми «Выйти» и введи его заново.</span>`},15000);
+  if(LS){specPending=LS;if(!specRun)specLoop()}else $('#specWait').hidden=false;
+  clearInterval(helloT);helloT=setInterval(sendHello,10000);sendHello();
 }
-let specHello=null;
-$('#specBar').addEventListener('click',e=>{if(e.target.closest('[data-sb="exit"]')){location.reload()}});
+$('#specBar').addEventListener('click',e=>{if(e.target.closest('[data-sb="exit"]'))location.reload()});
 addEventListener('message',e=>{
-  if(SPECT&&specHub&&e.source===specHub.contentWindow){
-    if(e.data&&typeof e.data==='object'&&typeof e.data.action==='string'&&/connect/i.test(e.data.action)&&e.data.value!==false&&specHello)setTimeout(specHello,300);
+  if(PLAYER&&specHub&&e.source===specHub.contentWindow){
+    if(e.data&&typeof e.data==='object'&&typeof e.data.action==='string'&&/connect/i.test(e.data.action)&&e.data.value!==false)setTimeout(sendHello,300);
     const m=e.data&&('dataReceived' in Object(e.data))?findKb(e.data.dataReceived):null;if(!m)return;
     if(m.kb==='state')onRemoteState(m);
-    else if(m.kb==='img'&&m.h&&typeof m.d==='string'&&m.d.startsWith('data:image/')){imgCache[m.h]=m.d;Object.values(S.cams).forEach(c=>{if(c.h===m.h)c.img=m.d});syncAllCams()}
+    else if(m.kb==='deny'&&m.cid===CID){pending=null;toast('В этой команде уже двое — выбери другую');if(jStep===2)renderJoin()}
+    else if(m.kb==='img'&&m.h&&typeof m.d==='string'&&m.d.startsWith('data:image/')){imgCache[m.h]=m.d;if(SPECT){Object.values(S.cams).forEach(c=>{if(c.h===m.h)c.img=m.d});syncAllCams()}}
     return}
-  if(!SPECT&&hubEl&&e.source===hubEl.contentWindow){const m=e.data&&('dataReceived' in Object(e.data))?findKb(e.data.dataReceived):null;if(m&&m.kb==='hello')onHello(m)}
+  if(!PLAYER&&hubEl&&e.source===hubEl.contentWindow){const m=e.data&&('dataReceived' in Object(e.data))?findKb(e.data.dataReceived):null;if(!m)return;
+    if(m.kb==='hello')onHello(m);else if(m.kb==='claim')onClaim(m);else if(m.kb==='rename')onRename(m)}
 });
+
 let specPending=null,specRun=false;
-function onRemoteState(st){if(!specGot){specGot=true;$('#specWait').hidden=true;clearInterval(helloT);helloT=setInterval(specHello,10000)}specPending=st;if(!specRun)specLoop()}
+function onRemoteState(st){LS=st;if(SPECT){updateMe();$('#specWait').hidden=true;specPending=st;if(!specRun)specLoop()}else joinOnState()}
 async function specLoop(){specRun=true;while(specPending){const st=specPending;specPending=null;try{await applyRemote(st)}catch(err){console.error(err)}}specRun=false}
 async function applyRemote(st){
   const p=RS,pg=p?p.game:null,g=st.game;
@@ -1265,8 +1364,8 @@ document.addEventListener('keydown',e=>{
 
 // ===== menu =====
 let menuTab='game',edC=0,iconRow=null,photoJ=null,photoKey=null;
-function openMenu(tab){if(tab)menuTab=tab;edC=Math.min(edC,S.containers.length-1);$('#menu').hidden=false;renderMenu()}
-function closeMenu(){$('#menu').hidden=true;applyChanges()}
+function openMenu(tab){if(tab)menuTab=tab;edC=Math.min(edC,S.containers.length-1);$('#menu').hidden=false;renderMenu();hpbUpdate()}
+function closeMenu(){$('#menu').hidden=true;applyChanges();hpbUpdate()}
 function applyChanges(){
   const g=S.game;if(!S.containers.length)S.containers.push(mkContainer(['Новый контейнер','',500,100,'',[['box','Коробка',100,'M']]]));
   g.index=Math.min(g.index,S.containers.length-1);
@@ -1314,16 +1413,17 @@ function tabCams(){
     return `<div class="slot" data-slot="${k}" style="--tc:${color}">
     <div class="sl-h"><b>${esc(title)}</b><div class="seg">${opts.map(([v,l])=>`<button class="${c.src===v?'on':''}" data-m="csrc" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div></div>
     ${c.src==='local'?`<div class="row-flex"><select class="inp" style="flex:1;min-width:0" data-cam="${k}" data-cf="device">${devOpts(c)}</select><label class="mini"><input type="checkbox" data-cam="${k}" data-cf="mirror" ${c.mirror?'checked':''}> зеркально</label></div>`:''}
-    ${c.src==='local'&&isHost&&rc?`<label class="mini"><input type="checkbox" data-cam="host" data-cf="share" ${c.share?'checked':''}> Показывать мою камеру зрителям-участникам</label>`:''}
+    ${c.src==='local'&&isHost&&rc?`<label class="mini"><input type="checkbox" data-cam="host" data-cf="share" ${c.share!==false?'checked':''}> Показывать мою камеру участникам</label>${c.share!==false?'<div class="note">Камера уходит участникам через окошко «Ваша камера для участников» внизу слева. Если там кнопка Start — нажмите её.</div>':''}`:''}
     ${c.src==='image'?`<div class="row-flex"><div class="sav">${c.img?`<img src="${c.img}" alt="">`:'<span>нет</span>'}</div><button class="btn" data-m="cimg" data-k="${k}">${c.img?'Другая картинка':'Загрузить картинку'}</button><span class="note">${c.fromPlayer?'Картинку выбрал сам участник':'Показывается вместо камеры'}</span></div>`:''}
-    ${c.src==='room'&&rc?`<div class="note">Участник входит по коду <b style="color:#fff">${teamCodeOf(k)}</b> и выбирает место ${+k.split(':')[1]+1}. Статус: <span class="st ${roomState[k]?'on':''}" data-st="${k}">${roomState[k]?'● в эфире':'○ ждём'}</span></div>`:''}
+    ${c.src==='room'&&rc?`<div class="note">${(S.room.seats||{})[k]?'Место занял <b style="color:#fff">'+esc(S.room.seats[k].n)+'</b>':'Место займёт участник, который выберет эту команду'}. Видео: <span class="st ${roomState[k]?'on':''}" data-st="${k}">${roomState[k]?'● в эфире':'○ ждём'}</span></div>`:''}
     ${c.src==='link'?`<div class="row-flex"><label class="fld" style="flex:1"><span>ID в VDO.Ninja или своя ссылка на видео</span><input class="inp" data-cam="${k}" data-cf="link" value="${esc(c.link)}"></label><button class="btn" data-m="cnewid" data-k="${k}" style="align-self:end">Новый ID</button></div>
       ${pu?`<div class="fld"><span>Ссылка для участника</span><div class="row-flex"><input class="inp mono" readonly value="${esc(pu)}" style="flex:1;min-width:0"><button class="btn" data-m="ccopy" data-k="${k}">Скопировать</button></div></div>`:''}`:''}
   </div>`};
+  const seats=(S.room&&S.room.seats)||{};
   const room=rc?`<div class="roombox"><div class="rb-l"><span class="rb-k">Код комнаты</span><div class="rb-code">${rc}</div>
-      <div class="note" style="margin:-6px 0 12px">Зрителей онлайн: <b data-spc style="color:#fff">${spectCount()}</b></div><div class="row-flex"><button class="btn primary" data-m="cinvall">Скопировать приглашение для всех</button><button class="btn" data-m="croomnew">Новый код</button><button class="btn danger" data-m="croomclose">Закрыть</button></div></div>
-      <div class="rb-teams">${S.teams.map((t,i)=>`<div class="rb-t" style="--tc:${t.color}"><b>${esc(t.name)}</b><code>${rc}-${i+1}</code>${[0,1].map(n=>{const k=`${t.id}:${n}`,on=roomState[k];return `<span class="st ${on?'on':''}" data-st="${k}">${on?'●':'○'} ${n+1}: ${on?esc((t.members||[])[n]||'в эфире'):'ждём'}</span>`}).join('')}<button class="btn" data-m="ccode" data-i="${i}">Копировать</button></div>`).join('')}</div></div>`
-    :`<div class="roombox empty"><div><b>Комната для участников</b><p class="note">Создайте комнату — каждая команда получит свой код приглашения. Участники открывают игру, выбирают «Я участник», вводят код, имя и место. Их камеры сами появятся в слотах команды, а имена — в карточках.</p></div><button class="btn primary" data-m="croom">Создать комнату</button></div>`;
+      <div class="note" style="margin:-6px 0 12px">Онлайн: <b data-spc style="color:#fff">${spectCount()}</b></div><div class="row-flex"><button class="btn primary" data-m="cinvall">Скопировать ссылку и код</button><button class="btn" data-m="croomnew">Новый код</button><button class="btn danger" data-m="croomclose">Закрыть</button></div></div>
+      <div class="rb-teams">${S.teams.map(t=>`<div class="rb-t2" style="--tc:${t.color}"><b>${esc(t.name)}</b>${[0,1].map(n=>{const k=`${t.id}:${n}`,x=seats[k];return `<span class="seat ${x?'busy':''}">${n+1}. ${x?esc(x.n):'свободно'}${x?`<button class="x2" data-m="cfree" data-k="${k}" title="Освободить место">✕</button>`:''}</span>`}).join('')}</div>`).join('')}</div></div>`
+    :`<div class="roombox empty"><div><b>Комната для участников</b><p class="note">Создайте комнату — получите код и ссылку. Участники открывают ссылку, вписывают код и выбирают команду. Кто зашёл первым — место 1. Камеры и имена появятся в слотах сами.</p></div><button class="btn primary" data-m="croom">Создать комнату</button></div>`;
   return `${blocked?`<div class="warn" style="margin-bottom:14px"><b>В этом окне видео не работает.</b> Вкладка claude.ai запрещает страницам камеры и встроенное видео. Откройте скачанный файл игры в Chrome — комната и камеры заработают там.</div>`:''}
   ${room}
   <div class="grid2" style="gap:26px;align-items:start;margin-top:22px">
@@ -1398,10 +1498,10 @@ MENU.addEventListener('click',async e=>{
       if(cf.src==='local'&&!Cam.blocked()&&!Cam.devices.some(d=>d.label)){const r=await Cam.ask();if(r!==true)toast(camErr(r));renderTab()}break}
     case'cimg':photoKey=b.dataset.k;$('#fileIn').value='';$('#fileIn').click();break;
     case'croom':createRoom();renderTab();break;
-    case'croomnew':if(await ask('Сделать новый код? Старые коды перестанут работать, участникам нужно будет войти заново.','Новый код')){S.room.code=newRoomCode();save();syncAllCams();renderTab()}break;
+    case'croomnew':if(await ask('Сделать новый код? Участникам нужно будет войти заново.','Новый код')){Object.keys(S.room.seats||{}).forEach(freeSeat);S.room.code=newRoomCode();S.room.seats={};save();buildTeams();syncAllCams();renderTab()}break;
     case'croomclose':if(await ask('Закрыть комнату? Камеры участников отключатся от слотов.','Закрыть')){closeRoom();renderTab()}break;
-    case'cinvall':copyText(inviteAll());break;
-    case'ccode':copyText(inviteText(i));break;
+    case'cinvall':copyText(joinText());break;
+    case'cfree':freeSeat(b.dataset.k);save();buildTeams();syncAllCams();hubSend(stateMsg());renderTab();break;
     case'player':S.role='player';save();showJoin();break;
     case'cnewid':camCfg(b.dataset.k).link=genId();save();syncAllCams();renderTab();break;
     case'ccopy':{const k=b.dataset.k,v=pushUrl(camCfg(k),k);try{await navigator.clipboard.writeText(v);toast('Ссылка скопирована')}catch(err){const inp=b.parentElement.querySelector('input');inp.focus();inp.select();toast('Выделено — нажмите Ctrl+C')}break}
@@ -1445,7 +1545,7 @@ MENU.addEventListener('input',e=>{
 });
 MENU.addEventListener('change',async e=>{
   const cd=e.target.dataset;
-  if(cd.cam){const cf=camCfg(cd.cam);if(cd.cf==='mirror')cf.mirror=e.target.checked;else cf[cd.cf]=e.target.value.trim();save();syncAllCams();if(cd.cf==='link')renderTab();return}
+  if(cd.cam){const cf=camCfg(cd.cam);if(e.target.type==='checkbox')cf[cd.cf]=e.target.checked;else cf[cd.cf]=e.target.value.trim();save();syncAllCams();if(cd.cf==='link')renderTab();return}
   if(e.target.id==='fileIn'&&photoKey){const f=e.target.files[0];const k=photoKey;photoKey=null;if(!f)return;try{const u=await loadImage(f,360),c=camCfg(k);c.img=u;c.h=hashStr(u);c.src='image';c.fromPlayer=false;save();syncAllCams();sendImages();renderTab()}catch(err){toast('Не удалось открыть картинку')}return}
   if(e.target.id!=='fileIn'||photoJ==null)return;const f=e.target.files[0];if(!f)return;
   try{const url=await loadImage(f);S.containers[edC].items[photoJ].img=url;save();renderTab()}catch(err){toast('Не удалось открыть картинку')}
@@ -1455,21 +1555,21 @@ function exportJSON(){return JSON.stringify({hostName:S.hostName,settings:S.sett
 
 // ===== boot =====
 function boot(){
+  if(location.hash==='#join')PLAYER=true;
   fit();const g=S.game;
   if(g.phase==='closing'){g.phase='summary'}
   if(!S.containers.length)S.containers=DEFAULT_CONTAINERS.map(mkContainer);
   g.index=Math.min(g.index,S.containers.length-1);
   buildTeams();setDoor(OPEN.includes(g.phase));buildScene();renderAll();
-  if(!Cam.blocked())Cam.list();
+  if(!Cam.blocked()&&!PLAYER)Cam.list();
   if(g.phase==='sold'){const t=g.buyer?T(g.buyer):null;showStamp(t?'ПРОДАНО':'НЕ ПРОДАН',t?t.name:'ставок нет',t?t.color:'#9aa6b2')}
   if(g.phase==='summary')renderSummary();
   if(g.phase==='final')showFinal();
   if(!g.started){const ex=$('#exterior');ex.classList.add('flicker')}
-  if(S.role==='player')showJoin();
-  else if(!S.role&&!g.started)showWelcome();
-  else if(!g.started)openMenu('game');
+  if(location.hash==='#join')showJoin();
+  else if(!g.started){welcomeRoom=!!(S.room&&S.room.code);showWelcome()}
 }
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{});
+addEventListener('hashchange',()=>{if((location.hash==='#join')!==PLAYER)location.reload()});
 boot();
 </script>
 </body></html>
