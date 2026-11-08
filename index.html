@@ -1135,7 +1135,8 @@ function ensureHub(){
     if(hw){const f=document.createElement('iframe');f.dataset.u=hw;f.allow='autoplay; camera; microphone';f.src=hw;$('#hpbFrame').appendChild(f);hostPushEl=f}}
   hpbUpdate();
 }
-function hubSend(o){const f=PLAYER?specHub:hubEl;if(!f)return;try{f.contentWindow.postMessage({sendData:o,type:'pcs'},'*')}catch(e){}}
+// host = publisher of the hub stream → 'pcs'; participant = viewer → 'rpcs' (also 'pcs' as a fallback)
+function hubSend(o){const f=PLAYER?specHub:hubEl;if(!f)return;try{if(PLAYER){f.contentWindow.postMessage({sendData:o,type:'rpcs'},'*');f.contentWindow.postMessage({sendData:o,type:'pcs'},'*')}else f.contentWindow.postMessage({sendData:o,type:'pcs'},'*')}catch(e){}}
 function broadcastSoon(){if(SPECT||!hubEl)return;clearTimeout(bcT);bcT=setTimeout(()=>hubSend(stateMsg()),120)}
 function sendImages(){allSlotKeys().forEach(k=>{const c=camCfg(k);if(c.src==='image'&&c.img)hubSend({kb:'img',h:c.h||(c.h=hashStr(c.img)),d:c.img})})}
 setInterval(()=>{if(!SPECT&&hubEl)hubSend(stateMsg())},4000);
@@ -1143,8 +1144,9 @@ const spectCount=()=>Object.values(spectSeen).filter(t=>Date.now()-t<30000).leng
 // ===== host welcome: one button "create room" =====
 let welcomeRoom=false;
 const SVG_HOST='';
-function joinUrl(){return /^https?:/.test(location.protocol)&&!Cam.blocked()?location.origin+location.pathname+'#join':''}
-function joinText(){const u=joinUrl();return `Битва контейнеров — заходи!\n${u?u+'\n':''}Код комнаты: ${S.room.code}\n\n${u?'Открой ссылку':'Открой игру (файл «Битва контейнеров.html» в Chrome) и нажми «Я участник»'}, впиши код комнаты и выбери свою команду.`}
+function joinUrl(){return /^https?:/.test(location.protocol)&&!Cam.blocked()&&S.room&&S.room.code?location.origin+location.pathname+'#join-'+S.room.code:''}
+const hashJoin=()=>{const m=location.hash.match(/^#join(?:-([A-Za-z0-9]{5}))?$/);return m?{code:(m[1]||'').toUpperCase()}:null};
+function joinText(){const u=joinUrl();return u?`Битва контейнеров — заходи!\n${u}\n\nОткрой ссылку, впиши имя и выбери свою команду.`:`Битва контейнеров — заходи!\nКод комнаты: ${S.room.code}\n\nОткрой игру (файл «Битва контейнеров.html» в Chrome), нажми «Я участник», впиши код и выбери свою команду.`}
 function showWelcome(){$('#welcome').hidden=false;renderWelcome()}
 let freshRoom=false;
 function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl(),g=S.game,cont=g.started&&g.phase!=='final'&&!freshRoom;
@@ -1152,7 +1154,7 @@ function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl(
     <div class="rcard"><span class="rb-k">Код комнаты</span><div class="rb-code">${rc}</div>
     ${u?`<span class="rb-k">Ссылка для участников</span><div class="row-flex"><input class="inp mono" readonly value="${esc(u)}" style="flex:1;min-width:0"><button class="btn primary" data-w="copy">Скопировать</button></div>`
       :`<div class="warn">Ссылка появится, когда игра открыта на сайте по https. Сейчас отправьте участникам файл игры и этот код.</div><div class="row-flex" style="justify-content:center"><button class="btn primary" data-w="copy">Скопировать код</button></div>`}
-    <p class="note">Участники открывают ссылку, вписывают код и выбирают команду. Кто зашёл в команду первым — место 1 и может её переименовать.</p></div>
+    <p class="note">Код комнаты уже встроен в ссылку. Участник открывает её, вписывает имя и выбирает команду. Кто зашёл в команду первым — место 1 и может её переименовать.</p></div>
     <button class="btn primary jgo wgo" data-w="go">${cont?`Продолжить игру · контейнер ${g.index+1}`:'Начать игру'}</button>
     <div class="wstack" style="margin-top:14px"><button class="linkbtn" data-w="create">Создать новую комнату (новая игра)</button><button class="linkbtn" data-w="solo">Играть без комнаты</button></div></div>`
   :`<div class="wbox"><div class="logo big">Битва <span>контейнеров</span></div><div class="wsub">Панель ведущего</div>
@@ -1161,7 +1163,7 @@ function renderWelcome(){const w=$('#welcome'),rc=S.room&&S.room.code,u=joinUrl(
     <button class="linkbtn" data-w="solo">Играть без комнаты</button><button class="linkbtn" data-w="player">Я участник — войти по коду</button></div></div>`}
 $('#welcome').addEventListener('click',async e=>{const b=e.target.closest('[data-w]');if(!b)return;const a=b.dataset.w;Sfx.init();
   if(a==='create'){S.role='host';createRoom();freshRoom=true;welcomeRoom=true;renderWelcome()}
-  else if(a==='copy')copyText(joinText());
+  else if(a==='copy')copyText(joinUrl()||S.room.code);
   else if(a==='go'){$('#welcome').hidden=true;if(freshRoom||!S.game.started||S.game.phase==='final'){freshRoom=false;await newGame(true)}else renderAll()}
   else if(a==='cont'){$('#welcome').hidden=true;renderAll()}
   else if(a==='solo'){S.role='host';if(S.room&&S.room.code)closeRoom();save();$('#welcome').hidden=true;if(S.game.started&&S.game.phase!=='final')renderAll();else openMenu('game')}
@@ -1200,19 +1202,22 @@ const CID=(()=>{try{let c=sessionStorage.getItem('kb-cid');if(!c){c=Math.random(
 function loadJoin(){const d={code:'',name:'',mode:'camera',img:null,mic:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('kb-join')||'{}'))}catch(e){return d}}
 function saveJoin(){try{localStorage.setItem('kb-join',JSON.stringify(J))}catch(e){}}
 const roomCodeOk=v=>/^[A-Z0-9]{5}$/.test(v);
-function showJoin(){PLAYER=true;J=loadJoin();document.body.classList.add('player');$('#menu').hidden=true;$('#welcome').hidden=true;$('#join').hidden=false;jStep=1;renderJoin()}
+function showJoin(){PLAYER=true;J=loadJoin();document.body.classList.add('player');$('#menu').hidden=true;$('#welcome').hidden=true;$('#join').hidden=false;
+  const h=hashJoin();if(h&&h.code&&!Cam.blocked()){J.code=h.code;saveJoin();startConnect()}else{jStep=1;renderJoin()}}
+function startConnect(){jStep='wait';renderJoin();connectHub();clearTimeout(joinT);joinT=setTimeout(()=>{const h=$('#jwHint');if(jStep==='wait'&&h)h.textContent='Комната не отвечает. Проверь, что у ведущего открыта игра и ссылка свежая.'},12000)}
+function teamsHtml(){const st=LS;return st.teams.map((t,i)=>{const s=[0,1].map(n=>(st.seats||{})[t.id+':'+n]),mine=s.some(x=>x&&x.c===CID),full=s[0]&&s[1]&&!mine;
+  return `<button class="tp ${full?'full':''} ${pending===i+1?'pend':''} ${mine?'mine':''}" style="--tc:${t.color}" data-j="team" data-i="${i+1}" ${full?'disabled':''}><b>${esc(t.name)}</b>${s.map((x,n)=>`<span>${n+1}. ${x?esc(x.n):'<i>свободно</i>'}</span>`).join('')}<em>${pending===i+1?'Занимаем место…':full?'Команда заполнена':mine?'Ты в этой команде':s[0]?'Будешь вторым':'Будешь первым'}</em></button>`}).join('')}
 const logoH='<div class="logo">Битва <span>контейнеров</span></div>';
 function renderJoin(){
   const j=$('#join');
   if(jStep===1){j.innerHTML=`<div class="jbox">${logoH}<div class="wsub" style="margin:6px 0 22px">Вход участника</div>
     <label class="fld"><span>Код комнаты</span><input class="inp jcode" id="jCode" placeholder="QW7KD" value="${esc(J.code)}" maxlength="6" autocomplete="off" spellcheck="false"></label>
-    <label class="fld"><span>Твоё имя — его увидят на экране</span><input class="inp" id="jName" maxlength="24" value="${esc(J.name)}" placeholder="Например, Ростик"></label>
     <button class="btn primary jgo" data-j="go">Войти</button></div>`;return}
   if(jStep==='wait'){j.innerHTML=`<div class="jbox">${logoH}<div class="jwait"><i class="spin"></i><b>Подключаемся к комнате ${esc(J.code)}…</b><span id="jwHint">Это занимает несколько секунд</span></div><button class="btn" data-j="back">Назад</button></div>`;return}
-  if(jStep===2){const st=LS;j.innerHTML=`<div class="jbox wide">${logoH}<div class="chips" style="margin-top:-6px"><span>Комната <b>${esc(J.code)}</b></span><span>${esc(J.name)}</span></div>
-    <div class="sec" style="margin:4px 0 0">Выбери свою команду</div><div class="tpick">${st.teams.map((t,i)=>{const s=[0,1].map(n=>(st.seats||{})[t.id+':'+n]),mine=s.some(x=>x&&x.c===CID),full=s[0]&&s[1]&&!mine;
-      return `<button class="tp ${full?'full':''} ${pending===i+1?'pend':''} ${mine?'mine':''}" style="--tc:${t.color}" data-j="team" data-i="${i+1}" ${full?'disabled':''}><b>${esc(t.name)}</b>${s.map((x,n)=>`<span>${n+1}. ${x?esc(x.n):'<i>свободно</i>'}</span>`).join('')}<em>${pending===i+1?'Занимаем место…':full?'Команда заполнена':mine?'Ты в этой команде':s[0]?'Будешь вторым':'Будешь первым'}</em></button>`}).join('')}</div>
-    <div class="row-flex"><button class="btn" data-j="back">Назад</button>${me?'<button class="btn primary" data-j="tostep3">Дальше</button>':''}</div></div>`;return}
+  if(jStep===2){j.innerHTML=`<div class="jbox wide">${logoH}<div class="chips" style="margin-top:-6px"><span>Комната <b>${esc(J.code)}</b></span></div>
+    <label class="fld"><span>Твоё имя — его увидят на экране</span><input class="inp" id="jName" maxlength="24" value="${esc(J.name)}" placeholder="Например, Ростик" style="max-width:360px"></label>
+    <div class="sec" style="margin:4px 0 0">Выбери свою команду</div><div class="tpick" id="tpick">${teamsHtml()}</div>
+    <div class="row-flex" id="jnext">${me?'<button class="btn primary" data-j="tostep3">Дальше</button>':''}</div></div>`;return}
   const t=LS.teams[me.ti-1]||{name:'?',color:'#999'},blocked=Cam.blocked(),url=roomPushUrl(J.code,me.ti,me.seat,J.name,J.mic);
   j.innerHTML=`<div class="jbox wide"><div class="jhead">${logoH}<div class="chips"><span>Комната <b>${esc(J.code)}</b></span><span class="tchip" style="--tc:${t.color}">${esc(t.name)}</span><span>Место <b>${me.seat}</b></span><span>${esc(J.name)}</span></div><button class="btn icon jmin" data-j="min" title="Свернуть">${SVG.down}</button></div>
     ${me.first?`<div class="fld jrename"><span>Ты первый в команде — можешь её переименовать</span><div class="row-flex"><input class="inp" id="jTeam" maxlength="20" value="${esc(t.name)}" style="flex:1"><button class="btn" data-j="rename">Сохранить</button></div></div>`:''}
@@ -1232,11 +1237,13 @@ function connectHub(){disconnectHub();specHub=document.createElement('iframe');s
 function disconnectHub(){if(specHub)specHub.remove();specHub=null;clearInterval(helloT);clearTimeout(joinT);LS=null;me=null}
 function updateMe(){const st=LS;me=null;if(!st)return;Object.entries(st.seats||{}).forEach(([k,v])=>{if(v.c===CID){const[id,n]=k.split(':'),ti=st.teams.findIndex(t=>t.id===id);if(ti>=0)me={ti:ti+1,seat:+n+1,first:n==='0'}}})}
 $('#join').addEventListener('click',e=>{const b=e.target.closest('[data-j]');if(!b)return;const a=b.dataset.j;
-  if(a==='go'){readJoin();saveJoin();if(!roomCodeOk(J.code))return toast('Код комнаты — 5 символов, например QW7KD');if(!J.name)return toast('Напиши своё имя');
+  if(a==='go'){readJoin();saveJoin();if(!roomCodeOk(J.code))return toast('Код комнаты — 5 символов, например QW7KD');
     if(Cam.blocked())return toast('Открой игру по ссылке ведущего в Chrome — здесь подключение не работает');
-    jStep='wait';renderJoin();connectHub();joinT=setTimeout(()=>{const h=$('#jwHint');if(jStep==='wait'&&h)h.textContent='Комната не отвечает. Проверь код и что у ведущего открыта игра.'},12000)}
+    startConnect()}
   else if(a==='back'){disconnectHub();pending=null;jStep=1;renderJoin()}
-  else if(a==='team'){pending=+b.dataset.i;hubSend({kb:'claim',cid:CID,name:J.name,ti:pending});renderJoin();setTimeout(()=>{if(pending===+b.dataset.i){pending=null;if(jStep===2)renderJoin()}},8000)}
+  else if(a==='team'){readJoin();if(!J.name){toast('Сначала впиши своё имя');$('#jName')?.focus();return}saveJoin();const ti=+b.dataset.i;pending=ti;
+    const send=()=>hubSend({kb:'claim',cid:CID,name:J.name,ti});send();setTimeout(()=>{if(pending===ti)send()},1500);setTimeout(()=>{if(pending===ti)send()},4000);updTeams();
+    setTimeout(()=>{if(pending===ti){pending=null;updTeams();toast('Ведущий не ответил. Попробуй ещё раз или попроси ведущего перезагрузить игру')}},9000)}
   else if(a==='tostep3'&&me){jStep=3;renderJoin()}
   else if(a==='rename'){const v=$('#jTeam').value.trim();if(!v)return;hubSend({kb:'rename',cid:CID,name:v});toast('Название команды отправлено')}
   else if(a==='mode'){J.mode=b.dataset.v;saveJoin();renderJoin();sendHello()}
@@ -1246,11 +1253,12 @@ $('#join').addEventListener('click',e=>{const b=e.target.closest('[data-j]');if(
   else if(a==='min')$('#join').classList.toggle('collapsed')});
 $('#join').addEventListener('change',async e=>{if(e.target.id!=='jFile')return;const f=e.target.files[0];if(!f)return;
   try{J.img=await loadImage(f,320);saveJoin();renderJoin();sendHello()}catch(err){toast('Не удалось открыть картинку')}});
-$('#join').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();const g=$('#join [data-j="go"]')||$('#join [data-j="rename"]');g&&g.click()}});
+$('#join').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();if(e.target.id==='jName')return e.target.blur();const g=$('#join [data-j="go"]')||$('#join [data-j="rename"]');g&&g.click()}});
+function updTeams(){const tp=$('#tpick');if(tp&&LS)tp.innerHTML=teamsHtml();const nx=$('#jnext');if(nx)nx.innerHTML=me?'<button class="btn primary" data-j="tostep3">Дальше</button>':''}
 function joinOnState(){
   const had=!!me;updateMe();
   if(jStep==='wait'){clearTimeout(joinT);jStep=me?3:2;renderJoin();return}
-  if(jStep===2){if(pending&&me){pending=null;jStep=3}renderJoin();return}
+  if(jStep===2){if(pending&&me){pending=null;jStep=3;renderJoin()}else updTeams();return}
   if(jStep===3&&!me){toast('Ведущий освободил твоё место — выбери команду');jStep=2;renderJoin();return}
   if(jStep===3&&had&&me){const tc=$('#join .tchip');const t=LS.teams[me.ti-1];if(tc&&t)tc.textContent=t.name}
 }
@@ -1426,7 +1434,7 @@ function tabCams(){
   </div>`};
   const seats=(S.room&&S.room.seats)||{};
   const room=rc?`<div class="roombox"><div class="rb-l"><span class="rb-k">Код комнаты</span><div class="rb-code">${rc}</div>
-      <div class="note" style="margin:-6px 0 12px">Онлайн: <b data-spc style="color:#fff">${spectCount()}</b></div><div class="row-flex"><button class="btn primary" data-m="cinvall">Скопировать ссылку и код</button><button class="btn" data-m="croomnew">Новый код</button><button class="btn danger" data-m="croomclose">Закрыть</button></div></div>
+      <div class="note" style="margin:-6px 0 12px">Онлайн: <b data-spc style="color:#fff">${spectCount()}</b></div><div class="row-flex"><button class="btn primary" data-m="cinvall">Скопировать ссылку</button><button class="btn" data-m="croomnew">Новый код</button><button class="btn danger" data-m="croomclose">Закрыть</button></div></div>
       <div class="rb-teams">${S.teams.map(t=>`<div class="rb-t2" style="--tc:${t.color}"><b>${esc(t.name)}</b>${[0,1].map(n=>{const k=`${t.id}:${n}`,x=seats[k];return `<span class="seat ${x?'busy':''}">${n+1}. ${x?esc(x.n):'свободно'}${x?`<button class="x2" data-m="cfree" data-k="${k}" title="Освободить место">✕</button>`:''}</span>`}).join('')}</div>`).join('')}</div></div>`
     :`<div class="roombox empty"><div><b>Комната для участников</b><p class="note">Создайте комнату — получите код и ссылку. Участники открывают ссылку, вписывают код и выбирают команду. Кто зашёл первым — место 1. Камеры и имена появятся в слотах сами.</p></div><button class="btn primary" data-m="croom">Создать комнату</button></div>`;
   return `${blocked?`<div class="warn" style="margin-bottom:14px"><b>В этом окне видео не работает.</b> Вкладка claude.ai запрещает страницам камеры и встроенное видео. Откройте скачанный файл игры в Chrome — комната и камеры заработают там.</div>`:''}
@@ -1505,7 +1513,7 @@ MENU.addEventListener('click',async e=>{
     case'croom':createRoom();renderTab();break;
     case'croomnew':if(await ask('Сделать новый код? Участникам нужно будет войти заново.','Новый код')){Object.keys(S.room.seats||{}).forEach(freeSeat);S.room.code=newRoomCode();S.room.seats={};save();buildTeams();syncAllCams();renderTab()}break;
     case'croomclose':if(await ask('Закрыть комнату? Камеры участников отключатся от слотов.','Закрыть')){closeRoom();renderTab()}break;
-    case'cinvall':copyText(joinText());break;
+    case'cinvall':copyText(joinUrl()||S.room.code);break;
     case'cfree':freeSeat(b.dataset.k);save();buildTeams();syncAllCams();hubSend(stateMsg());renderTab();break;
     case'player':S.role='player';save();showJoin();break;
     case'cnewid':camCfg(b.dataset.k).link=genId();save();syncAllCams();renderTab();break;
@@ -1560,7 +1568,7 @@ function exportJSON(){return JSON.stringify({hostName:S.hostName,settings:S.sett
 
 // ===== boot =====
 function boot(){
-  if(location.hash==='#join')PLAYER=true;
+  if(hashJoin())PLAYER=true;
   fit();const g=S.game;
   if(g.phase==='closing'){g.phase='summary'}
   if(!S.containers.length)S.containers=DEFAULT_CONTAINERS.map(mkContainer);
@@ -1571,10 +1579,10 @@ function boot(){
   if(g.phase==='summary')renderSummary();
   if(g.phase==='final')showFinal();
   if(!g.started){const ex=$('#exterior');ex.classList.add('flicker')}
-  if(location.hash==='#join')showJoin();
+  if(hashJoin())showJoin();
   else{welcomeRoom=!!(S.room&&S.room.code);showWelcome()}
 }
-addEventListener('hashchange',()=>{if((location.hash==='#join')!==PLAYER)location.reload()});
+addEventListener('hashchange',()=>{if(!!hashJoin()!==PLAYER||PLAYER)location.reload()});
 boot();
 </script>
 </body></html>
