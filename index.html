@@ -21,7 +21,7 @@ input,textarea,select{font:inherit;color:inherit}
 .notrans,.notrans *{transition:none!important;animation:none!important}
 
 /* ===== scaled 1920x1080 stage ===== */
-#app{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%);display:flex;gap:12px;padding:14px;
+#app{position:absolute;left:50%;top:0;width:1920px;height:1080px;transform-origin:50% 0;transform:translateX(-50%);display:flex;gap:12px;padding:14px;
   background:radial-gradient(ellipse 70% 60% at 25% 0%,rgba(52,74,98,.45),transparent 70%),
     repeating-linear-gradient(90deg,#0c1117 0 16px,#0f151c 16px 30px,#0a0e13 30px 34px),#0b1015;}
 #left{width:756px;display:grid;grid-template-columns:372px 372px;gap:12px}
@@ -114,9 +114,41 @@ body.chroma .cam:not(.live)::before,body.chroma .cam .rec{display:none}
 #stage.shake{animation:shake .45s}
 @keyframes shake{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-3px,2px)}80%{transform:translate(2px,-1px)}}
 
-/* interior */
-.interior{position:absolute;inset:0;transform-origin:50% 55%;transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
-.interior.far{transform:scale(1.12)}
+/* ===== 3D container interior ===== */
+#stage{perspective:1000px;perspective-origin:50% 36%}
+.interior{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:translateZ(260px);transition:transform 2.6s cubic-bezier(.42,0,.18,1)}
+.interior.far{transform:translateZ(-800px)}
+.drift{position:absolute;left:0;top:0;transform-style:preserve-3d;animation:drift 18s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:rotateY(-.7deg)}100%{transform:rotateY(.7deg)}}
+.p3{position:absolute;left:0;top:0;overflow:hidden}
+.p3::after{content:"";position:absolute;inset:0;pointer-events:none}
+.floor3{width:1400px;height:2800px;transform:translate(-50%,-50%) translate3d(0,360px,-800px) rotateX(90deg);
+  background:radial-gradient(ellipse 36% 6% at 50% 68%,rgba(255,246,226,.34),transparent),radial-gradient(ellipse 36% 6% at 50% 43%,rgba(255,246,226,.26),transparent),radial-gradient(ellipse 36% 6% at 50% 18%,rgba(255,246,226,.18),transparent),
+  repeating-linear-gradient(90deg,#5b3d22 0 3px,#8a5f37 3px 64px,#7d5532 64px 67px,#93683f 67px 128px,#6f4b2c 128px 131px,#86603a 131px 196px)}
+.floor3::before{content:"";position:absolute;inset:0;background:var(--noise);background-size:300px;opacity:.6;mix-blend-mode:multiply}
+.floor3::after{background:linear-gradient(to bottom,rgba(4,5,6,.88),rgba(4,5,6,.25) 45%,rgba(4,5,6,0) 70%,rgba(4,5,6,.35))}
+.back3{width:1400px;height:980px;transform:translate(-50%,-50%) translate3d(0,-130px,-2200px);
+  background:repeating-linear-gradient(90deg,#55606a 0,#6c7883 16px,#7f8b95 24px,#6c7883 32px,#55606a 48px,#4a545d 56px,#55606a 64px)}
+.back3::after{background:rgba(4,5,7,.6)}
+.back3 b{position:absolute;left:0;right:0;top:0;height:46px;background:linear-gradient(#3a4148,#2a3036)}
+.lw3,.rw3{width:2800px;height:980px;background:repeating-linear-gradient(90deg,#6c7883 0,#8794a0 16px,#a0acb6 24px,#8794a0 32px,#6c7883 48px,#5e6973 56px,#6c7883 64px)}
+.lw3{transform:translate(-50%,-50%) translate3d(-700px,-130px,-800px) rotateY(90deg)}
+.rw3{transform:translate(-50%,-50%) translate3d(700px,-130px,-800px) rotateY(-90deg)}
+.lw3::before,.rw3::before{content:"";position:absolute;left:0;right:0;top:0;height:40px;background:linear-gradient(#3a4148,#2a3036)}
+.lw3::after{background:linear-gradient(to right,rgba(4,5,7,.05),rgba(4,5,7,.4) 50%,rgba(4,5,7,.85)),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 30%,transparent 80%,rgba(0,0,0,.35))}
+.rw3::after{background:linear-gradient(to left,rgba(4,5,7,.05),rgba(4,5,7,.4) 50%,rgba(4,5,7,.85)),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 30%,transparent 80%,rgba(0,0,0,.35))}
+.ceil3{width:1400px;height:2800px;transform:translate(-50%,-50%) translate3d(0,-620px,-800px) rotateX(-90deg);background:repeating-linear-gradient(0deg,#3d454d 0,#4d565f 18px,#3d454d 36px)}
+.ceil3::after{background:linear-gradient(to bottom,rgba(4,5,7,.1),rgba(4,5,7,.85))}
+.ceil3 i{position:absolute;left:50%;width:640px;margin-left:-320px;height:22px;border-radius:11px;background:#f6f8ff;box-shadow:0 0 30px 10px rgba(230,238,255,.55),0 0 120px 50px rgba(230,238,255,.2);z-index:1}
+.rack-dummy{}
+#rack{position:absolute;left:0;top:0;transform-style:preserve-3d}
+#rack i{position:absolute;left:0;top:0;display:block}
+.r-top{background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,.05)),repeating-linear-gradient(90deg,#8a6a45 0 6px,#a07c52 6px 90px,#7d5f3e 90px 96px)}
+.r-beam{background:linear-gradient(#f0994a,#d9822b 45%,#a85e1c);box-shadow:inset 0 2px 0 rgba(255,255,255,.35)}
+.r-post{width:18px;background:linear-gradient(90deg,#1f3b5c,#3a6a9c 45%,#1f3b5c);background-size:100% 40px}
+.r-sh{border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 70%)}
+.haze{position:absolute;inset:0;pointer-events:none;z-index:30;background:radial-gradient(ellipse 60% 55% at 50% 45%,transparent 50%,rgba(0,0,0,.45))}
+/* old 2D interior (unused) */
 .wall{position:absolute;left:0;right:0;top:0;height:62%;
   background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0) 34%,rgba(0,0,0,.05) 70%,rgba(0,0,0,.28)),
   repeating-linear-gradient(90deg,#868e95 0,#bfc5ca 9px,#a7aeb4 20px,#7a8289 29px,#969da4 34px)}
@@ -139,18 +171,18 @@ body.chroma .cam:not(.live)::before,body.chroma .cam .rec{display:none}
 .dark.lit{opacity:0}
 
 /* items */
-#items{position:absolute;inset:0;z-index:20}
-.item{position:absolute;transform:translateX(-50%)}
+.exterior{z-index:50}
+#items{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.item{position:absolute;left:0;top:0}
+.fsh{position:absolute;left:0;top:0;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.6),rgba(0,0,0,.3) 40%,transparent 70%)}
 .item .art{position:relative;width:100%;transition:transform .3s,filter .3s}
-.item .art svg,.item .art img{display:block;width:100%;height:auto;filter:drop-shadow(0 5px 3px rgba(0,0,0,.35))}
-.item .art img{max-height:340px;object-fit:contain}
-.item .art::after{content:"";position:absolute;left:4%;right:4%;bottom:-9px;height:20px;background:radial-gradient(ellipse at center,rgba(0,0,0,.5),transparent 70%);z-index:-1}
-.item .nm{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);font:500 15px/1 Oswald;text-transform:uppercase;letter-spacing:.04em;
-  background:rgba(8,11,15,.8);padding:5px 9px 6px;white-space:nowrap;border-bottom:2px solid rgba(242,194,48,.8);color:#eef2f6}
+.item .art svg,.item .art img{display:block;width:100%;height:auto}
+.item .art img{max-height:640px;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(0,0,0,.45))}
+.item .nm{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);max-width:100%;width:max-content;text-align:center;white-space:normal!important;font:500 26px/1.1 Oswald;text-transform:uppercase;letter-spacing:.04em;
+  background:rgba(8,11,15,.82);padding:7px 12px 8px;white-space:nowrap;border-bottom:3px solid rgba(242,194,48,.85);color:#eef2f6}
 body.nonames .item .nm{display:none}
-.item .tag{position:absolute;left:50%;transform:translate(-50%,-100%) scale(0);transform-origin:50% 100%;font:700 44px/1 Oswald;color:var(--navy);white-space:nowrap;pointer-events:none;
-  transition:transform .5s cubic-bezier(.25,1.7,.45,1)}
-.outl{text-shadow:3px 0 0 #fff,-3px 0 0 #fff,0 3px 0 #fff,0 -3px 0 #fff,2px 2px 0 #fff,-2px 2px 0 #fff,2px -2px 0 #fff,-2px -2px 0 #fff,3px 2px 0 #fff,-3px 2px 0 #fff,3px -2px 0 #fff,-3px -2px 0 #fff,2px 3px 0 #fff,-2px 3px 0 #fff,2px -3px 0 #fff,-2px -3px 0 #fff,0 6px 10px rgba(0,0,0,.45)}
+.item .tag{position:absolute;left:50%;transform:translate(-50%,-100%) scale(0);transform-origin:50% 100%;font:700 70px/1 Oswald;color:var(--navy);white-space:nowrap;pointer-events:none;
+  transition:transform .5s cubic-bezier(.25,1.7,.45,1);text-shadow:5px 0 0 #fff,-5px 0 0 #fff,0 5px 0 #fff,0 -5px 0 #fff,4px 4px 0 #fff,-4px 4px 0 #fff,4px -4px 0 #fff,-4px -4px 0 #fff,5px 2px 0 #fff,-5px 2px 0 #fff,5px -2px 0 #fff,-5px -2px 0 #fff,2px 5px 0 #fff,-2px 5px 0 #fff,2px -5px 0 #fff,-2px -5px 0 #fff,0 10px 18px rgba(0,0,0,.5)}
 .item.rv .tag{transform:translate(-50%,-112%) scale(1)}
 .item.rv.top .tag{color:#7a1a12}
 .clickable .item:not(.rv){cursor:pointer}
@@ -248,7 +280,7 @@ body.nonames .item .nm{display:none}
 .summary{position:absolute;left:50%;top:27%;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:transform .55s cubic-bezier(.3,1.4,.5,1),opacity .35s;text-align:center;pointer-events:none}
 .summary.show{transform:translate(-50%,-50%) scale(1);opacity:1}
 .summary .k{font:700 26px/1 Oswald;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000}
-.summary .v{font:700 140px/1 Oswald;color:var(--navy);margin:6px 0 10px}
+.summary .v{font:700 116px/1 Oswald;color:#f2c230;margin:6px 0 12px;text-shadow:0 5px 0 #000,0 0 40px rgba(0,0,0,.9)!important}
 .summary .res{display:inline-flex;gap:0;font:700 26px/1 Oswald;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 8px 18px rgba(0,0,0,.45)}
 .summary .res span{padding:10px 16px}
 .summary .res .a{background:#0d1116}
@@ -262,7 +294,7 @@ body.nonames .item .nm{display:none}
 .final h2{font:700 84px/1 Oswald;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 4px 0 #000}
 .final .subt{font:500 20px Oswald;letter-spacing:.3em;color:#8d99a6;text-transform:uppercase;margin:10px 0 34px}
 .f-rows{width:100%;display:flex;flex-direction:column;gap:12px}
-.f-row{display:grid;grid-template-columns:76px 1fr 150px 150px 190px;align-items:center;background:linear-gradient(180deg,#2c343d,#1b2128);border:2px solid #07090c;
+.f-row{display:grid;grid-template-columns:76px 1fr 190px 190px 270px;align-items:center;background:linear-gradient(180deg,#2c343d,#1b2128);border:2px solid #07090c;
   box-shadow:inset 0 0 0 2px #3c4651;height:86px;opacity:0;transform:translateX(-60px);transition:.6s cubic-bezier(.3,1.2,.5,1)}
 .f-row.show{opacity:1;transform:none}
 .f-row .pl{height:100%;display:grid;place-items:center;font:700 44px Oswald;background:var(--tc);color:#0a0d10}
@@ -270,10 +302,10 @@ body.nonames .item .nm{display:none}
 .f-row .nm small{display:block;font:500 15px Oswald;color:#8d99a6;letter-spacing:.12em;margin-top:4px}
 .f-row .c{text-align:right;padding-right:22px;font:600 26px/1 Oswald}
 .f-row .c small{display:block;font:500 13px Oswald;color:#8d99a6;letter-spacing:.14em;margin-bottom:6px}
-.f-row .tot{font-size:40px;color:#fff}
+.f-row .tot{font-size:36px;color:#fff}
 .f-row.win{height:120px;box-shadow:inset 0 0 0 2px #3c4651,0 0 0 3px #f2c230,0 0 50px rgba(242,194,48,.35)}
 .f-row.win .nm{font-size:46px}
-.f-row.win .tot{color:#f2c230;font-size:52px}
+.f-row.win .tot{color:#f2c230;font-size:44px}
 .crown{font:700 20px/1 Oswald;letter-spacing:.2em;background:#f2c230;color:#111;padding:6px 12px;display:inline-block;margin-bottom:6px}
 #fx{position:absolute;inset:0;z-index:80;pointer-events:none}
 .vignette{position:absolute;inset:0;z-index:90;pointer-events:none;box-shadow:inset 0 0 140px rgba(0,0,0,.55)}
@@ -292,7 +324,7 @@ body.nonames .item .nm{display:none}
 .btn.primary{background:#f2c230;border-color:#f2c230;color:#111;font-weight:700}
 .btn.primary:hover{background:#ffd34d}
 .btn.danger{border-color:#7b2f29;color:#ffb3ab}
-.btn.team{border-left:6px solid var(--tc);padding-left:10px}
+.btn.team{border-left:6px solid var(--tc);padding:9px 12px 9px 10px;display:inline-flex;flex-direction:row;gap:8px;transition:background .15s}
 .btn.team .k{font-size:12px;background:#0c0f13;padding:2px 5px;border-radius:3px;color:#9aa6b2}
 .btn.team .nx{color:#9aa6b2;font-weight:400}
 .btn.icon{padding:8px 9px}
@@ -481,6 +513,31 @@ body.spect #dock,body.spect #dockShow,body.spect #menu{display:none!important}
 .seat.busy{color:#5fd38a}
 .x2{background:none;border:1px solid #3a2a2a;color:#e57f75;border-radius:4px;font-size:11px;padding:1px 5px;flex:none}
 #join.mini .jrename,#join.mini .jmode,#join.mini .jimg{display:none}
+.stencil.wipe>*{animation:wipe .85s forwards}
+@keyframes wipe{to{opacity:0;filter:blur(8px);transform:scale(1.06)}}
+.stencil.eg{mix-blend-mode:normal;color:#1b3254}
+.eg-t{font:700 50px/1.05 Oswald;text-transform:uppercase;letter-spacing:.03em;max-width:84%;margin:0 auto}
+.eg-l{font:500 27px/1.36 Oswald;max-width:80%;margin:22px auto 0}
+.stencil .w{display:inline-block;white-space:nowrap}
+.stencil .ch{color:transparent}
+.stencil .ch.on{animation:burn 1.5s forwards}
+@keyframes burn{0%{color:#fff;text-shadow:0 0 4px #fff,0 0 10px #ffd27a,0 0 24px #ff7a1a}22%{color:#ffe2a6;text-shadow:0 0 6px #ffb347,0 0 16px #ff5a00}60%{color:#7a4a2a;text-shadow:0 0 4px rgba(255,120,40,.5)}100%{color:#1b3254;text-shadow:0 1px 0 rgba(255,255,255,.4),0 -1px 0 rgba(0,0,0,.45)}}
+.stencil.done .ch{color:#1b3254;text-shadow:0 1px 0 rgba(255,255,255,.4),0 -1px 0 rgba(0,0,0,.45);animation:none}
+.laser{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;opacity:0;z-index:2;
+  box-shadow:0 0 6px 2px #fff,0 0 18px 6px #ffb347,0 0 44px 16px rgba(255,90,0,.55);transition:transform .035s linear,opacity .2s}
+.laser.on{opacity:1}
+.laser::before{content:"";position:absolute;left:4px;bottom:5px;width:2px;height:1600px;background:linear-gradient(to top,rgba(255,70,40,.95),rgba(255,70,40,.25) 30%,rgba(255,70,40,0) 70%)}
+.spark{position:absolute;width:4px;height:4px;margin:-2px;border-radius:50%;background:#ffd27a;box-shadow:0 0 6px #ff9a2a;animation:spark .6s ease-out forwards;z-index:2}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy));opacity:0}}
+.mul{display:flex;background:#0c0f13;border:1px solid #2d3640;border-radius:6px;overflow:hidden}
+.mul button{background:none;border:0;padding:8px 10px;font:500 14px Oswald;letter-spacing:.04em;text-transform:uppercase;color:#9aa6b2;display:flex;gap:6px;align-items:center}
+.mul button.on{background:#f2c230;color:#111}
+.ir{grid-template-columns:52px 1fr 92px 92px 110px 64px 34px!important}
+.steps{display:flex;align-items:center;gap:4px;background:#0c0f13;border:1px solid #2d3640;border-radius:6px;padding:3px 6px 3px 10px;font:500 14px Oswald;letter-spacing:.05em;text-transform:uppercase;color:#9aa6b2}
+.steps button{width:28px;height:30px;border-radius:4px;border:1px solid #2d3640;background:#1c232b;font:600 18px/1 Oswald;color:#fff}
+.steps input{width:58px;height:30px;background:#151b22;border:1px solid #f2c230;border-radius:4px;text-align:center;font:600 18px Oswald;color:#fff}
+.steps input::-webkit-inner-spin-button{opacity:.4}
+.steps em{font-style:normal;color:#6f7b87;font-size:13px;margin-left:4px;white-space:nowrap}
 .toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-30px);opacity:0;z-index:800;background:#f2c230;color:#111;font:600 15px Oswald;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;border-radius:6px;transition:.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
@@ -491,19 +548,20 @@ body.spect #dock,body.spect #dockShow,body.spect #menu{display:none!important}
     <div class="frame hostcard"><div class="cam" id="hostCam" data-key="host" style="--tc:#f2c230"><i class="rec"></i><span class="camlbl" id="hostLbl">Ведущий</span></div></div>
     <div class="frame info" id="info">
       <div class="face f1"><div class="cn" id="cnText">Контейнер 1</div><div class="cn-sub" id="cnSub">из 20</div><div class="pips" id="pips"></div></div>
-      <div class="face f2"><div class="lbl" id="lbl1">Купили за $</div><div class="box" id="box1">0</div><div class="lbl">Общая стоимость $</div><div class="box" id="box2"></div></div>
+      <div class="face f2"><div class="lbl" id="lbl1">Купили за, ₽</div><div class="box" id="box1">0</div><div class="lbl">Общая стоимость, ₽</div><div class="box" id="box2"></div></div>
     </div>
   </div>
   <div class="frame" id="stageFrame">
     <div id="stage">
-      <div class="interior far" id="interior">
-        <div class="wall"></div>
-        <div class="duct"><i style="left:16%"></i><i style="left:66%"></i></div>
-        <div class="tube" style="left:14%"></div><div class="tube" style="right:14%"></div>
-        <div class="floor"><div class="slabs"></div><div class="lightpool"></div></div>
+      <div class="interior far" id="interior"><div class="drift">
+        <div class="p3 back3"><b></b></div><div class="p3 lw3"></div><div class="p3 rw3"></div>
+        <div class="p3 ceil3"><i style="top:32%"></i><i style="top:57%"></i><i style="top:82%"></i></div>
+        <div class="p3 floor3"></div>
+        <div id="rack" style="display:none"><i class="r-sh"></i><i class="r-post"></i><i class="r-post"></i><i class="r-post"></i><i class="r-post"></i><i class="r-top"></i><i class="r-beam"></i></div>
         <div id="items"></div>
-        <div class="dark" id="dark"></div>
-      </div>
+      </div></div>
+      <div class="haze"></div>
+      <div class="dark" id="dark"></div>
       <div class="exterior" id="exterior">
         <div class="ext-wall"></div>
         <div class="ext-floor"></div>
@@ -537,120 +595,247 @@ body.spect #dock,body.spect #dockShow,body.spect #menu{display:none!important}
 <div id="modal" hidden></div>
 <div class="toast" id="toast"></div>
 <script>
-// ===== item illustrations (viewBox 0 0 100 100, floor at y≈94) =====
-const L='#e3e7ec',M='#b5bec8',D='#7d8894',K='#2c3138',W='#f3efe6',R='#d5483f',RD='#a8352d',B='#3f7fd8',BD='#2b5fa8',Y='#f0c04a',G='#4fae6c',GD='#2f7a49',O='#c08045',OD='#8b5228',AU='#e9b73b',AUD='#b98a22',GL='#a8dbea',BR='#6e3d27',BRD='#4f2a1a';
-const ICONS={
-pot:['Кастрюля',18,`<rect x="5" y="50" width="14" height="9" rx="4" fill="${K}"/><rect x="81" y="50" width="14" height="9" rx="4" fill="${K}"/><rect x="16" y="42" width="68" height="52" rx="7" fill="${M}"/><rect class="sh" x="62" y="46" width="19" height="45"/><path class="hl" d="M26 52v34"/><path d="M30 36q20-16 40 0z" fill="${L}"/><rect x="12" y="35" width="76" height="9" rx="4.5" fill="${L}"/><rect x="43" y="21" width="14" height="7" rx="3" fill="${K}"/>`],
-pan:['Сковорода',58,`<rect x="60" y="64" width="38" height="9" rx="4.5" fill="${K}" transform="rotate(-12 60 68)"/><path d="M3 72h64l-7 21H10z" fill="${K}"/><ellipse cx="35" cy="72" rx="32" ry="7" fill="#4b525c"/><path class="hl" d="M14 82h36"/>`],
-stove:['Плита',8,`<rect x="10" y="8" width="80" height="24" fill="${L}"/><rect class="sh" x="10" y="26" width="80" height="6"/><path d="M14 33v-5h18v5M41 33v-5h18v5M68 33v-5h18v5" fill="${K}"/><rect x="5" y="33" width="90" height="61" rx="2" fill="${L}"/><rect x="5" y="33" width="90" height="13" fill="${M}"/><g fill="${K}" stroke-width="2"><circle cx="15" cy="39.5" r="3"/><circle cx="27" cy="39.5" r="3"/><circle cx="39" cy="39.5" r="3"/><circle cx="51" cy="39.5" r="3"/><circle cx="63" cy="39.5" r="3"/><circle cx="75" cy="39.5" r="3"/><circle cx="86" cy="39.5" r="3"/></g><rect x="10" y="52" width="38" height="36" rx="2" fill="${M}"/><rect x="52" y="52" width="38" height="36" rx="2" fill="${M}"/><path d="M16 58h26M58 58h26" stroke-width="5"/><rect x="18" y="65" width="22" height="16" fill="#3a434d"/><rect x="60" y="65" width="22" height="16" fill="#3a434d"/><path class="hl" d="M14 50h30"/>`],
-knives:['Ножи',16,`<rect x="34" y="18" width="8" height="30" rx="3" fill="${K}" transform="rotate(-18 38 33)"/><rect x="43" y="16" width="8" height="32" rx="3" fill="${K}" transform="rotate(-10 47 32)"/><rect x="52" y="18" width="8" height="30" rx="3" fill="${K}" transform="rotate(-2 56 33)"/><rect x="60" y="22" width="8" height="26" rx="3" fill="${K}" transform="rotate(8 64 35)"/><path d="M26 50l46-10 8 54H36z" fill="${O}"/><path class="sh" d="M72 40l8 54h-12z"/><path class="hl" d="M34 58l4 30"/>`],
-mixer:['Миксер',20,`<rect x="16" y="85" width="64" height="9" rx="3" fill="${R}"/><rect x="58" y="34" width="17" height="53" rx="4" fill="${R}"/><rect x="20" y="20" width="62" height="21" rx="10" fill="${R}"/><path class="sh" d="M66 36h9v50h-9z"/><path d="M46 41v18" stroke-width="5"/><path d="M26 58h40l-5 27H31z" fill="${L}"/><path class="hl" d="M28 27h34"/><path class="hl" d="M33 65l2 14"/>`],
-moto:['Мотоцикл',26,`<circle cx="21" cy="76" r="17" fill="${K}"/><circle cx="21" cy="76" r="7" fill="${M}"/><circle cx="80" cy="76" r="17" fill="${K}"/><circle cx="80" cy="76" r="7" fill="${M}"/><path d="M21 76l18-24h24l17 24" stroke-width="5"/><rect x="40" y="56" width="22" height="17" rx="3" fill="${M}"/><path d="M36 50l40-4-6-10H50z" fill="${R}"/><path d="M22 48q3-8 14-8h12l-2 8z" fill="${K}"/><path d="M74 44l5-18h9" stroke-width="5"/><path class="hl" d="M52 40h14"/>`],
-helmet:['Шлем',22,`<path d="M12 84q0-60 42-60t36 44v16z" fill="${K}"/><path d="M50 50h40v18H58q-8 0-8-9z" fill="${GL}"/><path d="M28 32q16-8 34-3" stroke="${R}" stroke-width="6"/><path class="hl" d="M24 56q4-16 18-22"/><rect x="12" y="82" width="78" height="10" rx="3" fill="#43494f"/>`],
-tire:['Колесо',14,`<circle cx="50" cy="54" r="40" fill="${K}"/><circle cx="50" cy="54" r="34" stroke="#59606a" stroke-width="5" stroke-dasharray="5 6"/><circle cx="50" cy="54" r="22" fill="${M}"/><path d="M50 32v44M28 54h44M35 39l30 30M65 39L35 69" stroke="${D}" stroke-width="4"/><circle cx="50" cy="54" r="7" fill="${D}"/><path class="hl" d="M22 40q6-14 20-20"/>`],
-toolbox:['Ящик',30,`<path d="M36 44V32h28v12" stroke-width="6"/><rect x="8" y="44" width="84" height="50" rx="4" fill="${R}"/><rect x="8" y="44" width="84" height="12" fill="${RD}"/><rect x="43" y="51" width="14" height="10" rx="2" fill="${L}"/><path class="hl" d="M16 66h42"/>`],
-canister:['Канистра',16,`<path d="M66 30l8-12h8v10" fill="${K}"/><path d="M18 30h50l14 12v52H18z" fill="${R}"/><rect x="26" y="16" width="26" height="14" rx="5" stroke-width="5"/><path d="M28 46l42 40M70 46L28 86" stroke="${RD}" stroke-width="5"/><path class="hl" d="M24 40v46"/>`],
-bag:['Сумка',18,`<path d="M30 42q0-24 20-24t20 24" stroke-width="6"/><path d="M12 42h76l-6 52H18z" fill="${BR}"/><rect x="12" y="42" width="76" height="14" fill="${BRD}"/><rect x="43" y="51" width="14" height="11" rx="2" fill="${AU}"/><path class="hl" d="M22 64l2 22"/>`],
-pc:['Системник',8,`<rect x="22" y="8" width="56" height="86" rx="4" fill="${K}"/><rect x="28" y="15" width="44" height="7" rx="2" fill="#4a515b"/><rect x="28" y="28" width="44" height="52" rx="2" fill="#151a20"/><path d="M33 40h34" stroke="#ff4f8b" stroke-width="3"/><path d="M33 52h34" stroke="#43c6ff" stroke-width="3"/><path d="M33 64h34" stroke="#9b7bff" stroke-width="3"/><circle cx="64" cy="87" r="3" fill="${G}" stroke-width="2"/><path class="hl" d="M26 14v74"/>`],
-monitor:['Монитор',14,`<path d="M40 70h20l5 18H35z" fill="${D}"/><rect x="24" y="87" width="52" height="7" rx="3" fill="${K}"/><rect x="5" y="14" width="90" height="57" rx="4" fill="${K}"/><rect x="11" y="20" width="78" height="45" fill="#2d4a6c"/><path d="M11 50l20-14 16 12 18-18 24 22v13H11z" fill="#3c6593" stroke="none"/><path class="hl" d="M17 27h22M17 33h12"/>`],
-chair:['Кресло',8,`<path d="M30 92l20-10 20 10M50 70v12" stroke-width="5"/><circle cx="30" cy="92" r="3" fill="${K}"/><circle cx="70" cy="92" r="3" fill="${K}"/><path d="M30 8h40q7 0 7 7v47H23V15q0-7 7-7z" fill="${K}"/><path d="M41 12h18v46H41z" fill="${R}"/><path d="M17 46v12M83 46v12" stroke-width="6"/><rect x="17" y="58" width="66" height="13" rx="5" fill="${K}"/><path class="hl" d="M29 16v36"/>`],
-headphones:['Наушники',18,`<path d="M20 66V50q0-32 30-32t30 32v16" stroke-width="8"/><path d="M20 66V50q0-32 30-32t30 32v16" stroke="#4a515b" stroke-width="3"/><rect x="9" y="58" width="22" height="34" rx="9" fill="${K}"/><rect x="69" y="58" width="22" height="34" rx="9" fill="${K}"/><rect x="25" y="63" width="9" height="24" rx="3" fill="${R}"/><rect x="66" y="63" width="9" height="24" rx="3" fill="${R}"/>`],
-gamepad:['Геймпад',44,`<path d="M24 44h52q16 0 18 26t-12 24q-8 0-14-12H32q-6 12-14 12-14 0-12-24t18-26z" fill="${K}"/><path d="M20 62h16M28 54v16" stroke="${L}" stroke-width="5"/><g stroke-width="2"><circle cx="70" cy="56" r="4.5" fill="${R}"/><circle cx="79" cy="64" r="4.5" fill="${Y}"/><circle cx="61" cy="64" r="4.5" fill="${B}"/><circle cx="70" cy="72" r="4.5" fill="${G}"/></g><path class="hl" d="M26 50h20"/>`],
-mic:['Микрофон',8,`<path d="M50 62v30M32 94h36" stroke-width="5"/><path d="M28 36q0 26 22 26t22-26" stroke-width="5"/><rect x="37" y="8" width="26" height="46" rx="13" fill="${M}"/><path d="M37 24h26M37 32h26M37 40h26" stroke="${D}" stroke-width="2"/><path class="hl" d="M43 14v34"/>`],
-guitar:['Гитара',2,`<rect x="46" y="8" width="9" height="46" fill="${OD}"/><rect x="42" y="2" width="17" height="11" rx="2" fill="${K}"/><path d="M50 50q-28-6-30 15t10 21q-6 10 20 10t20-10q12 0 10-21t-30-15z" fill="${R}"/><rect x="39" y="66" width="23" height="5" fill="${K}"/><rect x="39" y="76" width="23" height="5" fill="${K}"/><circle cx="67" cy="85" r="3" fill="${L}" stroke-width="2"/><path class="hl" d="M27 66q2-8 10-10"/>`],
-amp:['Комбик',12,`<path d="M37 20v-8h26v8" stroke-width="5"/><rect x="10" y="20" width="80" height="74" rx="4" fill="${K}"/><rect x="16" y="25" width="68" height="9" fill="${AU}"/><rect x="16" y="39" width="68" height="49" rx="2" fill="#3a2f2a"/><circle cx="50" cy="63" r="19" fill="#261f1b"/><circle cx="50" cy="63" r="7" fill="#4b3f38"/><g fill="${K}" stroke-width="1.5"><circle cx="24" cy="29.5" r="2.5"/><circle cx="32" cy="29.5" r="2.5"/><circle cx="40" cy="29.5" r="2.5"/></g>`],
-drum:['Барабан',4,`<path d="M30 32L56 6M70 32L44 6" stroke="${OD}" stroke-width="5"/><path d="M10 44v34q0 14 40 14t40-14V44q0 14-40 14T10 44z" fill="${R}"/><path d="M22 58v30M36 60v32M50 60v33M64 60v32M78 58v30" stroke="${L}" stroke-width="3"/><ellipse cx="50" cy="44" rx="40" ry="14" fill="${W}"/><path class="hl" d="M16 66v16"/>`],
-vinyl:['Пластинки',12,`<g stroke-width="2.5"><circle cx="28" cy="36" r="22" fill="${K}"/><circle cx="28" cy="36" r="6" fill="${R}"/><circle cx="48" cy="32" r="22" fill="${K}"/><circle cx="48" cy="32" r="6" fill="${Y}"/><circle cx="70" cy="36" r="22" fill="${K}"/><circle cx="70" cy="36" r="6" fill="${B}"/></g><rect x="8" y="44" width="84" height="50" rx="3" fill="${O}"/><path d="M8 61h84M8 78h84" stroke="${OD}"/><path class="hl" d="M14 50h30"/>`],
-clock:['Часы',12,`<path d="M18 94V40q0-28 32-28t32 28v54z" fill="${OD}"/><circle cx="50" cy="40" r="19" fill="${W}"/><path d="M50 40V28M50 40l9 6" stroke-width="3.5"/><rect x="33" y="64" width="34" height="24" rx="2" fill="${O}"/><path d="M50 64v12" stroke="${AU}" stroke-width="2.5"/><circle cx="50" cy="79" r="5" fill="${AU}"/><path class="hl" d="M24 44q2-18 16-26"/>`],
-samovar:['Самовар',6,`<path d="M16 36q-9 0-9 12M84 36q9 0 9 12" stroke-width="5"/><rect x="40" y="6" width="20" height="10" rx="2" fill="${AU}"/><path d="M30 16h40q8 0 10 10l4 32q2 16-14 20H30q-16-4-14-20l4-32q2-10 10-10z" fill="${AU}"/><path d="M84 54h8v8" stroke-width="4"/><path d="M36 78h28l6 9H30z" fill="${AU}"/><rect x="24" y="87" width="52" height="7" rx="2" fill="${AUD}"/><path class="sh" d="M60 18h10q8 0 10 10l4 30q2 16-14 20H62q8-30-2-60z"/><path class="hl" d="M28 30q-4 22 0 40"/>`],
-vase:['Ваза',10,`<path d="M38 10h24v8q0 6 10 18t8 34q-4 24-30 24t-30-24 8-34 10-18z" fill="${B}"/><path d="M27 50h46M25 68h50" stroke="${W}" stroke-width="5"/><path d="M38 10h24" stroke-width="4"/><path class="hl" d="M33 42q-7 18 0 36"/>`],
-painting:['Картина',10,`<path d="M40 82l-7 12M60 82l7 12" stroke-width="5"/><rect x="7" y="10" width="86" height="72" fill="${AU}"/><rect x="15" y="18" width="70" height="56" fill="#264b3d"/><path d="M15 62l18-20 14 12 15-22 23 28v14H15z" fill="#7aa36a"/><circle cx="68" cy="32" r="6" fill="${Y}"/><path class="sh" d="M7 76h86v6H7z"/>`],
-chest:['Сундук',22,`<path d="M10 44q0-22 40-22t40 22z" fill="${OD}"/><rect x="10" y="44" width="80" height="50" rx="2" fill="${O}"/><path d="M26 25v69M74 25v69" stroke="${K}" stroke-width="7"/><path d="M10 44h80" stroke-width="4"/><rect x="43" y="38" width="14" height="16" rx="2" fill="${AU}"/><path class="hl" d="M16 52v34"/>`],
-sewing:['Швейная машинка',24,`<rect x="8" y="82" width="84" height="12" rx="2" fill="${OD}"/><path d="M20 82V40q0-14 14-14h46q10 0 10 10v14H36v32z" fill="${K}"/><rect x="72" y="50" width="14" height="22" fill="${K}"/><path d="M79 72v10" stroke-width="3"/><path d="M34 33h46" stroke="${AU}" stroke-width="3"/><circle cx="20" cy="46" r="11" fill="${M}"/><circle cx="20" cy="46" r="3" fill="${K}"/>`],
-dumbbell:['Гантели',48,`<rect x="24" y="66" width="52" height="9" fill="${M}"/><rect x="8" y="48" width="13" height="46" rx="3" fill="${K}"/><rect x="19" y="55" width="11" height="32" rx="3" fill="#3d434b"/><rect x="79" y="48" width="13" height="46" rx="3" fill="${K}"/><rect x="70" y="55" width="11" height="32" rx="3" fill="#3d434b"/><path class="hl" d="M12 54v30"/>`],
-kettlebell:['Гиря',14,`<path d="M32 50V34q0-20 18-20t18 20v16" stroke-width="11"/><path d="M32 50V34q0-20 18-20t18 20v16" stroke="#454c55" stroke-width="5"/><circle cx="50" cy="66" r="28" fill="${K}"/><rect x="40" y="62" width="20" height="13" rx="2" fill="${D}"/><path class="hl" d="M30 60q4-12 14-16"/>`],
-bike:['Велосипед',24,`<circle cx="21" cy="72" r="19" stroke-width="5"/><circle cx="79" cy="72" r="19" stroke-width="5"/><path d="M21 72l19-30h33l6 30M40 42l15 30H21M55 72l18-30" stroke-width="8"/><path d="M21 72l19-30h33l6 30M40 42l15 30H21M55 72l18-30" stroke="${R}" stroke-width="4"/><path d="M33 34h15" stroke-width="6"/><path d="M73 42l-3-10h9" stroke-width="5"/>`],
-gloves:['Перчатки',18,`<path d="M28 54q-12-2-14 9t11 13" fill="${R}"/><path d="M24 62q-8-32 14-42t38 6q10 14 2 34l-6 12H34z" fill="${R}"/><rect x="32" y="72" width="42" height="22" rx="4" fill="${W}"/><path class="sh" d="M62 22q14 8 16 22t-6 28h-8q10-24-2-50z"/><path class="hl" d="M40 30q14-8 26 0"/>`],
-laptop:['Ноутбук',16,`<path d="M17 16h66v54H17z" fill="${K}"/><rect x="22" y="21" width="56" height="44" fill="#33506f"/><path d="M22 54l14-12 10 8 14-14 18 16v13H22z" fill="#46709b" stroke="none"/><path d="M5 70h90l-7 16H12z" fill="${M}"/><rect x="40" y="73" width="20" height="5" rx="2" fill="${D}"/>`],
-coffee:['Кофемашина',8,`<rect x="14" y="8" width="72" height="86" rx="5" fill="${K}"/><rect x="20" y="14" width="60" height="17" rx="2" fill="#444b54"/><circle cx="29" cy="22.5" r="3.5" fill="${G}" stroke-width="2"/><rect x="40" y="18" width="34" height="9" rx="1" fill="${GL}"/><rect x="21" y="38" width="58" height="36" fill="#14181d"/><rect x="41" y="38" width="18" height="10" fill="${M}"/><path d="M40 60h20v13H40z" fill="${W}"/><rect x="17" y="76" width="66" height="8" fill="${M}"/><path class="hl" d="M18 36v36"/>`],
-printer:['Принтер',10,`<rect x="26" y="10" width="48" height="26" fill="${W}"/><rect x="7" y="32" width="86" height="40" rx="4" fill="${L}"/><rect x="7" y="58" width="86" height="14" fill="${M}"/><rect x="24" y="66" width="52" height="28" fill="${W}"/><path d="M32 76h36M32 84h24" stroke="${D}" stroke-width="2"/><circle cx="81" cy="44" r="3.5" fill="${G}" stroke-width="2"/>`],
-plant:['Растение',8,`<path d="M50 64C42 38 22 36 8 26c20 0 36 10 42 36z" fill="${G}"/><path d="M50 64C56 34 78 28 94 20 76 24 60 38 50 62z" fill="${G}"/><path d="M50 64C46 40 50 20 60 8c-6 18-6 36-10 56z" fill="${GD}"/><path d="M50 64C38 50 24 52 14 52c14 2 26 6 36 12z" fill="${GD}"/><path d="M28 66h44l-6 28H34z" fill="${O}"/><rect x="24" y="61" width="52" height="9" rx="2" fill="${OD}"/>`],
-camera:['Фотоаппарат',22,`<path d="M33 36l7-14h22l7 14" fill="${K}"/><rect x="8" y="34" width="84" height="56" rx="6" fill="${K}"/><rect x="8" y="44" width="11" height="36" fill="#454c55"/><circle cx="53" cy="62" r="21" fill="#3b424b"/><circle cx="53" cy="62" r="13" fill="#1b2a3a"/><circle cx="48" cy="57" r="3.5" fill="#fff" stroke="none"/><rect x="74" y="40" width="12" height="7" rx="2" fill="${R}" stroke-width="2"/>`],
-lens:['Объектив',14,`<rect x="26" y="20" width="48" height="74" rx="6" fill="${W}"/><rect x="26" y="66" width="48" height="28" rx="4" fill="${K}"/><rect x="26" y="40" width="48" height="12" fill="#3d434b"/><path d="M26 60h48" stroke="${R}" stroke-width="3"/><ellipse cx="50" cy="20" rx="24" ry="6" fill="#1b2a3a"/><path class="hl" d="M32 26v10"/>`],
-lamp:['Студийный свет',8,`<path d="M50 50v38M28 94l22-8 22 8" stroke-width="5"/><path d="M12 8h76L72 52H28z" fill="${K}"/><path d="M19 14h62L68 46H32z" fill="${W}"/><path class="sh" d="M50 14h31L68 46H50z"/>`],
-watch:['Часы наручные',6,`<rect x="38" y="6" width="24" height="88" rx="6" fill="${BR}"/><circle cx="50" cy="50" r="23" fill="${AU}"/><circle cx="50" cy="50" r="17" fill="${W}"/><path d="M50 50V39M50 50l8 5" stroke-width="3"/><rect x="72" y="46" width="6" height="8" rx="1" fill="${AU}" stroke-width="2"/><path class="hl" d="M36 42q4-8 12-10"/>`],
-phone:['Смартфон',6,`<rect x="28" y="6" width="44" height="88" rx="8" fill="${K}"/><rect x="32" y="14" width="36" height="72" rx="3" fill="#3d6aa8"/><path d="M32 60l12-10 10 8 14-12v40H32z" fill="#5583c1" stroke="none"/><path class="hl" d="M37 20h12"/>`],
-sneakers:['Кроссовки',40,`<path d="M6 62q0-16 10-18l18-4 14 14q20 6 36 8 10 2 10 12v8H6z" fill="${W}"/><path d="M6 82h88v7q0 5-5 5H11q-5 0-5-5z" fill="${L}"/><path d="M24 54l9-4M30 61l9-4" stroke-width="3"/><path d="M48 68q22 0 32 6" stroke="${R}" stroke-width="6"/><path class="hl" d="M12 70h22"/>`],
-perfume:['Парфюм',8,`<rect x="41" y="8" width="18" height="15" rx="2" fill="${AU}"/><rect x="45" y="23" width="10" height="8" fill="${AU}"/><rect x="18" y="30" width="64" height="64" rx="11" fill="#e8b6c4"/><rect x="33" y="50" width="34" height="21" rx="2" fill="${W}"/><path class="hl" d="M26 40v42"/>`],
-mower:['Газонокосилка',10,`<path d="M58 50L82 12h12" stroke-width="5"/><rect x="30" y="38" width="24" height="12" rx="3" fill="${K}"/><path d="M6 62q4-16 22-16h42q18 0 22 16v16H6z" fill="${G}"/><circle cx="22" cy="82" r="12" fill="${K}"/><circle cx="76" cy="82" r="12" fill="${K}"/><circle cx="22" cy="82" r="4" fill="${M}"/><circle cx="76" cy="82" r="4" fill="${M}"/><path class="hl" d="M16 58q4-6 14-6"/>`],
-grill:['Гриль',12,`<path d="M30 72L18 94M70 72l12 22M50 74v20" stroke-width="5"/><path d="M12 46h76q0 32-38 32T12 46z" fill="${K}"/><path d="M12 46q0-28 38-28t38 28z" fill="#3a4048"/><rect x="43" y="12" width="14" height="7" rx="2" fill="${M}"/><path d="M12 46h76" stroke-width="3"/><path class="hl" d="M22 40q6-14 22-16"/>`],
-books:['Книги',20,`<rect x="14" y="76" width="72" height="18" rx="2" fill="${R}"/><rect x="20" y="58" width="66" height="18" rx="2" fill="${B}"/><rect x="9" y="40" width="72" height="18" rx="2" fill="${G}"/><rect x="18" y="22" width="62" height="18" rx="2" fill="${Y}"/><path d="M80 80v10M80 62v10M75 44v10M74 26v10" stroke="${W}" stroke-width="3"/>`],
-tv:['Телевизор',4,`<path d="M40 18L28 4M60 18l12-14" stroke-width="3"/><rect x="17" y="86" width="12" height="8" fill="${K}"/><rect x="71" y="86" width="12" height="8" fill="${K}"/><rect x="5" y="18" width="90" height="70" rx="8" fill="#5a5148"/><rect x="13" y="26" width="62" height="54" rx="11" fill="#25303a"/><path class="hl" d="M21 35q10-5 22-3"/><circle cx="85" cy="37" r="4" fill="${K}"/><circle cx="85" cy="51" r="4" fill="${K}"/><path d="M80 64h10M80 71h10" stroke-width="2"/>`],
-vhs:['Кассеты',16,`<rect x="14" y="16" width="72" height="36" rx="3" fill="${K}"/><rect x="24" y="22" width="52" height="14" rx="2" fill="${R}"/><rect x="8" y="52" width="84" height="42" rx="3" fill="${K}"/><rect x="21" y="58" width="58" height="17" rx="2" fill="${W}"/><circle cx="34" cy="84" r="5" fill="#5b636d"/><circle cx="66" cy="84" r="5" fill="#5b636d"/>`],
-box:['Коробка',22,`<path d="M10 40l10-18h60l10 18z" fill="#ddb377"/><path d="M10 40h80v54H10z" fill="#c99a5b"/><rect x="41" y="40" width="18" height="54" fill="#e6cb98" stroke="none"/><path d="M10 40h80M50 22v18" stroke-width="3"/><rect x="18" y="72" width="18" height="12" fill="${W}" stroke-width="2"/><path class="sh" d="M70 40h20v54H70z"/>`],
-coin:['Монеты',14,`<rect x="4" y="72" width="32" height="22" fill="${AUD}"/><path d="M4 78h32M4 86h32" stroke-width="2"/><ellipse cx="20" cy="72" rx="16" ry="5" fill="${AU}"/><circle cx="58" cy="54" r="38" fill="${AU}"/><circle cx="58" cy="54" r="29" fill="#f2cb5c"/><path d="M58 36l5 12h13l-10 8 4 13-12-8-12 8 4-13-10-8h13z" fill="${AUD}" stroke-width="2"/><path class="hl" d="M30 42q6-16 22-22"/>`],
-figurine:['Статуэтка',8,`<ellipse cx="50" cy="88" rx="26" ry="6" fill="${L}"/><path d="M42 38L24 26M58 38l18-12" stroke-width="3"/><path d="M45 70l-4 18M55 70l4 18" stroke-width="3"/><path d="M50 30l-9 28h18z" fill="${W}"/><path d="M26 64q24-14 48 0l-6 7H32z" fill="#bcd8ef"/><circle cx="50" cy="20" r="10" fill="${W}"/><path class="hl" d="M46 34l-3 12"/>`],
-trophy:['Кубок',10,`<path d="M28 18H15q0 20 15 22M72 18h13q0 20-15 22" stroke-width="5"/><path d="M28 10h44v22q0 26-22 26T28 32z" fill="${AU}"/><rect x="44" y="58" width="12" height="14" fill="${AU}"/><rect x="28" y="72" width="44" height="22" rx="2" fill="${K}"/><rect x="37" y="78" width="26" height="9" fill="${AU}" stroke-width="2"/><path class="hl" d="M36 18v16"/>`],
-suitcase:['Чемодан',12,`<path d="M38 24V12h24v12" stroke-width="6"/><rect x="12" y="24" width="76" height="66" rx="7" fill="${B}"/><path d="M30 24v66M70 24v66" stroke="${BD}" stroke-width="5"/><circle cx="24" cy="92" r="3.5" fill="${K}"/><circle cx="76" cy="92" r="3.5" fill="${K}"/><path class="hl" d="M19 32v48"/>`],
-drill:['Перфоратор',28,`<path d="M76 40h20" stroke-width="5"/><path d="M36 54h18l-4 30H28z" fill="${K}"/><rect x="22" y="82" width="38" height="12" rx="3" fill="${K}"/><path d="M12 30h54q10 0 10 10v8q0 6-6 6H28z" fill="${Y}"/><rect x="16" y="34" width="22" height="14" rx="2" fill="${K}"/><path class="hl" d="M44 36h20"/>`],
-ladder:['Стремянка',4,`<path d="M22 94L40 4M78 94L60 4" stroke-width="8"/><path d="M22 94L40 4M78 94L60 4" stroke="${M}" stroke-width="3.5"/><path d="M26 76h48M30 56h40M34 36h32M38 16h24" stroke-width="7"/><path d="M26 76h48M30 56h40M34 36h32M38 16h24" stroke="${M}" stroke-width="3"/>`],
-hardhat:['Каска',30,`<path d="M14 82q0-52 36-52t36 52z" fill="${Y}"/><rect x="4" y="80" width="92" height="10" rx="3" fill="${Y}"/><path d="M50 30v50M36 36q-7 18-7 44M64 36q7 18 7 44" stroke="#c99a26" stroke-width="3"/><path class="hl" d="M24 62q4-16 16-24"/>`],
-teddy:['Мишка',8,`<circle cx="25" cy="18" r="10" fill="${O}"/><circle cx="75" cy="18" r="10" fill="${O}"/><ellipse cx="50" cy="72" rx="27" ry="22" fill="${O}"/><ellipse cx="50" cy="75" rx="14" ry="13" fill="#e3b98a"/><circle cx="25" cy="88" r="9" fill="${O}"/><circle cx="75" cy="88" r="9" fill="${O}"/><circle cx="50" cy="33" r="24" fill="${O}"/><ellipse cx="50" cy="42" rx="11" ry="8" fill="#e3b98a"/><circle cx="50" cy="38" r="3.5" fill="${K}" stroke-width="2"/><circle cx="41" cy="29" r="2.8" fill="${K}" stroke="none"/><circle cx="59" cy="29" r="2.8" fill="${K}" stroke="none"/><path d="M36 57l14 5 14-5" stroke="${R}" stroke-width="6"/>`],
-blocks:['Конструктор',24,`<g stroke-width="2.5"><rect x="34" y="24" width="10" height="7" fill="${Y}"/><rect x="58" y="24" width="10" height="7" fill="${Y}"/><rect x="28" y="31" width="46" height="25" rx="2" fill="${Y}"/><rect x="14" y="49" width="10" height="7" fill="${R}"/><rect x="74" y="49" width="10" height="7" fill="${B}"/><rect x="8" y="56" width="44" height="38" rx="2" fill="${R}"/><rect x="52" y="56" width="40" height="38" rx="2" fill="${B}"/></g><path class="hl" d="M14 64v22M58 64v22M34 38h20"/>`],
-bottle:['Бутылка',4,`<rect x="42" y="4" width="16" height="11" fill="${R}"/><path d="M44 15h12v18q15 6 15 22v35q0 4-4 4H33q-4 0-4-4V55q0-16 15-22z" fill="#2f4a2a"/><rect x="31" y="56" width="38" height="24" fill="${W}"/><path d="M38 64h24M42 72h16" stroke="${R}" stroke-width="2"/><path class="hl" d="M35 46v40"/>`],
-barrel:['Бочка',8,`<path d="M20 8h60q10 43 0 86H20q-10-43 0-86z" fill="${O}"/><path d="M38 8q-4 43 0 86M62 8q4 43 0 86" stroke="${OD}" stroke-width="2"/><path d="M14 28h72M14 74h72" stroke="${K}" stroke-width="7"/><path class="sh" d="M70 8h10q10 43 0 86H70q6-43 0-86z"/>`],
-rod:['Удочки',4,`<path d="M84 6q8 30-2 52" stroke="${L}" stroke-width="1"/><path d="M18 94L84 6" stroke-width="4.5"/><path d="M32 94L92 20" stroke-width="3.5"/><circle cx="33" cy="70" r="10" fill="${M}"/><circle cx="33" cy="70" r="3.5" fill="${K}"/><rect x="14" y="78" width="11" height="16" rx="3" fill="${K}" transform="rotate(-36 20 86)"/>`],
-tent:['Палатка',10,`<path d="M50 4v8" stroke-width="3"/><path d="M6 94L50 12l44 82z" fill="${G}"/><path d="M50 12L36 94h28z" fill="${GD}"/><path d="M50 12l-4 82M50 12l4 82" stroke-width="2"/><path class="hl" d="M24 76l14-26"/>`],
-cooler:['Термобокс',18,`<path d="M30 30V18h40v12" stroke-width="6"/><rect x="10" y="40" width="80" height="54" rx="6" fill="${B}"/><rect x="8" y="30" width="84" height="16" rx="4" fill="${W}"/><rect x="18" y="58" width="64" height="5" fill="${BD}" stroke="none"/><path class="hl" d="M16 70v16"/>`],
-ring:['Кольцо',16,`<path d="M16 58l6-30h56l6 30z" fill="#8c2836"/><circle cx="50" cy="56" r="16" stroke-width="11"/><circle cx="50" cy="56" r="16" stroke="${AU}" stroke-width="6"/><path d="M42 34l8-10 8 10-8 8z" fill="${GL}" stroke-width="2.5"/><rect x="16" y="58" width="68" height="36" rx="6" fill="#7a1f2b"/><path d="M16 68h68" stroke="#5a1520"/>`],
-gold:['Слиток',54,`<path d="M10 94l14-28h52l14 28z" fill="${AU}"/><path d="M24 66l8-10h36l8 10z" fill="#f6d77f"/><path class="sh" d="M76 66l14 28H74z"/><path class="hl" d="M28 76h34"/>`],
-safe:['Сейф',10,`<rect x="15" y="86" width="12" height="8" fill="${K}"/><rect x="73" y="86" width="12" height="8" fill="${K}"/><rect x="9" y="10" width="82" height="78" rx="4" fill="#4d555f"/><rect x="17" y="18" width="66" height="62" rx="2" fill="#5d6671"/><circle cx="50" cy="49" r="15" fill="${M}"/><circle cx="50" cy="49" r="5" fill="${K}"/><path d="M50 34v5M65 49h-5M50 64v-5M35 49h5" stroke-width="2"/><rect x="71" y="40" width="6" height="18" rx="2" fill="${K}"/><path class="hl" d="M22 24v50"/>`],
-drone:['Дрон',50,`<g transform="translate(0 14)"><path d="M8 40h26M66 40h26" stroke-width="3.5"/><path d="M21 40v12M79 40v12" stroke-width="4"/><path d="M14 54h22M64 54h22" stroke-width="5"/><path d="M38 62l-7 18M62 62l7 18" stroke-width="3.5"/><rect x="32" y="46" width="36" height="18" rx="7" fill="${K}"/><circle cx="50" cy="69" r="6" fill="${K}"/><circle cx="50" cy="69" r="2.5" fill="${GL}" stroke="none"/></g>`],
-car:['Авто под чехлом',28,`<g transform="translate(0 6)"><path d="M3 84q2-24 18-28l15-22q4-6 12-6h22q10 0 17 10l8 16q9 2 9 16v14z" fill="#8a8f78"/><path d="M30 38q7 22 0 46M56 30q5 28-2 54M80 56q-4 14 0 28" stroke="#6b705c" stroke-width="3"/><path d="M44 30l-6 58" stroke="${Y}" stroke-width="5"/><path d="M12 88a11 11 0 0 1 22 0zM66 88a11 11 0 0 1 22 0z" fill="${K}"/><path class="hl" d="M40 36h16"/></g>`]
+// ===== realistic item renders: shared materials + primitives (viewBox 0 0 200 200, floor ≈ y 188) =====
+const MATS={steel:'#a9b2bb',chrome:'#cfd5db',alu:'#c3c8cd',dark:'#30353b',black:'#181a1d',red:'#c4372c',blue:'#2c69c2',navy:'#1d3354',yellow:'#e3ad27',green:'#378f52',wood:'#a7692f',wdark:'#6a3d1c',oak:'#b98545',brass:'#c99a3e',copper:'#b8693a',gold:'#dcae35',white:'#ecebe6',cream:'#e3d4b2',card:'#c39a5d',rubber:'#212428',leather:'#6b3720',olive:'#7a7e66',pink:'#dfa0b2',fur:'#a8713f',orange:'#dd7726',glass:'#94bfd2',screen:'#101a26',purple:'#6b4fb8',terra:'#b85f3a',silver:'#bfc4ca',bottle:'#1f4a2c',velvet:'#7d1d2c',tan:'#c9a27a'};
+function shade(hex,a){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const t=a<0?0:255,p=Math.min(1,Math.abs(a));r=Math.round(r+(t-r)*p);g=Math.round(g+(t-g)*p);b=Math.round(b+(t-b)*p);return `rgb(${r},${g},${b})`}
+function buildDefs(){
+  let s='';const metals=['steel','chrome','alu','brass','copper','gold','silver'];
+  const st=(arr)=>arr.map(([o,c,op])=>`<stop offset="${o}" stop-color="${c}"${op!=null?` stop-opacity="${op}"`:''}/>`).join('');
+  for(const[k,c]of Object.entries(MATS)){
+    const m=metals.includes(k),hi=m?.78:.32,lo=m?-.6:-.5,gl=k==='glass'?.55:null;
+    const cyl=k==='chrome'?[[0,shade(c,-.7)],[.1,shade(c,-.2)],[.22,shade(c,.9)],[.3,shade(c,.2)],[.5,shade(c,-.35)],[.66,shade(c,.55)],[.82,shade(c,-.25)],[1,shade(c,-.75)]]
+      :[[0,shade(c,lo)],[.13,shade(c,lo*.35)],[.33,shade(c,hi)],[.47,shade(c,hi*.3)],[.78,shade(c,lo*.35)],[1,shade(c,lo)]];
+    const cy=cyl.map(([o,col])=>[o,col,gl]);
+    s+=`<linearGradient id="${k}-c" x1="0" y1="0" x2="1" y2="0">${st(cy)}</linearGradient>`;
+    s+=`<linearGradient id="${k}-ch" x1="0" y1="0" x2="0" y2="1">${st(cy)}</linearGradient>`;
+    s+=`<linearGradient id="${k}-f" x1="0" y1="0" x2="0" y2="1">${st([[0,shade(c,m?.25:.1),gl],[1,shade(c,m?-.3:-.22),gl]])}</linearGradient>`;
+    s+=`<linearGradient id="${k}-fx" x1="0" y1="0" x2="1" y2="0">${st([[0,shade(c,m?.35:.14),gl],[.6,c,gl],[1,shade(c,-.25),gl]])}</linearGradient>`;
+    s+=`<linearGradient id="${k}-t" x1="0" y1="1" x2="1" y2="0">${st([[0,shade(c,m?.45:.22),gl],[1,shade(c,m?.75:.42),gl]])}</linearGradient>`;
+    s+=`<linearGradient id="${k}-s" x1="0" y1="0" x2="1" y2="0">${st([[0,shade(c,-.3),gl],[1,shade(c,-.55),gl]])}</linearGradient>`;
+    s+=`<radialGradient id="${k}-r" cx=".36" cy=".3" r=".78">${st([[0,shade(c,hi+.1),gl],[.28,shade(c,hi*.35),gl],[.7,c,gl],[1,shade(c,lo),gl]])}</radialGradient>`;
+  }
+  s+=`<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">${st([[0,'#7fa9cf'],[.6,'#e9c99b'],[1,'#d89a63']])}</linearGradient>`;
+  s+=`<linearGradient id="wall-p" x1="0" y1="0" x2="1" y2="1">${st([[0,'#3b6fd6'],[.5,'#7a4ad1'],[1,'#d1477e']])}</linearGradient>`;
+  s+=`<linearGradient id="refl" x1="0" y1="0" x2="1" y2="1">${st([[0,'#fff',.0],[.45,'#fff',.0],[.5,'#fff',.28],[.62,'#fff',.0],[1,'#fff',0]])}</linearGradient>`;
+  s+=`<radialGradient id="glow-w">${st([[0,'#fff'],[.4,'#fff8e4',.9],[1,'#fff8e4',0]])}</radialGradient>`;
+  s+=`<radialGradient id="glow-p">${st([[0,'#ff5aa0'],[.5,'#ff5aa0',.5],[1,'#ff5aa0',0]])}</radialGradient>`;
+  s+=`<radialGradient id="glow-b">${st([[0,'#52d4ff'],[.5,'#52d4ff',.5],[1,'#52d4ff',0]])}</radialGradient>`;
+  s+=`<radialGradient id="flame" cx=".5" cy=".7">${st([[0,'#fff6c8'],[.4,'#ffb23c'],[1,'#c4372c',0]])}</radialGradient>`;
+  s+=`<pattern id="grille" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#1b1d20"/><circle cx="2" cy="2" r=".9" fill="#3a3f45"/></pattern>`;
+  s+=`<pattern id="mesh" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#2a2d31"/><path d="M0 0L5 5M5 0L0 5" stroke="#4a4f55" stroke-width=".6"/></pattern>`;
+  s+=`<pattern id="cloth" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#2b2622"/><rect width="1.5" height="1.5" fill="#3a332d"/></pattern>`;
+  s+=`<pattern id="tread" width="10" height="8" patternUnits="userSpaceOnUse"><rect width="10" height="8" fill="#1d2023"/><path d="M0 4l5-3 5 3" stroke="#33373c" stroke-width="2" fill="none"/></pattern>`;
+  s+=`<pattern id="keys" width="9" height="7" patternUnits="userSpaceOnUse"><rect width="9" height="7" fill="#2c3036"/><rect x=".8" y=".8" width="7.4" height="5.2" rx="1" fill="#41464d"/></pattern>`;
+  s+=`<pattern id="grain" width="40" height="8" patternUnits="userSpaceOnUse"><path d="M0 3c10-2 20 2 40 0M0 7c14 1 26-2 40 0" stroke="#000" stroke-opacity=".12" fill="none"/></pattern>`;
+  [1,2,3,5,8].forEach(b=>s+=`<filter id="b${b}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${b}"/></filter>`);
+  return `<svg width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true"><defs>${s}</defs></svg>`;
+}
+const u=(m,t='f')=>`url(#${m}-${t})`;
+const A={
+  sh:(cx,cy,rx,ry,o=.5)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${o}" filter="url(#b5)"/>`,
+  ao:(cx,cy,rx,ry,o=.55)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${o}" filter="url(#b2)"/>`,
+  e:(cx,cy,rx,ry,f,x='')=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${f}" ${x}/>`,
+  c:(cx,cy,r,f,x='')=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}" ${x}/>`,
+  r:(x,y,w,h,rx,f,o='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}" ${o}/>`,
+  p:(d,f,x='')=>`<path d="${d}" fill="${f}" ${x}/>`,
+  l:(d,s,w,x='')=>`<path d="${d}" fill="none" stroke="${s}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${x}/>`,
+  hl:(d,w=3,o=.6)=>`<path d="${d}" fill="none" stroke="#fff" stroke-opacity="${o}" stroke-width="${w}" stroke-linecap="round" filter="url(#b1)"/>`,
+  // oblique box: front face x,y,w,h; depth d goes up-right
+  box(x,y,w,h,d,m,o={}){const dx=d*.55,dy=-d*.4;return `<path d="M${x} ${y}h${w}l${dx} ${dy}h${-w}z" fill="${o.t||u(m,'t')}"/><path d="M${x+w} ${y}l${dx} ${dy}v${h}l${-dx} ${-dy}z" fill="${o.s||u(m,'s')}"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${o.f||u(m,'f')}"/>${o.edge===false?'':`<path d="M${x} ${y+.5}h${w}l${dx} ${dy}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>`}`},
+  // vertical cylinder: top ellipse at y, height h
+  cyl(cx,y,rx,ry,h,m,top){return `<path d="M${cx-rx} ${y}v${h}a${rx} ${ry} 0 0 0 ${2*rx} 0v${-h}z" fill="${u(m,'c')}"/>`+(top===false?'':`<ellipse cx="${cx}" cy="${y}" rx="${rx}" ry="${ry}" fill="${top||u(m,'t')}"/>`)},
+  // horizontal cylinder along x from x to x+len, centre cy, radius r, visible right cap
+  hcyl(x,cy,len,r,m,cap=true){return `<rect x="${x}" y="${cy-r}" width="${len}" height="${2*r}" fill="${u(m,'ch')}"/>`+(cap?`<ellipse cx="${x+len}" cy="${cy}" rx="${r*.38}" ry="${r}" fill="${u(m,'t')}"/>`:'')},
+  // rod between two points with tube shading
+  rod(x1,y1,x2,y2,w,m){const a=Math.atan2(y2-y1,x2-x1)*180/Math.PI,len=Math.hypot(x2-x1,y2-y1);return `<rect x="${x1}" y="${y1-w/2}" width="${len}" height="${w}" rx="${w/2}" fill="${u(m,'ch')}" transform="rotate(${a} ${x1} ${y1})"/>`},
+  // wheel/tyre seen from side
+  wheel(cx,cy,r,o={}){const t=o.t||r*.24,rim=o.rim||'chrome';let s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#rubber-r)"/><circle cx="${cx}" cy="${cy}" r="${r-1.5}" fill="none" stroke="#3a3e44" stroke-width="1.2"/>`;
+    s+=`<circle cx="${cx}" cy="${cy}" r="${r-t}" fill="${u(rim,'r')}"/><circle cx="${cx}" cy="${cy}" r="${r-t-3}" fill="${o.inner||'#2a2e33'}"/>`;
+    const n=o.spokes||0;for(let i=0;i<n;i++){const a=i/n*Math.PI*2;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*(r-t-3)}" y2="${cy+Math.sin(a)*(r-t-3)}" stroke="${o.sc||'#cfd5db'}" stroke-width="${o.sw||1}"/>`}
+    s+=`<circle cx="${cx}" cy="${cy}" r="${Math.max(3,r*.14)}" fill="url(#chrome-r)"/>`+A.hl(`M${cx-r*.7} ${cy-r*.35}A${r*.8} ${r*.8} 0 0 1 ${cx-r*.2} ${cy-r*.78}`,2,.35);return s}
 };
-function iconSVG(key){const ic=ICONS[key]||ICONS.box;return `<svg class="ico" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#16191e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">${ic[2]}</g></svg>`}
-// ===== default 20 containers: [title, origin, start, step, legend, items[[icon,name,value,size]]] =====
+// ---- items ----
+const ART={
+pot:['Кастрюля',()=>A.sh(100,184,74,10)+A.r(14,96,30,11,5.5,u('black','ch'))+A.r(156,96,30,11,5.5,u('black','ch'))+A.cyl(100,92,64,17,86,'steel',false)+A.e(100,178,64,17,'none')+A.hl('M58 104v66',5,.55)+A.hl('M74 106v62',2,.3)
+  +A.e(100,92,66,18,u('chrome','t'))+A.p('M38 92C40 62 160 62 162 92A62 16 0 0 1 38 92z',u('chrome','r'))+A.e(100,92,62,15,'none','stroke="#fff" stroke-opacity=".5" stroke-width="1.2"')+A.cyl(100,58,11,4,9,'black')+A.e(100,58,11,4,'#41464d')+A.hl('M66 80C80 70 100 68 112 69',3,.7)],
+pan:['Сковорода',()=>A.sh(94,170,76,12)+A.rod(144,140,194,118,11,'black')+A.c(150,138,2.4,u('chrome','r'))+A.p('M24 136v12a64 20 0 0 0 128 0v-12z',u('dark','c'))+A.e(88,136,64,20,u('dark','t'))+A.e(88,138,57,16,'url(#black-r)')+A.hl('M48 132q30-10 66-6',2,.25)],
+stove:['Плита',()=>{let s=A.sh(104,186,92,10,.6)+A.r(26,32,152,36,2,u('steel','f'))+A.hl('M30 36h144',1.5,.6)+A.box(18,66,152,114,40,'steel');
+  [[44,58],[86,58],[128,58],[56,48],[98,48],[140,48]].forEach(([x,y])=>{s+=A.e(x,y,15,5,'#1a1c1f')+A.l(`M${x-15} ${y}h30M${x} ${y-5}v10`,'#3b3f45',2)});
+  s+=A.r(18,66,152,16,0,u('steel','ch'));[30,48,66,84,102,120,138,156].forEach(x=>s+=A.c(x,74,4.5,'url(#black-r)')+A.c(x-1,73,1.2,'#888'));
+  s+=A.r(24,90,68,82,3,u('steel','f'))+A.r(98,90,68,82,3,u('steel','f'))+A.r(32,106,52,40,3,'url(#black-r)')+A.r(106,106,52,40,3,'url(#black-r)')+A.p('M32 106h22l-14 40H32z','#fff','opacity=".06"')+A.p('M106 106h22l-14 40h-8z','#fff','opacity=".06"');
+  s+=A.hcyl(30,97,56,3.2,'chrome',false)+A.hcyl(104,97,56,3.2,'chrome',false)+A.r(22,176,10,8,1,'#111')+A.r(156,176,10,8,1,'#111');return s}],
+knives:['Ножи',()=>A.sh(102,184,52,8)+[[64,40,-20],[80,34,-10],[96,32,0],[112,36,10]].map(([x,y,a])=>`<g transform="rotate(${a} ${x+6} 92)">${A.r(x,y,12,58,6,u('black','c'))+A.c(x+6,y+14,1.6,u('chrome','r'))+A.c(x+6,y+34,1.6,u('chrome','r'))}</g>`).join('')
+  +A.p('M52 92l70-16 26 104H64z',u('oak','fx'))+A.p('M122 76l14-8 26 104-14 8z',u('wood','s'))+A.p('M52 92l70-16 14-8-70 16z',u('oak','t'))+A.p('M52 92l70-16 26 104H64z','url(#grain)')+A.hl('M60 100l8 70',3,.3)],
+mixer:['Миксер',()=>A.sh(100,184,72,9)+A.p('M36 166h112q8 0 8 8v4H28v-4q0-8 8-8z',u('red','fx'))+A.r(120,58,30,112,12,u('red','c'))+A.p('M40 54q0-24 30-24h66q24 0 24 24v8q0 12-14 12H54q-14 0-14-12z',u('red','r'))
+  +A.r(66,74,10,20,3,u('chrome','c'))+A.p('M44 104h68l-6 54q-1 8-9 8H59q-8 0-9-8z',u('chrome','c'))+A.e(78,104,34,7,u('steel','t'))+A.e(78,104,30,5,'#5d646b')+A.hl('M56 40q20-8 70-6',4,.6)+A.hl('M128 70v80',4,.4)+A.r(132,78,8,12,2,u('chrome','c'))],
+moto:['Мотоцикл',()=>{let s=A.sh(102,182,96,8,.6)+A.wheel(40,150,32,{spokes:18,sw:.7})+A.wheel(164,150,32,{spokes:18,sw:.7});
+  s+=A.rod(150,76,164,150,7,'chrome')+A.rod(56,112,40,150,6,'dark')+A.p('M60 104l40-6 46 8-16 30H76z',u('dark','f'))+A.r(80,110,40,32,4,u('steel','f'))+[114,120,126,132].map(y=>A.l(`M82 ${y}h36`,'#6b737b',2)).join('');
+  s+=A.hcyl(52,148,64,5,'chrome')+A.p('M70 98q20-26 56-22l26 8q-8 18-30 20H76z',u('red','r'))+A.hl('M84 86q20-12 50-8',4,.7)+A.p('M28 98q4-12 22-12h28l-6 14H34z',u('black','f'))+A.hl('M36 90h30',2,.3);
+  s+=A.rod(150,76,172,62,4,'black')+A.c(156,82,9,u('chrome','r'))+A.c(156,82,5,'#fff8d8')+A.p('M138 120q20 0 30 18','none','stroke="#222" stroke-width="10"');return s}],
+helmet:['Мотошлем',()=>A.sh(100,182,64,9)+A.p('M38 150q-8-70 54-86 58-8 74 52 6 26-6 40H52q-14 0-14-6z',u('red','r'))+A.p('M84 98q36-14 74 6 8 20 6 34H96q-16-14-12-40z','url(#screen-r)')+A.p('M92 102q30-10 62 4','none','stroke="#fff" stroke-opacity=".35" stroke-width="3"')
+  +A.p('M48 156h112v8q0 8-8 8H56q-8 0-8-8z',u('black','f'))+A.hl('M58 96q16-22 46-28',6,.55)+A.hl('M110 110l30 22',10,.12)],
+tire:['Колесо',()=>{let s=A.sh(104,186,62,9)+A.p('M100 22a58 78 0 1 1 0 156h14a58 78 0 1 0 0-156z',u('rubber','s'))+`<ellipse cx="100" cy="100" rx="58" ry="78" fill="url(#tread)"/>`+A.e(100,100,58,78,'url(#rubber-r)','opacity=".8"')+A.e(100,100,40,56,u('silver','r'));
+  const pt=(a,r)=>[100+Math.cos(a)*r*.7,100+Math.sin(a)*r];for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2-Math.PI/2+Math.PI/5,d=.36;const[p1,p2,p3,p4]=[pt(a-d,18),pt(a-d*.8,48),pt(a+d*.8,48),pt(a+d,18)];
+  s+=A.p(`M${p1}L${p2}Q${pt(a,52)} ${p3}L${p4}Q${pt(a,16)} ${p1}z`,'#16181b')}
+  return s+A.e(100,100,40,56,'none','stroke="#7c838a" stroke-width="2"')+A.e(100,100,10,14,u('chrome','r'))+[0,1,2,3,4].map(i=>{const[x,y]=pt(i/5*Math.PI*2-Math.PI/2,22);return A.c(x,y,2,'#3a3f45')}).join('')+A.hl('M58 64q10-30 34-38',4,.35)}],
+toolbox:['Ящик инструментов',()=>A.sh(102,184,82,9)+A.box(22,92,140,86,40,'red')+A.r(22,92,140,18,0,u('red','ch'))+A.l('M22 110h140','#7a1f18',1.5)+A.p('M70 76q0-22 22-22h22q22 0 22 22','none','stroke="url(#chrome-c)" stroke-width="7"')+A.r(44,104,16,12,2,u('chrome','f'))+A.r(124,104,16,12,2,u('chrome','f'))+A.hl('M30 120h60',3,.3)+A.l('M22 178h140',`#000`,1,'opacity=".3"')],
+canister:['Канистра',()=>A.sh(100,184,64,9)+A.box(40,52,96,128,36,'red')+A.p('M48 64l80 104M128 64L48 168','none','stroke="#e05a4e" stroke-width="6" opacity=".55"')+A.p('M48 64l80 104M128 64L48 168','none','stroke="#7a1f18" stroke-width="2" opacity=".5" transform="translate(1.5 2)"')
+  +A.p('M58 52v-16h44v16','none',`stroke="${shade('#c4372c',-.3)}" stroke-width="8"`)+A.cyl(142,26,8,3.5,16,'black')+A.hl('M46 70v100',4,.35)],
+bag:['Сумка',()=>A.sh(100,184,82,9)+A.p('M64 82q0-34 36-34t36 34','none','stroke="url(#leather-c)" stroke-width="9"')+A.p('M22 92q0-12 12-12h132q12 0 12 12v76q0 12-12 12H34q-12 0-12-12z',u('leather','r'))+A.p('M22 96h156','none',`stroke="${shade('#6b3720',-.4)}" stroke-width="2"`)
+  +A.l('M30 104h140','#e8d2b0',1,'stroke-dasharray="4 4" opacity=".5"')+A.l('M30 172h140','#e8d2b0',1,'stroke-dasharray="4 4" opacity=".5"')+A.r(88,90,24,18,3,u('gold','r'))+A.r(94,95,12,8,2,'#3a2410')+A.hl('M32 118q4-18 30-22',5,.25)],
+pc:['Игровой ПК',()=>A.sh(104,186,66,9)+A.box(50,36,88,146,44,'black')+A.p('M138 36l24-18v146l-24 18z','url(#screen-f)')+[[150,52],[150,86],[150,120]].map(([x,y])=>A.e(x,y,9,13,'url(#glow-p)')+A.e(x,y,7,10,'none','stroke="#ff7ab4" stroke-width="1.5"')).join('')+A.e(150,150,7,12,'url(#glow-b)')
+  +A.p('M138 36l24-18v146l-24 18z','url(#refl)')+[0,1,2,3,4,5,6,7].map(i=>A.l(`M60 ${60+i*8}h68`,'#2c3036',2.5)).join('')+A.c(120,46,3,'#5df08a')+A.r(58,146,72,4,2,'url(#glow-b)','opacity=".9"')+A.hl('M52 40v136',2,.25)],
+monitor:['Монитор',()=>A.sh(100,186,56,7)+A.p('M88 124h24l6 50H82z',u('dark','fx'))+A.e(100,178,44,8,u('black','t'))+A.r(10,24,180,104,5,u('black','f'))+A.r(15,29,170,94,2,'url(#wall-p)')+A.p('M15 100q50-30 90-10t80-24v57H15z','#1c1240','opacity=".5"')+A.p('M15 29h80L45 123H15z','#fff','opacity=".08"')+A.r(10,128,180,6,2,u('black','ch'))],
+chair:['Игровое кресло',()=>A.sh(100,186,74,8)+A.rod(100,150,100,176,9,'chrome')+[[-62,10],[-30,16],[30,16],[62,10],[0,14]].map(([dx,dy])=>A.rod(100,176,100+dx,176+dy,7,'black')+A.c(100+dx,182+dy*.2,5,'url(#black-r)')).join('')
+  +A.p('M56 26q0-18 18-18h52q18 0 18 18v100H56z',u('black','r'))+A.p('M60 30q2-12 16-12h12v104H62z',u('red','fx'))+A.p('M140 30q-2-12-16-12h-12v104h26z',u('red','s'))+A.r(80,26,40,22,8,u('black','f'))+A.l('M100 52v66','#000',1.5,'opacity=".5"')
+  +A.p('M38 128q0-10 10-10h104q10 0 10 10v18q0 8-8 8H46q-8 0-8-8z',u('black','f'))+A.r(24,104,14,40,5,u('black','c'))+A.r(162,104,14,40,5,u('black','c'))+A.hl('M66 36v80',3,.25)],
+headphones:['Наушники',()=>A.sh(100,184,66,8)+A.p('M42 120V90q0-60 58-60t58 60v30','none','stroke="#151719" stroke-width="13"')+A.p('M42 120V90q0-60 58-60t58 60v30','none','stroke="url(#dark-c)" stroke-width="8"')+A.hl('M52 80q14-38 48-40',3,.4)
+  +A.e(44,140,24,36,u('black','r'))+A.e(156,140,24,36,u('black','r'))+A.e(52,140,14,26,u('dark','r'))+A.e(148,140,14,26,u('dark','r'))+A.e(44,140,6,9,'#c4372c')+A.e(156,140,6,9,'#c4372c')],
+gamepad:['Геймпад',()=>A.sh(100,178,82,10)+A.p('M48 94h104q26 0 34 40t-14 46q-14 4-26-16l-8-12H62l-8 12q-12 20-26 16-22-6-14-46t34-40z',u('black','r'))+A.p('M48 94h104q20 0 28 18-60-10-160 0 8-18 28-18z','#fff','opacity=".07"')
+  +A.r(44,118,26,8,2,'#2c3036')+A.r(53,109,8,26,2,'#2c3036')+[[148,112,'#e0453c'],[162,122,'#f2c230'],[134,122,'#3b78e7'],[148,132,'#3fae5a']].map(([x,y,c])=>A.c(x,y,6,c)+A.c(x-2,y-2,2,'#fff','opacity=".5"')).join('')
+  +A.cyl(80,136,10,5,4,'dark',u('black','r'))+A.cyl(122,136,10,5,4,'dark',u('black','r'))],
+mic:['Микрофон',()=>A.sh(100,186,40,7)+A.e(100,180,34,8,u('black','t'))+A.rod(100,120,100,178,6,'black')+A.p('M62 96q0 40 38 40t38-40','none','stroke="url(#chrome-c)" stroke-width="5"')+A.r(76,22,48,92,24,u('chrome','c'))
+  +`<rect x="80" y="26" width="40" height="44" rx="20" fill="url(#mesh)"/>`+A.r(80,26,40,44,20,u('chrome','c'),'opacity=".45"')+A.r(76,74,48,6,0,u('dark','ch'))+A.hl('M88 30v76',4,.6)],
+guitar:['Гитара',()=>A.sh(96,186,58,8)+A.r(90,10,18,92,3,u('wood','c'))+[20,30,40,50,60,70,80,90].map(y=>A.l(`M90 ${y}h18`,'#d7d0c4',1)).join('')+A.p('M86 2h26l-2 14H88z',u('black','f'))+[4,9,14].map(y=>A.c(84,y+1,2.5,u('chrome','r'))+A.c(114,y+1,2.5,u('chrome','r'))).join('')
+  +A.p('M99 96c-28-8-52 4-54 30-2 18 12 26 10 34-4 14 16 26 44 26s48-12 44-26c-2-8 12-16 10-34-2-26-26-38-54-30z',`url(#red-r)`)+A.p('M99 96c-28-8-52 4-54 30-2 18 12 26 10 34-4 14 16 26 44 26s48-12 44-26c-2-8 12-16 10-34-2-26-26-38-54-30z','none','stroke="#1a0806" stroke-opacity=".5" stroke-width="2"')
+  +A.p('M112 100q22 6 22 30t-14 30q-14 10-28 6-10-30-6-62z',u('white','f'))+A.r(84,116,30,8,2,u('black','ch'))+A.r(84,132,30,8,2,u('black','ch'))+A.r(84,154,32,7,1,u('chrome','ch'))+[0,1,2,3,4,5].map(i=>A.l(`M${93+i*2.6} 10V156`,'#e8e8e8',.6,'opacity=".8"')).join('')+A.c(130,172,3.4,u('chrome','r'))+A.hl('M58 120q4-14 18-20',4,.5)],
+amp:['Комбоусилитель',()=>A.sh(102,186,84,9)+A.box(22,52,138,130,40,'black')+A.r(28,58,126,22,2,u('gold','f'))+[44,64,84,104,124,140].map(x=>A.c(x,69,5,'url(#black-r)')+A.c(x-1,68,1.4,'#999')).join('')
+  +`<rect x="30" y="86" width="122" height="88" rx="2" fill="url(#cloth)"/>`+A.e(91,130,34,34,'#000','opacity=".25"')+A.p('M70 52v-12q0-6 6-6h30q6 0 6 6v12','none','stroke="url(#black-c)" stroke-width="6"')+A.hl('M30 90v80',2,.15)],
+drum:['Барабан',()=>A.sh(100,184,80,10)+A.rod(56,60,124,22,5,'oak')+A.rod(144,60,76,22,5,'oak')+A.p('M24 84v62a76 22 0 0 0 152 0V84z',u('red','c'))+[34,58,82,100,118,142,166].map(x=>A.r(x-3,96,6,44,2,u('chrome','c'))).join('')
+  +A.p('M24 146a76 22 0 0 0 152 0v6a76 22 0 0 1-152 0z',u('chrome','c'))+A.e(100,84,76,22,u('chrome','t'))+A.e(100,84,72,19,'url(#white-r)')+A.hl('M34 100v40',4,.4)],
+vinyl:['Пластинки',()=>{let s=A.sh(100,184,84,9);[[38,'#e0453c',-8],[66,'#2c69c2',-3],[94,'#f2c230',2],[122,'#1d3354',6],[146,'#3fae5a',10]].forEach(([x,c,a])=>{s+=`<g transform="rotate(${a} ${x} 110)">${A.r(x-24,40,48,74,1,c)+A.r(x-24,40,48,74,1,'url(#refl)')+A.c(x,70,12,'#000','opacity=".25"')}</g>`});
+  s+=A.c(60,44,30,'url(#black-r)')+A.c(60,44,10,'#e0453c')+A.c(60,44,22,'none','stroke="#2a2a2a" stroke-width=".8"')+A.c(60,44,16,'none','stroke="#2a2a2a" stroke-width=".8"');
+  s+=A.box(14,96,152,86,30,'oak')+A.r(14,96,152,86,0,'url(#grain)')+A.l('M14 124h152M14 152h152',shade('#b98545',-.35),2)+A.r(66,108,48,12,4,'#3a2410','opacity=".6"');return s}],
+clock:['Каминные часы',()=>A.sh(100,186,64,8)+A.p('M52 62q0-56 56-56t56 56z',u('wdark','s'))+A.box(38,70,112,110,26,'wdark')+A.p('M38 72q0-56 56-56t56 56z',u('wood','r'))+A.c(94,72,32,u('brass','r'))+A.c(94,72,26,'url(#white-r)')
+  +[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>{const a=i*Math.PI/6;return A.l(`M${94+Math.cos(a)*20} ${72+Math.sin(a)*20}L${94+Math.cos(a)*23} ${72+Math.sin(a)*23}`,'#222',i%3?1:2.2)}).join('')+A.l('M94 72l-8-13M94 72l13 5','#1a1a1a',2.2)+A.c(94,72,2.2,'#111')+A.p('M70 52q12-14 30-14','none','stroke="#fff" stroke-opacity=".55" stroke-width="3"')
+  +A.r(60,112,68,58,3,'#1c140c')+A.l('M94 112v34','url(#brass-c)',2)+A.c(94,152,11,u('brass','r'))+A.r(60,112,68,58,3,'url(#refl)')+A.hl('M44 90v80',3,.3)],
+samovar:['Самовар',()=>A.sh(100,186,62,9)+A.p('M54 174l10-12h72l10 12z',u('brass','fx'))+A.r(50,172,100,8,2,u('brass','ch'))+A.p('M70 160q-26-8-28-50 0-34 18-48h80q18 14 18 48-2 42-28 50z',u('brass','c'))+A.p('M62 62h76l-6-12H68z',u('brass','t'))
+  +A.cyl(100,32,14,5,20,'brass')+A.p('M86 32q14-14 28 0','none','stroke="url(#black-c)" stroke-width="5"')+A.p('M42 92q-14 0-14 14t12 14','none','stroke="url(#black-c)" stroke-width="7"')+A.p('M158 92q14 0 14 14t-12 14','none','stroke="url(#black-c)" stroke-width="7"')
+  +A.hcyl(138,138,20,4,'brass')+A.p('M156 138v14h-6','none','stroke="url(#black-c)" stroke-width="4"')+A.e(100,100,22,30,'none','stroke="#7a5214" stroke-opacity=".4" stroke-width="2"')+A.hl('M66 76q-10 40 2 74',6,.6)+A.hl('M80 70q-6 30 0 60',2,.4)],
+vase:['Ваза',()=>A.sh(100,186,40,7)+A.p('M80 16h40v10q0 10 16 30t14 60q-4 50-50 62-46-12-50-62t14-60 16-30z',u('white','r'))+A.e(100,18,20,5,'#d8dbe0')+A.e(100,18,15,3,'#8a9099')
+  +A.p('M62 80q38-14 76 0M54 120q46-16 92 0M60 158q40-12 80 0','none','stroke="#2a4f9c" stroke-width="5" opacity=".85"')+A.p('M96 100q-10 10 0 20 10 10 0 20M112 96q-14 6-4 18','none','stroke="#2a4f9c" stroke-width="3"')+A.hl('M68 70q-14 40 0 90',6,.7)],
+painting:['Картина',()=>A.sh(104,186,78,7)+A.p('M18 16h160l10-8v160l-10 8z',u('gold','s'))+A.r(18,16,160,160,1,u('gold','fx'))+A.r(30,28,136,136,0,'url(#sky)')+A.p('M30 118q30-30 56-14t50-24 30 10v74H30z','#4f6b3a')+A.p('M30 138q40-20 80-8t56-6v40H30z','#344b29')
+  +A.c(126,62,10,'#fff2c4','opacity=".9"')+A.p('M60 104l6-34 6 34z','#22301c')+A.r(30,28,136,136,0,'url(#refl)')+A.r(24,22,148,148,1,'none','stroke="#7a5a12" stroke-width="3"')+A.hl('M22 20h150',2,.6)],
+chest:['Сундук',()=>A.sh(100,186,84,9)+A.p('M39 79q0-46 72-46t72 46z',u('wdark','s'))+A.box(18,94,144,86,38,'wood')+A.p('M18 94q0-46 72-46t72 46z',u('wood','r'))+A.r(18,94,144,86,0,'url(#grain)')
+  +[40,140].map(x=>A.r(x-6,48,12,132,2,u('dark','c'))).join('')+A.r(18,92,144,7,0,u('dark','ch'))+A.r(80,92,20,26,3,u('brass','r'))+A.c(90,108,3,'#2a1a08')+A.hl('M26 104v66',3,.25)],
+sewing:['Швейная машинка',()=>A.sh(100,186,86,8)+A.box(14,150,160,30,26,'wdark')+A.p('M36 150V84q0-30 30-30h88q14 0 14 14v18H64v64z',u('black','r'))+A.p('M140 86h28v40h-28z',u('black','f'))+A.r(148,126,6,18,1,u('chrome','c'))+A.p('M66 64h90','none','stroke="url(#gold-c)" stroke-width="4"')
+  +A.p('M70 76q20-10 40 0','none','stroke="#d7b04a" stroke-width="2" opacity=".8"')+A.e(36,96,8,22,u('chrome','r'))+A.e(30,96,4,18,'#2a2d31')+A.hl('M50 70q4-12 14-14',3,.45)],
+dumbbell:['Гантели',()=>{const db=(y,o)=>A.hcyl(40+o,y,120,4,'chrome',false)+[44,58,128,142].map(x=>A.e(x+o,y,9,26,u('black','r'))+A.e(x+o+3,y,6,20,'#2d3137')).join('')+A.e(30+o,y,4,5,u('chrome','r'))+A.e(170+o,y,4,5,u('chrome','r'));return A.sh(100,186,86,8)+db(140,-8)+db(160,8)}],
+kettlebell:['Гиря',()=>A.sh(100,186,58,9)+A.p('M66 104V72q0-38 34-38t34 38v32','none','stroke="#0f1012" stroke-width="20"')+A.p('M66 104V72q0-38 34-38t34 38v32','none','stroke="url(#black-c)" stroke-width="14"')+A.c(100,130,54,u('black','r'))+A.r(84,122,32,18,3,'#3a3f45')+A.p('M90 131h20','none','stroke="#8a9199" stroke-width="2"')+A.hl('M62 110q8-22 30-28',6,.35)],
+bike:['Велосипед',()=>{const w=(cx)=>A.c(cx,138,44,'none','stroke="#141618" stroke-width="7"')+A.c(cx,138,40,'none','stroke="url(#silver-c)" stroke-width="2.5"')+Array.from({length:20},(_,i)=>{const a=i/20*Math.PI*2;return A.l(`M${cx} 138L${cx+Math.cos(a)*39} ${138+Math.sin(a)*39}`,'#aeb4ba',.6)}).join('')+A.c(cx,138,4,u('chrome','r'));
+  const f=(d)=>A.l(d,'#0e0f10',8)+A.l(d,'url(#blue-c)',5);return A.sh(100,186,92,7)+w(46)+w(154)+f('M46 138L80 78h62L100 140z')+f('M80 78l20 62M142 78l12 60M46 138l54 2')+A.l('M76 70h20','#151618',6)+A.p('M70 64q8-6 30 0l-4 6H72z',u('black','f'))+A.l('M142 78l4-16q10-4 18 0q4 12-6 14','#151618',4)+A.c(100,140,8,u('chrome','r'))}],
+gloves:['Боксёрские перчатки',()=>{const g=(o,f)=>`<g transform="translate(${o} 0) scale(${f} 1)">`+A.p('M30 92q-14 0-14 18t16 20',u('red','r'))+A.p('M26 108q-6-56 34-64t60 16q12 22 2 52l-10 18H40z',u('red','r'))+A.r(38,130,72,40,8,u('white','f'))+A.l('M40 142h68','#bbb',1.5)+A.hl('M44 62q22-14 50-6',5,.5)+`</g>`;
+  return A.sh(100,186,86,9)+g(-6,1)+`<g transform="translate(200 6) scale(-1 1)">${g(-6,1)}</g>`}],
+laptop:['Ноутбук',()=>A.sh(100,186,84,8)+A.p('M20 152h150l22 22H32z',u('alu','t'))+A.p('M40 156h112l14 14H50z','url(#keys)')+A.p('M76 172h40l2 2H74z','#9aa0a6')+A.p('M32 174h160v4H34z',u('alu','ch'))
+  +A.p('M30 40h132l8 112H20z',u('alu','f'))+A.p('M36 46h120l7 100H28z',u('screen','f'))+A.p('M38 48h116l6 94H31z','url(#wall-p)')+A.p('M38 48h50L50 142H31z','#fff','opacity=".1"')],
+coffee:['Кофемашина',()=>A.sh(102,186,84,9)+A.box(20,58,140,124,36,'chrome')+A.r(20,58,140,26,0,u('steel','ch'))+[[58,114],[122,114]].map(([x,y])=>A.r(x-14,y-8,28,14,3,u('black','ch'))+A.r(x-4,y+6,8,10,1,u('chrome','c'))+A.cyl(x,148,10,4,14,'white')).join('')
+  +A.r(28,164,124,8,1,'url(#grille)')+A.c(60,72,8,'url(#white-r)')+A.l('M60 72l4-5','#c4372c',1.2)+A.c(120,72,8,'url(#white-r)')+A.l('M120 72l-3-5','#c4372c',1.2)+A.rod(152,110,168,150,3,'chrome')
+  +[60,80,100].map(x=>A.cyl(x,52,9,3.5,10,'white')).join('')+A.hl('M28 92v60',4,.5)+A.hl('M36 92v60',2,.3)],
+printer:['Принтер',()=>A.sh(100,186,84,8)+A.p('M48 40h96l12-10H60z',u('white','t'))+A.r(50,36,92,8,1,'#e8e6e0')+A.box(16,64,150,96,40,'white')+A.p('M16 64h150l22-16H38z',u('silver','t'))+A.r(30,104,122,8,2,'#2a2d31')
+  +A.p('M36 108h110l-6 24H42z','#fafaf6')+A.l('M52 116h70M52 122h50','#b9bcc0',1.5)+A.r(118,76,40,16,3,u('screen','f'))+A.c(110,84,3,'#5df08a')+A.r(16,140,150,20,0,u('silver','ch'))+A.hl('M24 72v60',3,.4)],
+plant:['Пальма',()=>{let s=A.sh(100,186,46,7);const leaf=(d,f)=>A.p(d,f)+A.p(d,'none','stroke="#1d4d2a" stroke-width=".8" opacity=".6"');
+  s+=leaf('M100 112C84 70 46 52 14 50c30 14 52 34 82 66z','url(#green-c)')+leaf('M100 112C112 68 150 46 186 44c-34 16-56 38-82 72z','url(#green-c)')+leaf('M100 112C92 64 104 28 124 8c-12 30-14 60-20 104z','url(#green-r)')+leaf('M100 112C80 86 52 92 30 96c26 0 46 10 66 20z','url(#green-ch)')+leaf('M100 112c22-24 50-22 70-14-24-2-44 6-66 18z','url(#green-ch)');
+  return s+A.cyl(100,116,36,10,58,'terra')+A.e(100,116,36,10,u('terra','t'))+A.e(100,117,31,7,'#3b2416')+A.p('M64 128a36 10 0 0 0 72 0v4a36 10 0 0 1-72 0z','#000','opacity=".15"')+A.hl('M74 132v40',4,.35)}],
+camera:['Фотоаппарат',()=>A.sh(100,186,80,9)+A.box(22,72,128,84,34,'black')+A.p('M64 72l10-26h40l8 26z',u('black','f'))+A.p('M114 46l18-12 10 26-16 12z',u('black','s'))+A.r(22,80,26,70,8,u('dark','c'))+A.r(140,64,14,7,2,'#c4372c')
+  +A.cyl(98,112,32,32,0,'black',false)+A.c(98,116,34,u('black','r'))+A.c(98,116,27,u('chrome','r'))+A.c(98,116,22,'#0b1622')+A.c(98,116,16,'url(#navy-r)')+A.c(90,108,5,'#fff','opacity=".55"')+A.c(104,122,2.5,'#fff','opacity=".35"')+A.hl('M28 90v52',3,.25)],
+lens:['Объектив',()=>A.sh(100,186,52,8)+A.cyl(100,30,40,13,148,'white',false)+A.p('M60 64h80v38H60z','url(#rubber-c)')+[68,76,84,92].map(y=>A.l(`M60 ${y}h80`,'#111',1.2)).join('')+A.r(60,112,80,5,0,'#c4372c')+A.p('M60 168h80v10a40 13 0 0 1-80 0z',u('black','c'))
+  +A.e(100,30,40,13,u('white','t'))+A.e(100,30,34,10,'#0b1622')+A.e(100,30,24,7,'url(#navy-r)')+A.e(92,28,6,2,'#fff','opacity=".6"')+A.hl('M72 40v120',5,.55)],
+lamp:['Студийный свет',()=>A.sh(100,186,62,7)+A.rod(100,90,100,170,5,'black')+A.l('M100 168L52 186M100 168l48 18M100 168v18','#16181a',4)+A.p('M28 18h144l-22 70H50z',u('black','f'))+A.p('M172 18l12-10-18 72-16 8z',u('black','s'))+A.p('M38 26h124l-18 56H56z','url(#glow-w)')+A.p('M38 26h124l-18 56H56z','#fffaf0','opacity=".6"')+A.p('M28 18h144l12-10H40z',u('black','t'))],
+watch:['Наручные часы',()=>A.sh(100,186,48,7)+A.p('M78 168h44l-8 16H86z',u('wdark','fx'))+A.r(80,36,40,132,10,u('leather','c'))+[50,64,136,150].map(y=>A.l(`M84 ${y}h32`,'#3a1c0e',1,'opacity=".6"')).join('')+A.c(100,98,36,u('gold','r'))+A.c(100,98,29,u('silver','r'))+A.c(100,98,27,'#f7f6f2')
+  +[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>{const a=i*Math.PI/6;return A.l(`M${100+Math.cos(a)*21} ${98+Math.sin(a)*21}L${100+Math.cos(a)*25} ${98+Math.sin(a)*25}`,'#222',i%3?1:2.4)}).join('')+A.l('M100 98l-6-15M100 98l14 6','#111',2)+A.l('M100 98l4 20','#c4372c',.8)+A.r(134,94,8,8,2,u('gold','c'))+A.p('M76 80q12-16 30-16','none','stroke="#fff" stroke-opacity=".6" stroke-width="3"')],
+phone:['Смартфоны',()=>A.sh(100,186,80,8)+A.box(18,120,96,60,40,'white')+A.r(30,140,72,12,2,'#d9d7d0')+A.box(30,96,84,26,30,'white')+A.r(40,104,40,8,1,'#c9c6bd')+A.p('M120 40q0-8 8-8h40q8 0 8 8v132q0 8-8 8h-40q-8 0-8-8z',u('black','f'))+A.r(124,40,48,132,4,'url(#wall-p)')+A.p('M124 40h22l-22 80z','#fff','opacity=".14"')+A.r(140,36,16,4,2,'#000')],
+sneakers:['Кроссовки',()=>{const sh=(o,y)=>`<g transform="translate(${o} ${y})">`+A.p('M14 132q0-26 16-30l28-6 22 22q32 8 56 12 18 4 18 22v10H14z',u('white','r'))+A.p('M14 158h162v8q0 8-8 8H22q-8 0-8-8z',u('cream','f'))+A.p('M14 162h162','none','stroke="#c9bfa8" stroke-width="2"')+A.p('M60 140q40-8 80 6','none','stroke="#c4372c" stroke-width="8" stroke-linecap="round"')+[0,1,2,3].map(i=>A.l(`M${50+i*7} ${112+i*3}l10-6`,'#555',2)).join('')+A.hl('M24 120q10-14 28-18',3,.6)+'</g>';return A.sh(100,186,90,9)+sh(10,-24)+sh(-6,8)}],
+perfume:['Парфюм',()=>A.sh(100,186,50,8)+A.r(50,70,100,112,16,u('glass','fx'))+A.r(58,96,84,80,10,'#e2a33a','opacity=".75"')+A.r(58,96,84,80,10,'url(#refl)')+A.r(74,112,52,30,2,u('white','f'))+A.l('M82 122h36M88 132h24','#7a5a12',1.5)+A.cyl(100,40,22,7,30,'gold')+A.r(92,62,16,10,1,u('gold','c'))+A.hl('M58 82v88',5,.7)],
+mower:['Газонокосилка',()=>A.sh(100,186,92,9)+A.rod(124,96,182,24,6,'black')+A.l('M168 30h22','#151719',6)+A.p('M18 132q4-26 40-30h70q36 4 40 30v22H18z',u('green','r'))+A.r(18,148,150,10,2,u('dark','ch'))+A.box(60,82,52,30,26,'black')+A.cyl(86,72,14,5,10,'red')
+  +A.wheel(36,162,20,{t:6,rim:'silver'})+A.wheel(150,162,20,{t:6,rim:'silver'})+A.hl('M28 124q8-16 32-18',4,.4)],
+grill:['Гриль',()=>A.sh(100,186,74,8)+A.rod(66,124,40,182,5,'black')+A.rod(134,124,160,182,5,'black')+A.rod(100,130,100,180,5,'black')+A.wheel(40,176,10,{t:4,rim:'silver'})
+  +A.p('M30 98h140q0 46-70 46T30 98z',u('black','c'))+A.p('M30 98q0-56 70-56t70 56z',u('black','r'))+A.r(84,30,32,8,4,u('chrome','ch'))+A.r(30,96,140,6,1,u('chrome','ch'))+A.hl('M48 76q14-24 44-28',5,.4)],
+books:['Книги',()=>{let s=A.sh(100,186,78,8);[[24,156,'#8c2a22',0],[30,132,'#1d3354',4],[18,108,'#2f6b3f',-4],[28,84,'#7a5a12',3],[34,60,'#5a2a6b',-2]].forEach(([x,y,c,a])=>{s+=`<g transform="rotate(${a} 100 ${y+12})">${A.p(`M${x} ${y}h126l18-12H${x+18}z`,'#efe6d0')+A.p(`M${x+126} ${y}l18-12v24l-18 12z`,'#d8ccb0')+A.r(x,y,126,24,2,c)+A.r(x,y,126,24,2,'url(#refl)')+A.l(`M${x+10} ${y+12}h40`,'#e8c46a',2,'opacity=".8"')}</g>`});return s}],
+tv:['Телевизор',()=>A.sh(102,186,86,9)+A.rod(80,30,60,6,2.5,'chrome')+A.rod(110,30,138,8,2.5,'chrome')+A.box(16,40,148,136,34,'wdark')+A.r(24,48,104,118,16,'#1b1f24')+A.r(30,54,92,106,22,'url(#screen-r)')+A.p('M36 62q30-8 60-4L52 150q-14-30-16-88z','#fff','opacity=".09"')
+  +A.r(134,52,24,114,2,'#2b2118')+A.c(146,70,6,u('chrome','r'))+A.c(146,92,6,u('chrome','r'))+[112,120,128,136,144].map(y=>A.l(`M138 ${y}h16`,'#111',2)).join('')],
+vhs:['Кассеты',()=>{let s=A.sh(100,186,80,8);[[22,140,0],[28,102,-3],[18,64,4]].forEach(([x,y,a])=>{s+=`<g transform="rotate(${a} 100 ${y+16})">${A.box(x,y,140,36,26,'black')+A.r(x+18,y+6,88,14,1,'#f3efe4')+A.l(`M${x+24} ${y+13}h50`,'#c4372c',2)+A.r(x+44,y+24,52,8,2,'#0b0c0d')+A.c(x+56,y+28,3,'#555')+A.c(x+84,y+28,3,'#555')}</g>`});return s}],
+box:['Коробка',()=>A.sh(100,186,84,9)+A.box(18,98,140,84,46,'card')+A.p('M18 98l-14-24h140l14 24z',shade('#c39a5d',.2))+A.p('M158 98l25-18 14-26-25 18z',shade('#c39a5d',-.15))+A.r(76,98,24,84,0,'#e2c690','opacity=".8"')+A.r(30,138,40,24,1,'#f3efe4')+A.l('M36 146h28M36 154h18','#555',1.5)+A.l('M120 120l18 12','#8b6a3a',1.5)],
+coin:['Монеты',()=>{let s=A.sh(100,186,86,9);const st=(x,n,m)=>{let o='';for(let i=0;i<n;i++)o+=A.cyl(x,176-i*7,22,7,7,m);return o};s+=st(40,8,'silver')+st(86,11,'gold');
+  s+=A.e(150,110,40,62,u('gold','s'))+A.e(144,110,40,62,u('gold','r'))+A.e(144,110,32,52,'none','stroke="#a07a1c" stroke-width="2"')+A.p('M144 82l8 18h20l-16 12 6 20-18-12-18 12 6-20-16-12h20z',shade('#dcae35',-.25))+A.hl('M114 86q6-28 24-34',4,.6);return s}],
+figurine:['Статуэтка',()=>A.sh(100,186,46,7)+A.cyl(100,168,42,11,12,'white')+A.p('M62 168q2-56 38-70 36 14 38 70z',u('white','r'))+A.p('M68 150q32-12 64 0M66 160q34-10 68 0','none','stroke="#3d6fc4" stroke-width="3" opacity=".75"')
+  +[78,92,106,120].map(x=>A.c(x,134+Math.abs(x-99)*.2,3,'#3d6fc4','opacity=".7"')).join('')+A.p('M88 100q-2-24 12-30 14 6 12 30z',u('white','r'))+A.p('M90 82q-18 6-22 22M110 82q16 6 20 20','none','stroke="#efeae2" stroke-width="7"')+A.c(68,104,5,u('pink','r'))
+  +A.c(100,56,14,u('white','r'))+A.p('M86 52q4-20 18-16 12 4 10 16-6-8-14-6-10 2-14 6z','#6b4a2a')+A.c(104,38,7,'#6b4a2a')+A.e(94,60,2,1.4,'#c97a7a','opacity=".7"')+A.hl('M74 120q4-14 12-18',3,.6)],
+trophy:['Кубок',()=>A.sh(100,186,56,8)+A.box(56,146,88,38,20,'black')+A.r(74,156,52,14,1,u('gold','f'))+A.cyl(100,136,18,6,12,'gold')+A.r(94,104,12,34,2,u('gold','c'))+A.p('M54 24h92v30q0 52-46 52T54 54z',u('gold','c'))
+  +A.e(100,24,46,10,u('gold','t'))+A.e(100,24,40,7,shade('#dcae35',-.45))+A.p('M54 36H34q0 34 28 40M146 36h20q0 34-28 40','none','stroke="url(#gold-c)" stroke-width="7"')+A.hl('M70 34v40',5,.7)],
+suitcase:['Чемодан',()=>A.sh(100,186,64,8)+A.rod(80,22,80,50,5,'chrome')+A.rod(120,22,120,50,5,'chrome')+A.r(76,16,48,10,4,u('black','ch'))+A.box(42,48,108,128,32,'navy')+[66,96,126].map(x=>A.r(x-4,52,8,120,3,'#fff','opacity=".08"')+A.l(`M${x+4} 52v120`,'#0c1626',1.5)).join('')
+  +A.r(42,170,108,6,2,u('black','ch'))+A.c(52,182,6,'url(#black-r)')+A.c(140,182,6,'url(#black-r)')+A.hl('M48 56v108',3,.35)],
+drill:['Перфоратор',()=>A.sh(100,186,86,8)+A.rod(168,96,198,96,4,'chrome')+A.r(150,88,20,16,3,u('black','ch'))+A.p('M28 74q0-14 14-14h96q16 0 18 16l2 22q0 12-12 12H64z',u('yellow','r'))+A.r(40,66,46,30,6,u('black','f'))+[46,54,62,70,78].map(x=>A.l(`M${x} 70v22`,'#2c3036',2)).join('')
+  +A.p('M70 108h40l-10 58H56z',u('black','fx'))+A.r(48,160,62,22,6,u('black','f'))+A.r(80,118,10,18,3,'#c4372c')+A.hl('M46 70h60',3,.6)],
+ladder:['Стремянка',()=>{let s=A.sh(100,188,72,7);s+=A.rod(112,22,156,184,8,'alu')+A.rod(104,22,146,186,7,'alu')+A.rod(126,104,138,104,4,'dark');
+  s+=A.rod(74,22,40,184,9,'alu')+A.rod(104,22,98,184,9,'alu');[56,90,124,158].forEach(y=>{const t=(y-22)/162,xl=74+(40-74)*t,xr=104+(98-104)*t;s+=A.box(xl-1,y,xr-xl+4,7,12,'alu')});
+  s+=A.box(68,12,44,9,22,'dark')+A.r(36,182,10,6,2,'#111')+A.r(94,182,10,6,2,'#111')+A.r(142,182,10,6,2,'#111');return s}],
+hardhat:['Каска',()=>A.sh(100,186,80,8)+A.p('M14 158q0-8 10-10h152q10 2 10 10v6q-80 10-172 0z',u('yellow','fx'))+A.p('M30 152q-2-96 70-98 72 2 70 98z',u('yellow','r'))+A.p('M100 56v94M76 62q-10 40-10 88M124 62q10 40 10 88','none','stroke="#a5781a" stroke-width="3" opacity=".7"')+A.hl('M48 110q6-34 34-46',7,.55)],
+teddy:['Плюшевый медведь',()=>{const f=(x)=>u('fur',x);return A.sh(100,186,70,8)+A.e(48,170,22,15,f('r'))+A.e(152,170,22,15,f('r'))+A.e(48,172,12,8,'#e3c49a')+A.e(152,172,12,8,'#e3c49a')+A.e(100,140,52,46,f('r'))+A.e(100,146,28,30,'#e3c49a','opacity=".8"')+A.e(46,126,15,28,f('r'),'transform="rotate(20 46 126)"')+A.e(154,126,15,28,f('r'),'transform="rotate(-20 154 126)"')
+  +A.c(52,34,17,f('r'))+A.c(148,34,17,f('r'))+A.c(52,36,9,'#d9b083')+A.c(148,36,9,'#d9b083')+A.c(100,62,46,f('r'))+A.e(100,78,20,15,'#e3c49a')+A.e(100,72,8,6,'url(#black-r)')+A.l('M100 78v6M92 86q8 6 16 0','#2a1a0e',2)+A.c(80,54,5.5,'url(#black-r)')+A.c(120,54,5.5,'url(#black-r)')+A.c(78,52,1.6,'#fff')+A.c(118,52,1.6,'#fff')+A.p('M66 102q34 14 68 0l6 10q-40 16-80 0z',u('red','f'))+A.p('M92 106l-14 18 12 2 10-16 10 16 12-2-14-18z',u('red','r'))}],
+blocks:['Конструктор',()=>{let s=A.sh(100,186,86,9)+A.box(20,42,126,140,30,'blue')+A.r(30,52,106,84,2,'#cfe3ff')+A.r(30,52,106,84,2,'url(#sky)','opacity=".6"')+A.r(30,142,70,16,2,'#f2c230')+A.l('M36 150h56','#1d3354',3);
+  const br=(x,y,w,c)=>A.box(x,y,w,16,14,c)+Array.from({length:Math.round(w/14)},(_,i)=>A.cyl(x+7+i*14,y-2,4.5,2,4,c)).join('');s+=br(48,96,56,'red')+br(62,80,42,'yellow')+br(58,64,28,'green');s+=br(120,168,42,'red')+br(150,150,28,'yellow')+br(24,170,28,'green');return s}],
+bottle:['Вино',()=>A.sh(100,186,34,6)+A.p('M88 8h24v40q24 12 24 44v80q0 8-8 8H72q-8 0-8-8V92q0-32 24-44z',u('bottle','c'))+A.r(88,8,24,28,2,u('velvet','c'))+A.r(70,104,60,46,2,u('cream','f'))+A.l('M80 118h40M86 128h28','#5a2a1a',1.5)+A.r(80,136,40,6,1,'#c4372c','opacity=".7"')+A.hl('M74 96v76',5,.5)+A.hl('M96 50v34',2,.4)],
+barrel:['Бочка',()=>A.sh(100,186,70,9)+A.p('M38 26q-12 76 0 152h124q12-76 0-152z',u('oak','c'))+[60,82,104,126,148].map(x=>A.p(`M${x} 26q-4 76 0 152`,'none',`stroke="${shade('#b98545',-.4)}" stroke-width="1.5"`)).join('')+A.p('M38 26q-12 76 0 152h124q12-76 0-152z','url(#grain)')
+  +A.e(100,26,62,12,u('oak','t'))+A.e(100,26,56,9,shade('#b98545',-.2))+[44,154].map(y=>A.p(`M${y<100?33:31} ${y}h${y<100?134:138}`,'none','stroke="url(#dark-c)" stroke-width="8"')).join('')+A.e(100,26,62,12,'none','stroke="url(#dark-ch)" stroke-width="5"')+A.hl('M48 50v110',5,.35)],
+rod:['Спиннинги',()=>A.sh(100,188,60,7)+A.l('M50 184L150 10','#1c1d1f',4.5)+A.l('M74 184L176 30','#2b2420',3.5)+A.l('M150 10q14 40 2 100','#ddd',.8,'opacity=".7"')+[0.35,0.55,0.75].map(t=>A.c(50+100*t,184-174*t,3,'none','stroke="#bbb" stroke-width="1.3"')).join('')
+  +A.r(44,144,14,40,5,u('black','c'),'transform="rotate(30 51 164)"')+A.c(70,150,15,u('chrome','r'))+A.c(70,150,9,u('dark','r'))+A.rod(70,150,88,140,3,'chrome')+A.e(100,168,12,8,u('black','r'))],
+tent:['Палатка',()=>A.sh(100,186,92,9)+A.p('M8 178Q40 50 100 30q60 20 92 148z',u('green','r'))+A.p('M100 30q-20 60-30 148h60q-10-88-30-148z',u('orange','f'))+A.p('M78 178q4-40 22-60 18 20 22 60z','#1a1d1a')+A.p('M8 178Q40 50 100 30q60 20 92 148','none','stroke="#1f2a22" stroke-width="2.5"')+A.p('M24 150q76-40 152 0','none','stroke="#1f2a22" stroke-width="2" opacity=".5"')+A.hl('M36 120q20-60 56-82',5,.4)],
+cooler:['Термобокс',()=>A.sh(100,186,84,9)+A.box(20,86,140,92,38,'blue')+A.p('M14 84h152v-14H14z',u('white','f'))+A.p('M166 70l24-17v14l-24 17z',u('white','s'))+A.p('M14 70h152l24-17H38z',u('white','t'))+A.r(52,58,76,9,4,u('silver','ch'))+A.r(30,120,120,6,1,shade('#2c69c2',-.3))+A.r(70,100,40,12,2,u('white','f'))+A.hl('M28 96v70',4,.35)],
+ring:['Кольцо',()=>A.sh(100,186,64,8)+A.p('M30 116l14-74h112l14 74z',u('velvet','s'))+A.p('M40 112l10-60h100l10 60z','#5a1420')+A.box(26,118,148,62,26,'velvet')+A.r(40,124,120,28,6,'#4a0f19')+A.e(100,124,26,30,'none','stroke="#2a1608" stroke-width="10" opacity=".5"')+A.e(100,120,26,30,'none','stroke="url(#gold-c)" stroke-width="8"')
+  +A.p('M88 92l12-16 12 16-12 12z','url(#glass-r)')+A.p('M88 92l12-16 12 16z','#ffffff','opacity=".6"')+A.c(104,82,6,'url(#glow-w)')+A.l('M104 72v20M94 82h20','#fff',1,'opacity=".8"')],
+necklace:['Колье',()=>A.sh(100,186,64,8)+A.box(26,140,148,40,26,'velvet')+A.p('M54 140q-10-110 46-110t46 110','none','stroke="#1a1a1a" stroke-width="8"')+A.p('M54 140q-10-110 46-110t46 110','none','stroke="url(#black-c)" stroke-width="5"')
+  +A.p('M62 82q38 70 76 0','none','stroke="url(#gold-c)" stroke-width="3"')+[0,1,2,3,4,5,6,7,8].map(i=>{const t=i/8,x=62+76*t,y=82+70*4*t*(1-t)*.5;return A.c(x,y,i===4?8:4,i===4?'url(#glass-r)':u('silver','r'))}).join('')+A.c(103,114,6,'url(#glow-w)')],
+gold:['Слиток',()=>A.sh(100,186,80,8)+A.p('M16 178l22-46h104l22 46z',u('gold','f'))+A.p('M38 132l14-14h96l-6 14z',u('gold','t'))+A.p('M142 132l6-14 22 46-6 14z',u('gold','s'))+A.l('M62 152h56M70 162h40','#9a7414',2)+A.hl('M42 140h90',3,.7)],
+safe:['Сейф',()=>A.sh(100,186,84,9)+A.box(20,30,140,150,36,'dark')+A.r(30,40,120,130,4,u('steel','fx'),'opacity=".25"')+A.r(30,40,120,130,4,'none','stroke="#1a1d21" stroke-width="2"')+A.c(82,102,24,u('chrome','r'))+A.c(82,102,18,u('black','r'))+[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>{const a=i*Math.PI/6;return A.l(`M${82+Math.cos(a)*19} ${102+Math.sin(a)*19}L${82+Math.cos(a)*22} ${102+Math.sin(a)*22}`,'#ddd',1)}).join('')
+  +A.rod(122,86,122,124,8,'chrome')+A.r(26,58,8,22,2,u('black','c'))+A.r(26,130,8,22,2,u('black','c'))+A.hl('M30 46h110',2,.3)],
+drone:['Дрон',()=>{let s=A.sh(100,182,80,8);[[30,100],[170,100],[52,72],[148,72]].forEach(([x,y],i)=>{s+=A.rod(100,104,x,y,6,'black')+A.cyl(x,y-6,6,2.5,6,'dark')+A.e(x,y-8,34,6,'#cfd5db','opacity=".35"')+A.e(x,y-8,34,6,'none','stroke="#e6eaee" stroke-width=".8" opacity=".6"')});
+  return s+A.p('M70 96q0-14 14-14h32q14 0 14 14v14q0 10-10 10H80q-10 0-10-10z',u('white','r'))+A.r(86,120,28,16,4,u('black','f'))+A.c(100,130,7,u('navy','r'))+A.c(98,128,2,'#fff','opacity=".6"')+A.l('M74 122l-10 40M126 122l10 40','#202326',3)+A.l('M56 164h20M124 164h20','#202326',3)}],
+car:['Авто под чехлом',()=>A.sh(100,188,98,8,.65)+A.p('M8 170q0-30 20-36l28-36q8-10 22-10h46q16 0 26 12l18 30q22 4 24 22v18z',u('olive','r'))+A.p('M8 170h164v8H8z','#3a3c30','opacity=".6"')
+  +A.p('M40 132q10-20 40-40M130 92q14 20 18 46M88 92q-4 40 0 78','none','stroke="#5a5d4a" stroke-width="3" opacity=".7"')+A.p('M106 88l-8 90','none','stroke="#e3ad27" stroke-width="6"')+A.p('M24 178a18 18 0 0 1 36 0zM134 178a18 18 0 0 1 36 0z','url(#rubber-r)')+A.hl('M40 120q20-28 50-30',5,.35)]
+};
+// ===== 20 default containers. Item prices: realistic used (б/у) range in ₽, rolled each new game.
+// [title, origin, legend, items[[icon, name, min, max, size, skew]], startFactor?]  skew 'low' = usually near min (rare jackpot)
 const DEFAULT_CONTAINERS=[
-['Кухня закрытого ресторана','Москва, Пятницкая ул.',640,200,'Ресторан высокой кухни закрылся через полгода после открытия. Шеф клялся, что всё оборудование итальянское. Бухгалтер клялся, что шеф много в чём клялся.',
- [['stove','Плита на 6 конфорок',3422,'L'],['mixer','Планетарный миксер',380,'M'],['pot','Кастрюля 20 л',162,'M'],['pot','Сотейник',150,'S'],['pan','Сковорода',90,'S'],['pan','Сковорода-гриль',110,'S'],['knives','Набор ножей',40,'S']]],
-['Гараж байкера','Подольск',900,200,'Хозяин продал гараж и уехал на Бали. Соседи говорят, что он не открывал ворота три года, а за аренду не платил четыре.',
- [['moto','Мотоцикл (не на ходу)',2100,'L'],['toolbox','Ящик с инструментами',260,'M'],['helmet','Шлем',180,'M'],['tire','Колесо в сборе',95,'M'],['bag','Кожаная сумка',120,'S'],['canister','Канистра',15,'S']]],
-['Квартира стримера','Санкт-Петербург',1200,200,'Стример переехал в студию побольше и бросил старый сетап. В чате писали, что там топовая видеокарта. Чат часто такое пишет.',
- [['pc','Системный блок',1450,'M'],['chair','Игровое кресло',210,'L'],['monitor','Монитор 27"',320,'M'],['monitor','Монитор 24"',140,'M'],['mic','Микрофон',180,'S'],['headphones','Наушники',90,'S'],['gamepad','Геймпад',35,'S']]],
-['Музыкальный магазин','Екатеринбург',800,200,'Магазин закрыли за долги. Продавец уверял, что на одной из гитар автограф известного рокера. Или это был ценник.',
- [['guitar','Электрогитара',650,'L'],['guitar','Акустическая гитара',140,'L'],['amp','Комбоусилитель',280,'M'],['drum','Малый барабан',120,'M'],['vinyl','Коллекция пластинок',1900,'M'],['mic','Вокальный микрофон',75,'S']]],
-['Наследство бабушки','Тверская область',500,100,'Внуки поделили квартиру, а про контейнер на складе забыли. Бабушка всю жизнь говорила, что в доме есть вещь, которая стоит как машина.',
- [['chest','Сундук',180,'L'],['clock','Часы с маятником',420,'L'],['painting','Картина маслом',6200,'M'],['samovar','Самовар',860,'M'],['sewing','Швейная машинка',90,'M'],['vase','Ваза',35,'S']]],
-['Фитнес-клуб «Тело мечты»','Казань',1000,200,'Клуб обещал тело мечты за 30 дней и закрылся через 29. Абонементы никто не вернул, тренажёры никто не вывез.',
- [['bike','Шоссейный велосипед',540,'L'],['dumbbell','Набор блинов',210,'M'],['dumbbell','Гантели',160,'M'],['kettlebell','Гиря 32 кг',45,'M'],['gloves','Боксёрские перчатки',60,'S']]],
-['Офис стартапа','Москва-Сити',1500,300,'Стартап обещал «убить Uber». Убил только инвесторов. Всё оборудование было куплено «на вырост».',
- [['coffee','Кофемашина',940,'M'],['chair','Офисное кресло',110,'L'],['laptop','Ноутбук',780,'M'],['laptop','Ноутбук (разбит экран)',120,'M'],['monitor','Монитор',150,'M'],['printer','Принтер',60,'M'],['plant','Пальма в горшке',25,'M']]],
-['Фотостудия','Новосибирск',700,200,'Фотограф ушёл в монастырь. Перед уходом сказал, что «один объектив дороже всей студии». Какой именно — не уточнил.',
- [['lamp','Студийный свет',180,'L'],['lamp','Софтбокс',70,'L'],['camera','Зеркальная камера',620,'M'],['bag','Кофр',50,'M'],['lens','Объектив 70–200',1350,'S'],['lens','Китовый объектив',40,'S']]],
-['Конфискат с таможни','Пограничный пункт',2000,300,'Партия задержана на границе. В документах значится «сувенирная продукция». Таможенник при досмотре почему-то улыбался.',
- [['phone','Смартфоны, коробка',1200,'M'],['sneakers','Кроссовки, 12 пар',360,'M'],['bag','«Брендовые» сумки',90,'M'],['watch','Часы «швейцарские»',45,'S'],['watch','Часы (настоящие)',3800,'S'],['perfume','Парфюм',140,'S']]],
-['Дача профессора','Подмосковье',400,100,'Профессор переехал к дочери в Германию. Дачу продали, а сарай вывезли в контейнер не глядя.',
- [['mower','Газонокосилка',230,'L'],['grill','Гриль',160,'L'],['bike','Велосипед «Урал»',70,'L'],['toolbox','Садовый инвентарь',55,'M'],['books','Книги',30,'M']]],
-['Видеопрокат 90-х','Самара',300,100,'Владелец сорок лет хранил всё, что не вернули клиенты. По слухам, среди кассет есть запечатанные.',
- [['tv','Телевизор Trinitron',260,'L'],['vhs','Коробка VHS',85,'M'],['box','Плакаты',40,'M'],['vhs','Запечатанные кассеты',1400,'S'],['gamepad','Приставка Dendy',120,'S']]],
-['Коллекционер','Нижний Новгород',1800,300,'Человек тридцать лет собирал всё подряд: монеты, фигурки, марки. Жена все эти годы собирала чемодан.',
- [['suitcase','Чемодан',25,'M'],['figurine','Фарфоровые статуэтки',380,'M'],['trophy','Кубок',60,'M'],['coin','Альбом монет',2400,'S'],['books','Альбом марок',150,'S']]],
-['Строительный склад','Краснодар',600,200,'Бригада закончила объект и исчезла, не забрав инструмент. Заказчик до сих пор ищет бригаду.',
- [['ladder','Стремянка',75,'L'],['toolbox','Кейс инструментов',340,'M'],['drill','Перфоратор',210,'M'],['drill','Шуруповёрт',90,'S'],['hardhat','Каски',30,'S'],['canister','Бензин',20,'S']]],
-['Магазин игрушек','Воронеж',350,100,'Магазин закрылся перед Новым годом. Остатки партии лежат нетронутыми. Среди коробок есть одна очень старая.',
- [['teddy','Медведь 1,5 метра',120,'L'],['box','Коробки с игрушками',180,'M'],['blocks','Коллекционный конструктор',1600,'M'],['gamepad','Игровая приставка',290,'S'],['blocks','Кубики',25,'S']]],
-['Винный погреб','Сочи',2500,500,'Ресторатор хранил вино «на особый случай». Особый случай так и не наступил, а вот банкротство наступило.',
- [['barrel','Дубовая бочка',420,'L'],['bottle','Бордо 1998',1800,'S'],['bottle','Шампанское, ящик',650,'S'],['bottle','Вино «Домашнее»',10,'S'],['vase','Декантер',80,'S']]],
-['Рыбацкий склад','Астрахань',450,100,'Рыбак продал всё и переехал в город. Говорит, за сорок лет ни разу не поймал рыбу больше ладони.',
- [['tent','Палатка',140,'L'],['rod','Спиннинги',320,'M'],['cooler','Термобокс',60,'M'],['box','Эхолот в коробке',380,'M']]],
-['Подозрительно дешёвый','Неизвестно',200,100,'Контейнер стоит на складе одиннадцать лет. Документов нет, владельца нет, запах есть.',
- [['tv','Сломанный телевизор',5,'L'],['chest','Старый сундук',30,'L'],['tire','Лысые покрышки',0,'M'],['box','Коробки',15,'M'],['ring','Кольцо из сундука',2800,'S']]],
-['Ювелирная мастерская','Кострома',3000,500,'Мастер ушёл на пенсию, а сейф так и не смогли открыть. Продаётся вместе с сейфом. Код никто не знает.',
- [['safe','Сейф (закрыт)',900,'L'],['toolbox','Инструменты ювелира',400,'M'],['ring','Колье',2200,'S'],['ring','Кольца, лоток',1100,'S'],['watch','Часы',300,'S'],['gold','«Слиток» (позолота)',60,'S']]],
-['Сервисный центр','Ростов-на-Дону',1100,200,'Сервис закрылся, а клиенты так и не пришли за своими вещами. Половина — рабочая. Какая — не знает никто.',
- [['drone','Дрон',560,'M'],['phone','Телефоны б/у',340,'M'],['laptop','Ноутбуки в ремонт',260,'M'],['headphones','Наушники',180,'S'],['phone','Планшет',120,'S'],['gamepad','Геймпады',45,'S']]],
-['Финальный лот','Дубай',4000,500,'Контейнер привезли с аукциона в Дубае. Внутри машина под чехлом. Какая — узнаете только после продажи.',
- [['car','Авто под чехлом',9500,'L'],['tire','Комплект дисков',900,'M'],['suitcase','Чемодан',180,'M'],['canister','Канистра',20,'S']]]
+['Кухня закрытого ресторана','Москва, Пятницкая ул.','Ресторан высокой кухни закрылся через полгода после открытия. Шеф клялся, что всё оборудование итальянское. Бухгалтер клялся, что шеф много в чём клялся.',
+ [['stove','Проф. плита с духовкой',70000,140000,'L'],['coffee','Кофемашина эспрессо',30000,85000,'M'],['mixer','Планетарный миксер',9000,24000,'M'],['pot','Кастрюля 20 л',1500,4000,'M'],['pan','Сковорода',600,2200,'S'],['pan','Сковорода-гриль',800,2600,'S'],['knives','Набор ножей',1200,6000,'S']]],
+['Гараж байкера','Подольск','Хозяин продал гараж и уехал на Бали. Соседи говорят, что ворота он не открывал три года, а за аренду не платил четыре.',
+ [['moto','Мотоцикл (не на ходу)',60000,190000,'L'],['toolbox','Ящик с инструментами',4000,16000,'M'],['helmet','Мотошлем',3000,12000,'M'],['tire','Колесо в сборе',2500,7500,'M'],['bag','Кожаная сумка',1500,8000,'S'],['canister','Канистра 20 л',300,900,'S']]],
+['Квартира стримера','Санкт-Петербург','Стример переехал в студию побольше и бросил старый сетап. В чате писали, что там топовая видеокарта. Чат часто такое пишет.',
+ [['pc','Игровой ПК',35000,140000,'L'],['chair','Игровое кресло',4000,15000,'L'],['monitor','Монитор 27"',9000,26000,'M'],['monitor','Монитор 24"',4500,11000,'M'],['mic','Студийный микрофон',3000,16000,'S'],['headphones','Наушники',2000,12000,'S'],['gamepad','Геймпад',1500,4500,'S']]],
+['Музыкальный магазин','Екатеринбург','Магазин закрыли за долги. Продавец уверял, что на одной из гитар автограф известного рокера. Или это был ценник.',
+ [['guitar','Электрогитара',15000,90000,'L'],['amp','Комбоусилитель',8000,35000,'M'],['drum','Малый барабан',4000,16000,'M'],['vinyl','Коллекция пластинок',4000,70000,'M','low'],['mic','Вокальный микрофон',2000,9000,'S']]],
+['Наследство бабушки','Тверская область','Внуки поделили квартиру, а про контейнер на складе забыли. Бабушка всю жизнь говорила, что в доме есть вещь, которая стоит как машина.',
+ [['chest','Сундук',2500,12000,'L'],['clock','Каминные часы',3000,26000,'M'],['painting','Картина маслом',2000,450000,'M','low'],['samovar','Медный самовар',5000,38000,'M'],['sewing','Швейная машинка Singer',3000,20000,'M'],['vase','Фарфоровая ваза',300,4000,'S']]],
+['Фитнес-клуб «Тело мечты»','Казань','Клуб обещал тело мечты за 30 дней и закрылся через 29. Абонементы никто не вернул, тренажёры никто не вывез.',
+ [['bike','Шоссейный велосипед',15000,70000,'L'],['dumbbell','Гантели разборные',2500,9000,'M'],['kettlebell','Гиря 32 кг',1500,4000,'M'],['gloves','Боксёрские перчатки',1000,5500,'S']],[.3,.55]],
+['Офис стартапа','Москва-Сити','Стартап обещал «убить Uber». Убил только инвесторов. Всё оборудование было куплено «на вырост».',
+ [['coffee','Кофемашина',25000,80000,'M'],['chair','Офисное кресло',2500,10000,'L'],['laptop','Ноутбук',12000,60000,'M'],['laptop','Ноутбук (разбит экран)',2000,8000,'M'],['monitor','Монитор',4000,12000,'M'],['printer','МФУ',2000,10000,'M'],['plant','Пальма в горшке',300,2500,'M']]],
+['Фотостудия','Новосибирск','Фотограф ушёл в монастырь. Перед уходом сказал, что «один объектив дороже всей студии». Какой именно — не уточнил.',
+ [['lamp','Студийный свет',3000,14000,'L'],['lamp','Софтбокс',1500,6000,'L'],['camera','Зеркальная камера',20000,70000,'M'],['bag','Кофр',1500,6000,'M'],['lens','Объектив 70–200',40000,120000,'S'],['lens','Китовый объектив',2000,6000,'S']]],
+['Конфискат с таможни','Пограничный пункт','Партия задержана на границе. В документах значится «сувенирная продукция». Таможенник при досмотре почему-то улыбался.',
+ [['phone','Смартфоны, коробка',20000,90000,'M'],['sneakers','Кроссовки, 12 пар',6000,30000,'M'],['bag','«Брендовые» сумки',1500,9000,'M'],['watch','Часы «швейцарские»',500,3000,'S'],['watch','Часы (настоящие)',150000,450000,'S','low'],['perfume','Парфюм',1500,9000,'S']]],
+['Дача профессора','Подмосковье','Профессор переехал к дочери в Германию. Дачу продали, а сарай вывезли в контейнер не глядя.',
+ [['mower','Газонокосилка',6000,20000,'L'],['grill','Угольный гриль',2000,8000,'L'],['bike','Велосипед «Урал»',1500,6000,'L'],['toolbox','Садовый инвентарь',1000,5000,'M'],['books','Книги',200,25000,'M','low']]],
+['Видеопрокат 90-х','Самара','Владелец сорок лет хранил всё, что не вернули клиенты. По слухам, среди кассет есть запечатанные.',
+ [['tv','Телевизор Trinitron',800,6000,'L'],['vhs','Коробка VHS',300,2500,'M'],['box','Плакаты',500,6000,'M'],['vhs','Запечатанные кассеты',8000,90000,'S','low'],['gamepad','Приставка Dendy',1500,5000,'S']]],
+['Коллекционер','Нижний Новгород','Человек тридцать лет собирал всё подряд: монеты, фигурки, марки. Жена все эти годы собирала чемодан.',
+ [['suitcase','Чемодан',1000,5000,'M'],['figurine','Статуэтка ЛФЗ',2000,35000,'M'],['trophy','Кубок',500,3500,'M'],['coin','Альбом монет',5000,280000,'S','low'],['books','Альбом марок',1000,60000,'S','low']]],
+['Строительный склад','Краснодар','Бригада закончила объект и исчезла, не забрав инструмент. Заказчик до сих пор ищет бригаду.',
+ [['ladder','Стремянка',1500,5000,'L'],['toolbox','Кейс инструментов',4000,18000,'M'],['drill','Перфоратор',4000,16000,'M'],['drill','Шуруповёрт',2000,8000,'S'],['hardhat','Каски',300,1500,'S'],['canister','Бензин',300,900,'S']],[.3,.55]],
+['Магазин игрушек','Воронеж','Магазин закрылся перед Новым годом. Остатки партии лежат нетронутыми. Среди коробок есть одна очень старая.',
+ [['teddy','Медведь 1,5 метра',1500,6000,'L'],['box','Коробки с игрушками',2000,9000,'M'],['blocks','Коллекционный конструктор',10000,130000,'M','low'],['gamepad','Игровая приставка',8000,25000,'S']]],
+['Винный погреб','Сочи','Ресторатор хранил вино «на особый случай». Особый случай так и не наступил, а вот банкротство наступило.',
+ [['barrel','Дубовая бочка',6000,25000,'L'],['bottle','Бордо 1998',15000,90000,'S','low'],['bottle','Шампанское, ящик',12000,40000,'S'],['bottle','Вино «Домашнее»',200,600,'S'],['vase','Декантер',1000,6000,'S']]],
+['Рыбацкий склад','Астрахань','Рыбак продал всё и переехал в город. Говорит, за сорок лет ни разу не поймал рыбу больше ладони.',
+ [['tent','Палатка',3000,15000,'L'],['rod','Спиннинги',3000,22000,'M'],['cooler','Термобокс',1000,4500,'M'],['box','Эхолот в коробке',8000,30000,'M']],[.3,.55]],
+['Подозрительно дешёвый','Неизвестно','Контейнер стоит на складе одиннадцать лет. Документов нет, владельца нет, запах есть.',
+ [['tv','Сломанный телевизор',0,500,'L'],['chest','Старый сундук',1000,5000,'L'],['tire','Лысые покрышки',0,800,'M'],['box','Коробки',0,1000,'M'],['ring','Кольцо из сундука',30000,260000,'S','low']],[.1,.2]],
+['Ювелирная мастерская','Кострома','Мастер ушёл на пенсию, а сейф так и не смогли открыть. Продаётся вместе с сейфом. Код никто не знает.',
+ [['safe','Сейф (закрыт)',12000,40000,'L'],['toolbox','Инструменты ювелира',8000,30000,'M'],['necklace','Колье',20000,200000,'S','low'],['ring','Кольца, лоток',15000,90000,'S'],['watch','Часы',3000,40000,'S'],['gold','«Слиток» (позолота)',500,3000,'S']]],
+['Сервисный центр','Ростов-на-Дону','Сервис закрылся, а клиенты так и не пришли за своими вещами. Половина — рабочая. Какая — не знает никто.',
+ [['drone','Дрон',15000,65000,'M'],['phone','Телефоны б/у',8000,40000,'M'],['laptop','Ноутбуки в ремонт',5000,35000,'M'],['headphones','Наушники',2000,12000,'S'],['gamepad','Геймпады',1500,6000,'S']]],
+['Финальный лот','Дубай','Контейнер привезли с аукциона в Дубае. Внутри машина под чехлом. Какая — узнаете только после продажи.',
+ [['car','Авто под чехлом',350000,1800000,'L','low'],['tire','Комплект дисков',20000,80000,'M'],['suitcase','Чемодан',2000,12000,'M'],['canister','Канистра',300,900,'S']],[.12,.25]]
 ];
 const TEAM_COLORS=['#e0453c','#3b78e7','#3fae5a','#f2c230','#9b5de5','#f08a24','#22b8cf','#e5579a'];
 const DEFAULT_TEAMS=[['Красные','#e0453c'],['Синие','#3b78e7'],['Зелёные','#3fae5a'],['Жёлтые','#f2c230']];
@@ -661,8 +846,18 @@ const uid=()=>Math.random().toString(36).slice(2,10);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const pad=n=>String(n).padStart(2,'0');
 const SZ={S:120,M:190,L:290};
+const RUB='\u00a0₽';const nf=n=>Math.round(+n||0).toLocaleString('ru-RU').replace(/\s/g,'\u00a0');const money=n=>nf(n)+RUB;
+function niceRound(v){v=Math.max(0,v);const st=v<1000?50:v<10000?100:v<100000?500:v<1e6?1000:5000;return Math.round(v/st)*st}
+const STEPS=[100,200,250,500,1000,2000,2500,5000,10000,20000,25000,50000,100000];
+const snapStep=v=>STEPS.reduce((a,b)=>Math.abs(b-v)<Math.abs(a-v)?b:a);
+function rollItem(it){const lo=+it.min||0,hi=Math.max(lo,+it.max||0),r=it.skew==='low'?Math.pow(Math.random(),2.2):(Math.random()+Math.random())/2;it.value=niceRound(lo+(hi-lo)*r)}
+const expItem=i=>{const lo=+i.min||0,hi=Math.max(lo,+i.max||0);return lo+(hi-lo)*(i.skew==='low'?.31:.5)};
+const expTotal=c=>c.items.reduce((a,i)=>a+expItem(i),0);
+function autoStart(c){if(c.auto===false)return;const sf=c.sf||[.25,.5];c.start=Math.max(500,niceRound(expTotal(c)*(sf[0]+Math.random()*(sf[1]-sf[0]))));c.step=snapStep(c.start*.1)}
+function rollContainer(c){c.items.forEach(rollItem);autoStart(c)}
+function rollAll(){S.containers.forEach(rollContainer)}
 const OPEN=['preview','auction','sold','reveal','summary'];
-const KEY='container-battle-v1';
+const KEY='container-battle-v2';
 let SPECT=false;
 const SVG={
   prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
@@ -673,15 +868,15 @@ const SVG={
   down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
 };
 
-function mkContainer([title,origin,start,step,legend,items]){return{id:uid(),title,origin,start,step,legend,items:items.map(([icon,name,value,size])=>({id:uid(),icon,name,value,size,img:null}))}}
+function mkContainer([title,origin,legend,items,sf]){const c={id:uid(),title,origin,legend,start:0,step:0,auto:true,sf:sf||[.25,.5],items:items.map(([icon,name,min,max,size,skew])=>({id:uid(),icon,name,min,max,size,skew:skew||'',value:0,img:null}))};rollContainer(c);return c}
 function freshGame(){return{started:false,index:0,phase:'closed',bid:null,bidStack:[],count:0,buyer:null,price:0,pay:null,queue:[],revealed:[],legend:true,history:[],finalShown:0}}
 function defaults(){return{
-  settings:{capital:16000,chroma:false,sound:true,spendRevenue:false,showNames:true,revealOrder:'asc',linkAudio:false},
+  settings:{capital:400000,chroma:false,sound:true,spendRevenue:false,showNames:true,revealOrder:'asc',linkAudio:false},
   hostName:'Ведущий',
   cams:{},
   room:{code:null},
   join:{code:'',name:'',seat:1,mic:false},
-  teams:DEFAULT_TEAMS.map(([n,c])=>({id:uid(),name:n,color:c,members:['Игрок 1','Игрок 2'],balance:16000,revenue:0})),
+  teams:DEFAULT_TEAMS.map(([n,c])=>({id:uid(),name:n,color:c,members:['Игрок 1','Игрок 2'],balance:400000,revenue:0})),
   containers:DEFAULT_CONTAINERS.map(mkContainer),
   game:freshGame()
 }}
@@ -698,7 +893,7 @@ const histOf=i=>{const h=S.game.history.filter(x=>x.idx===i);return h[h.length-1
 
 function countTo(el,from,to,dur=700,suffix=''){
   const tok={};el._tok=tok;const t0=performance.now();
-  const f=t=>{if(el._tok!==tok)return;const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e)+suffix;if(k<1)requestAnimationFrame(f)};
+  const f=t=>{if(el._tok!==tok)return;const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=nf(from+(to-from)*e)+suffix;if(k<1)requestAnimationFrame(f)};
   requestAnimationFrame(f);
 }
 let toastT;
@@ -731,11 +926,15 @@ const Sfx={ctx:null,
   ding(i){this.play(t=>{const f=620*Math.pow(2,Math.min(i,14)/12);this.tone(t,f,.55,{gain:.15});this.tone(t,f*2,.28,{gain:.04});this.noise(t,.03,{type:'highpass',freq:5200,gain:.05,attack:.002})})},
   cash(){this.play(t=>{this.noise(t,.08,{type:'highpass',freq:3500,gain:.14,attack:.002});this.tone(t+.05,1320,.55,{gain:.14});this.tone(t+.14,1760,.8,{gain:.14})})},
   fail(){this.play(t=>{this.tone(t,330,.35,{type:'triangle',gain:.15,slide:300});this.tone(t+.32,247,.7,{type:'triangle',gain:.15,slide:210})})},
+  laser(){this.init();if(!S.settings.sound||!this.ctx)return()=>{};try{const c=this.ctx,t=c.currentTime,o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter(),l=c.createOscillator(),lg=c.createGain();o.type='sawtooth';o.frequency.value=1650;f.type='bandpass';f.frequency.value=2400;f.Q.value=4;l.frequency.value=33;lg.gain.value=.02;l.connect(lg).connect(g.gain);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.035,t+.05);o.connect(f).connect(g).connect(c.destination);o.start(t);l.start(t);
+    return()=>{try{const n=c.currentTime;g.gain.cancelScheduledValues(n);g.gain.setValueAtTime(.03,n);g.gain.exponentialRampToValueAtTime(.0001,n+.15);o.stop(n+.2);l.stop(n+.2)}catch(e){}}}catch(e){return()=>{}}},
   fanfare(){this.play(t=>{[523,659,784,1047].forEach((f,i)=>this.tone(t+i*.13,f,i===3?1.4:.25,{type:'triangle',gain:.17}));this.tone(t+.39,659,1.3,{type:'triangle',gain:.08});this.tone(t+.39,784,1.3,{type:'triangle',gain:.07})})}
 };
 
 // ===== layout / scaling =====
-function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);$('#app').style.transform=`translate(-50%,-50%) scale(${s})`}
+function dockSpace(){const d=$('#dock');if(SPECT||PLAYER||!d||d.classList.contains('hidden')||!d.offsetHeight)return 0;return d.offsetHeight+24}
+function fit(){const dh=dockSpace(),H=Math.max(200,innerHeight-dh),s=Math.min(innerWidth/1920,H/1080),a=$('#app');a.style.top=Math.max(0,(H-1080*s)/2)+'px';a.style.transform=`translateX(-50%) scale(${s})`}
+try{new ResizeObserver(()=>fit()).observe($('#dock'))}catch(e){}
 addEventListener('resize',fit);
 
 // ===== teams =====
@@ -755,7 +954,7 @@ function buildTeams(anim){
   S.teams.forEach(t=>{
     const d=teamEl(t.id);d.style.setProperty('--tc',t.color);d.querySelector('.t-name').textContent=t.name;
     d.querySelectorAll('.cam').forEach((c,k)=>{c.style.setProperty('--tc',t.color);const m=(t.members||[])[k]||'',l=c.querySelector('.camlbl');l.textContent=m;l.style.display=m?'':'none'});
-    [['bal','balance'],['rev','revenue']].forEach(([c,k])=>{const n=d.querySelector('.'+c),from=n.dataset.v;if(anim&&from!=null&&from!==''&&+from!==t[k]){n.dataset.v=t[k];countTo(n,+from,t[k],900);n.classList.remove('flash');void n.offsetWidth;n.classList.add('flash')}else{n._tok={};n.dataset.v=t[k];n.textContent=t[k]}});
+    [['bal','balance'],['rev','revenue']].forEach(([c,k])=>{const n=d.querySelector('.'+c),from=n.dataset.v;if(anim&&from!=null&&from!==''&&+from!==t[k]){n.dataset.v=t[k];countTo(n,+from,t[k],900);n.classList.remove('flash');void n.offsetWidth;n.classList.add('flash')}else{n._tok={};n.dataset.v=t[k];n.textContent=nf(t[k])}});
   });
   syncAllCams();
 }
@@ -808,7 +1007,7 @@ let camFocus=null;
 function showNums(t){
   const d=teamEl(t.id);if(!d)return;
   [['bal','balance'],['rev','revenue']].forEach(([c,k])=>{const n=d.querySelector('.'+c),from=+n.dataset.v||0;n.dataset.v=t[k];
-    if(from!==t[k]){countTo(n,from,t[k],900);n.classList.remove('flash');void n.offsetWidth;n.classList.add('flash')}else n.textContent=t[k]});
+    if(from!==t[k]){countTo(n,from,t[k],900);n.classList.remove('flash');void n.offsetWidth;n.classList.add('flash')}else n.textContent=nf(t[k])});
 }
 function updateTeamFlags(){
   const g=S.game,nb=g.phase==='auction'?nextBid():0;
@@ -818,7 +1017,7 @@ function updateTeamFlags(){
     d.classList.toggle('lead',!!lead);
     d.classList.toggle('poor',g.phase==='auction'&&!lead&&avail(t)<nb);
     b.className='t-badge'+(lead||bought?' show':'')+(bought?' bought':'');
-    b.textContent=bought?'Купили':lead?`Ставка ${g.bid.amount}$`:'';
+    b.textContent=bought?'Купили':lead?`Ставка ${money(g.bid.amount)}`:'';
   });
 }
 
@@ -827,7 +1026,7 @@ let boxV={1:0,2:null};
 function setBox(n,v){const el=$('#box'+n),prev=boxV[n];boxV[n]=v;
   if(v===null||v===''){el._tok={};el.textContent='';return}
   if(typeof v!=='number'){el._tok={};el.textContent=v;return}
-  if(typeof prev==='number'&&prev!==v){countTo(el,prev,v,500);el.classList.remove('hot');void el.offsetWidth;el.classList.add('hot')}else{el._tok={};el.textContent=v}}
+  if(typeof prev==='number'&&prev!==v){countTo(el,prev,v,500);el.classList.remove('hot');void el.offsetWidth;el.classList.add('hot')}else{el._tok={};el.textContent=nf(v)}}
 const revealedSum=()=>{const c=cur();return c?c.items.filter(i=>S.game.revealed.includes(i.id)).reduce((a,i)=>a+(+i.value||0),0):0};
 function renderInfo(){
   const g=S.game;$('#info').classList.toggle('flip',OPEN.includes(g.phase));
@@ -835,7 +1034,7 @@ function renderInfo(){
   $('#cnSub').textContent=!g.started?'битва контейнеров':g.phase==='final'?'битва окончена':'из '+S.containers.length;
   $('#pips').innerHTML=S.containers.map((c,i)=>{const h=histOf(i);const t=h&&h.team?T(h.team):null;
     return `<i class="pip ${h?(t?'done':'skip'):''} ${g.started&&i===g.index&&g.phase!=='final'?'cur':''}" ${t?`style="--pc:${t.color}"`:''}></i>`}).join('');
-  $('#lbl1').textContent=g.phase==='auction'?'Текущая ставка $':'Купили за $';
+  $('#lbl1').textContent=g.phase==='auction'?'Текущая ставка, ₽':'Купили за, ₽';
   let v1=0;if(g.phase==='auction')v1=g.bid?g.bid.amount:0;else if(['sold','reveal','summary'].includes(g.phase))v1=g.buyer?g.price:'—';
   setBox(1,v1);
   setBox(2,g.revealed.length||g.phase==='summary'?revealedSum():'');
@@ -843,38 +1042,60 @@ function renderInfo(){
 
 // ===== scene =====
 let itemNodes={};
+const ART_C={};
+function iconSVG(k){k=ART[k]?k:'box';return ART_C[k]||(ART_C[k]=`<svg class="ico" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${ART[k][1]()}</svg>`)}
 function buildScene(){
   const c=cur(),wrap=$('#items');wrap.innerHTML='';itemNodes={};
   const st=$('#stencil');
+  st.className='stencil';
   if(!S.game.started)st.innerHTML=`<div class="s1">Склад №7 · ворота 3</div><div class="s2" style="font-size:118px;line-height:.95;margin-top:18px">БИТВА<br>КОНТЕЙНЕРОВ</div>`;
   else if(S.game.phase==='final')st.innerHTML=`<div class="s1">Склад закрыт</div><div class="s2" style="font-size:170px">ИТОГИ</div>`;
-  else{const c0=cur();st.innerHTML=`<div class="s1">Контейнер ${pad(S.game.index+1)}</div>${c0&&c0.title?`<div class="dtitle">${esc(c0.title)}</div>`:''}${c0&&c0.legend?`<div class="dleg">${esc(c0.legend)}</div>`:''}`}
+  else if(S.game.phase==='closed'){st.className='stencil';st.innerHTML=`<div class="s1">Контейнер</div><div class="s2">${pad(S.game.index+1)}</div><div class="s3">Не кантовать</div>`}
+  else{engTok++;st.className='stencil eg done';st.innerHTML=engraveHTML(cur())}
   if(!c)return;
   c.items.forEach(it=>{
     const d=document.createElement('div');d.className='item';d.dataset.id=it.id;
-    const top=it.img?0:(ICONS[it.icon]||ICONS.box)[1];
-    d.innerHTML=`<div class="art">${it.img?`<img src="${it.img}" alt="">`:iconSVG(it.icon)}<div class="tag outl" style="top:${top}%">${+it.value||0}$</div></div><div class="nm">${esc(it.name)}</div>`;
+    d.innerHTML=`<div class="art">${it.img?`<img src="${it.img}" alt="">`:iconSVG(it.icon)}<div class="tag outl">${it.value!=null?money(it.value):''}</div><div class="nm">${esc(it.name)}</div></div>`;
     d.addEventListener('click',()=>{Sfx.init();revealItem(it.id)});
+    const sh=document.createElement('div');sh.className='fsh';d._sh=sh;wrap.appendChild(sh);
     wrap.appendChild(d);itemNodes[it.id]=d;
+    const svg=d.querySelector('svg.ico');let top=0;if(svg){try{const bb=svg.getBBox();top=Math.max(0,bb.y/200)}catch(e){}}d.querySelector('.tag').style.top=(top*100)+'%';
     if(S.game.revealed.includes(it.id))d.classList.add('rv');
   });
   layoutItems();
   if(S.game.phase==='summary')markTop();
 }
+const W3={RW:1400,RH:980,RD:2200,FY:360},SZ3={S:300,M:430,L:620},ZS={L:-780,M:-600,S:-430},P3=1000,CAMZ=260;
+const sAt=z=>P3/(P3-(z+CAMZ));
+function placeItem(it,cw,wx,wy,z){const nd=itemNodes[it.id];nd.style.width=cw+'px';nd.style.transform=`translate3d(${wx}px,${wy}px,${z}px) translate(-50%,-100%)`;
+  nd.querySelector('.nm').style.fontSize=Math.max(14,cw*.066)+'px';nd.querySelector('.tag').style.fontSize=Math.max(26,cw*.15)+'px';
+  const sh=nd._sh;sh.style.width=cw*.92+'px';sh.style.height=cw*.36+'px';sh.style.transform=`translate3d(${wx}px,${wy-2}px,${z+4}px) rotateX(90deg) translate(-50%,-50%)`}
+// pack a row left→right in screen space so nothing overlaps; returns screen width used
+function packRow(arr,z,k,wy,SW,gap){const sc=arr.map((_,i)=>sAt(z[i])),w=arr.map(it=>SZ3[it.size]||430);const tot=w.reduce((a,v,i)=>a+v*k*sc[i],0)+gap*(arr.length-1);let x=-tot/2;
+  arr.forEach((it,i)=>{const sw=w[i]*k*sc[i];placeItem(it,w[i]*k,(x+sw/2)/sc[i],wy,z[i]);x+=sw+gap});return tot}
+const centreOut=list=>{const a=[];list.forEach((it,i)=>i%2?a.unshift(it):a.push(it));return a};
+// items never cover each other: one row on the floor, or (6+ items) floor row + shelf row behind it
 function layoutItems(){
-  const st=$('#stage'),W=st.clientWidth,H=st.clientHeight,items=cur()?.items||[];if(!items.length)return;
-  const k=W/1100;
-  const sorted=[...items].sort((a,b)=>(SZ[b.size]||190)-(SZ[a.size]||190));
-  const rows=items.length<=4?[sorted]:[sorted.slice(0,Math.ceil(items.length/2)),sorted.slice(Math.ceil(items.length/2))];
-  const conf=rows.length===1?[{base:.87,sc:1.08}]:[{base:.705,sc:.82},{base:.925,sc:1}];
-  rows.forEach((row,ri)=>{
-    const c=conf[ri],arr=[];row.forEach((it,i)=>i%2?arr.unshift(it):arr.push(it));
-    let ws=arr.map(it=>(SZ[it.size]||190)*c.sc*k);const gap=46*c.sc*k;
-    let total=ws.reduce((a,b)=>a+b,0)+gap*(arr.length-1);const f=Math.min(1,W*.9/total);
-    ws=ws.map(w=>w*f);total*=f;let x=(W-total)/2;
-    arr.forEach((it,i)=>{const n=itemNodes[it.id];n.style.width=ws[i]+'px';n.style.left=(x+ws[i]/2)+'px';n.style.bottom=(H*(1-c.base))+'px';n.style.zIndex=10+ri*10;x+=ws[i]+gap*f});
-  });
+  const items=cur()?.items||[];if(!items.length){setRack(null);return}
+  const st=$('#stage'),SW=(st.clientWidth||1100)*.96,SH=st.clientHeight||1030,oy=SH*.36,topLim=-(oy-115),gap=16,FY=W3.FY;
+  const sorted=[...items].sort((a,b)=>(SZ3[b.size]||430)-(SZ3[a.size]||430)),n=items.length;
+  const fit=(arr,z,maxH,cap)=>{const sc=z.map(sAt),w=arr.map(it=>SZ3[it.size]||430);const kw=(SW-gap*(arr.length-1))/w.reduce((a,v,i)=>a+v*sc[i],0),kh=maxH/Math.max(...w.map((v,i)=>v*sc[i]*1.22));return Math.min(kw,kh,cap)};
+  if(n<6){const arr=centreOut(sorted),z=arr.map((it,i)=>(ZS[it.size]||-600)+(i%2?-40:40));
+    const maxH=Math.min(...z.map(v=>FY*sAt(v)))-topLim;const k=fit(arr,z,maxH,1.5);packRow(arr,z,k,FY,SW,gap);setRack(null);return}
+  const nf=Math.ceil(n/2),front=centreOut(sorted.slice(0,nf)),back=centreOut(sorted.slice(nf));
+  const zf=front.map((_,i)=>-400+(i%2?-30:30)),zb=back.map(()=>-960),sF=sAt(-400),sB=sAt(-960);
+  const avail=FY*sF-topLim,kf=fit(front,zf,avail*.54,1.4);
+  const frontTop=FY*sF-Math.max(...front.map((it,i)=>(SZ3[it.size]||430)*kf*sAt(zf[i])))*1.22;
+  const shelfY=frontTop-8,Hs=FY-shelfY/sB;
+  const kb=Math.min(fit(back,zb,shelfY-topLim,9),kf*2);
+  packRow(front,zf,kf,FY,SW,gap);const bw=packRow(back,zb,kb,FY-Hs,SW,gap);
+  setRack({y:FY-Hs,z:-960,w:bw/sB+160});
 }
+function setRack(r){const el=$('#rack');if(!el)return;if(!r){el.style.display='none';return}el.style.display='';const{y,z,w}=r,h=W3.FY-y,d=340;
+  el.querySelector('.r-top').style.cssText=`width:${w}px;height:${d}px;transform:translate(-50%,-50%) translate3d(0,${y}px,${z}px) rotateX(90deg)`;
+  el.querySelector('.r-beam').style.cssText=`width:${w}px;height:34px;transform:translate(-50%,0) translate3d(0,${y}px,${z+d/2}px)`;
+  el.querySelectorAll('.r-post').forEach((p,i)=>{const x=(i%2?1:-1)*(w/2-8),zz=z+(i<2?d/2:-d/2);p.style.cssText=`height:${h}px;transform:translate(-50%,0) translate3d(${x}px,${y}px,${zz}px)`});
+  el.querySelector('.r-sh').style.cssText=`width:${w}px;height:${d+120}px;transform:translate(-50%,-50%) translate3d(0,${W3.FY-1}px,${z}px) rotateX(90deg)`}
 function markTop(){const c=cur();if(!c||!c.items.length)return;const top=c.items.reduce((a,b)=>(+b.value||0)>(+a.value||0)?b:a);itemNodes[top.id]?.classList.add('top')}
 function renderManifest(){
   const c=cur();if(!c){$('#manifest').innerHTML='';return}
@@ -887,17 +1108,17 @@ function renderManifest(){
 function renderPlate(bump){
   const g=S.game,c=cur(),p=$('#plate');
   if(c&&(g.phase==='preview'||(g.phase==='auction'&&!g.bid))){
-    p.innerHTML=`Стартовая цена ${c.start}$<br>Шаг ${c.step}$${g.phase==='auction'?'<div class="muted" style="margin-top:8px">Торги открыты</div>':''}`;p.classList.add('show');
+    p.innerHTML=`Стартовая цена ${money(c.start)}<br>Шаг ${money(c.step)}${g.phase==='auction'?'<div class="muted" style="margin-top:8px">Торги открыты</div>':''}`;p.classList.add('show');
   }else if(g.phase==='auction'){
     const t=T(g.bid.team)||{name:'?',color:'#999'};
-    p.innerHTML=`<div class="muted">Ставка · шаг ${c.step}$</div><div class="bid-amt ${bump?'bump':''}">${g.bid.amount}$</div><div><span class="bid-team" style="--tc:${t.color}">${esc(t.name)}</span></div>
+    p.innerHTML=`<div class="muted">Ставка · шаг ${money(c.step)}</div><div class="bid-amt ${bump?'bump':''}">${money(g.bid.amount)}</div><div><span class="bid-team" style="--tc:${t.color}">${esc(t.name)}</span></div>
       <div class="lamps"><i class="${g.count>=1?'on':''}">Раз</i><i class="${g.count>=2?'on':''}">Два</i><i class="${g.count>=3?'on':''}">Три</i></div>`;p.classList.add('show');
   }else p.classList.remove('show');
 }
 function renderSummary(){
   const g=S.game,total=revealedSum(),t=g.buyer?T(g.buyer):null,diff=total-g.price;
-  $('#summary').innerHTML=`<div class="k">Общая стоимость</div><div class="v outl">${total}$</div>`+(t
-    ?`<div class="res"><span class="a">${esc(t.name)} · купили за ${g.price}$</span><span class="b ${diff<0?'neg':''}">${diff>=0?'Прибыль +':'Убыток −'}${Math.abs(diff)}$</span></div>`
+  $('#summary').innerHTML=`<div class="k">Общая стоимость</div><div class="v">${money(total)}</div>`+(t
+    ?`<div class="res"><span class="a">${esc(t.name)} · купили за ${money(g.price)}</span><span class="b ${diff<0?'neg':''}">${diff>=0?'Прибыль +':'Убыток −'}${money(Math.abs(diff))}</span></div>`
     :`<div class="res"><span class="a">Никто не купил этот контейнер</span></div>`);
   $('#summary').classList.add('show');
 }
@@ -926,20 +1147,39 @@ function renderAll(){
   $('#final').classList.toggle('show',g.phase==='final');
 }
 
+// ===== laser engraving of the legend on the door =====
+let engTok=0;
+function spanify(t){return String(t||'').split(/(\s+)/).map(w=>/^\s*$/.test(w)?w:`<span class="w">${[...w].map(ch=>`<span class="ch">${esc(ch)}</span>`).join('')}</span>`).join('')}
+function engraveHTML(c){return c?`<div class="eg-t">${spanify(c.title)}</div><div class="eg-l">${spanify(c.legend)}</div><i class="laser"></i>`:''}
+function spark(st,x,y){for(let i=0;i<3;i++){const p=document.createElement('i');p.className='spark';p.style.left=x+'px';p.style.top=y+'px';p.style.setProperty('--dx',(Math.random()*60-30)+'px');p.style.setProperty('--dy',(20+Math.random()*50)+'px');st.appendChild(p);setTimeout(()=>p.remove(),650)}}
+async function engrave(c){
+  const st=$('#stencil'),tok=++engTok;st.className='stencil wipe';await wait(850);if(tok!==engTok)return;
+  st.className='stencil eg';st.innerHTML=engraveHTML(c);const chars=[...st.querySelectorAll('.ch')],laser=st.querySelector('.laser');if(!chars.length)return;
+  laser.classList.add('on');const stop=Sfx.laser(),per=Math.max(16,Math.min(45,6500/chars.length));
+  for(let i=0;i<chars.length;i++){if(tok!==engTok){stop();return}const ch=chars[i];ch.classList.add('on');
+    const x=ch.offsetLeft+ch.offsetWidth,y=ch.offsetTop+ch.offsetHeight*.6;laser.style.transform=`translate(${x}px,${y}px)`;if(i%3===0)spark(st,x,y);await wait(per)}
+  laser.classList.remove('on');stop();await wait(1300);if(tok===engTok)st.classList.add('done');
+}
+function startLegend(){const g=S.game;g.phase='legend';save();renderAll();engrave(cur())}
+
 // ===== game flow =====
 let busy=false;
 function setBusy(v){busy=v;renderDock()}
-function nextBid(){const g=S.game,c=cur();return g.bid?g.bid.amount+(+c.step||100):(+c.start||0)}
+let bidMul=1;
+function nextBid(mul=bidMul){const g=S.game,c=cur(),st=+c.step||100;return g.bid?g.bid.amount+st*mul:(+c.start||0)+st*(mul-1)}
+function setMul(m,keepInput){if(S.game.phase!=='auction')return;bidMul=Math.max(1,Math.min(999,Math.round(+m)||1));const inp=$('#stepsIn');if(inp&&!keepInput)inp.value=bidMul;updBidButtons();updateTeamFlags()}
+function updBidButtons(){const g=S.game,nb=nextBid();document.querySelectorAll('#dock [data-a="bid"]').forEach(b=>{const t=S.teams[+b.dataset.i];if(!t)return;const lead=g.bid&&g.bid.team===t.id;b.disabled=!(avail(t)>=nb&&!lead);const nx=b.querySelector('.nx');if(nx)nx.textContent=money(nb)})}
 function primary(){
   if(SPECT)return;
   const g=S.game;if(!g.started)return openMenu('game');if(busy)return;
-  ({closed:openDoor,preview:startAuction,auction:countStep,sold:revealNext,reveal:revealNext,summary:nextContainer,final:finalNext})[g.phase]?.();
+  ({closed:startLegend,legend:openDoor,preview:startAuction,auction:countStep,sold:revealNext,reveal:revealNext,summary:nextContainer,final:finalNext})[g.phase]?.();
 }
 async function openDoor(){
-  setBusy(true);bcPhase='preview';if(hubEl)hubSend(stateMsg());Sfx.door();shake();
+  setBusy(true);if(!$('#stencil').classList.contains('done')){engTok++;const st=$('#stencil');st.className='stencil eg done';st.innerHTML=engraveHTML(cur())}bcPhase='preview';if(hubEl)hubSend(stateMsg());Sfx.door();shake();
   $('#door').classList.add('up');
   await wait(1050);const dk=$('#dark');dk.className='dark';void dk.offsetWidth;dk.classList.add('on');Sfx.lights();
   await wait(850);$('#exterior').classList.add('gone');$('#interior').classList.remove('far');
+  await wait(900);
   S.game.phase='preview';S.game.legend=false;bcPhase=null;save();
   await wait(500);renderAll();
   await wait(600);dk.className='dark lit';setBusy(false);
@@ -955,9 +1195,9 @@ function placeBid(i,amount){
   const g=S.game;if(g.phase!=='auction'||busy)return;const t=S.teams[i];if(!t)return;
   if(amount==null&&g.bid&&g.bid.team===t.id)return toast(`${t.name} уже лидирует`);
   const amt=amount??nextBid(),min=g.bid?g.bid.amount+1:(+cur().start||0);
-  if(!(amt>=min))return toast(`Ставка должна быть не меньше ${min}$`);
-  if(amt>avail(t))return toast(`${t.name}: не хватает денег (доступно ${avail(t)}$)`);
-  g.bidStack.push({bid:g.bid,count:g.count});g.bid={team:t.id,amount:amt};g.count=0;Sfx.bid();save();
+  if(!(amt>=min))return toast(`Ставка должна быть не меньше ${money(min)}`);
+  if(amt>avail(t))return toast(`${t.name}: не хватает денег (доступно ${money(avail(t))})`);
+  g.bidStack.push({bid:g.bid,count:g.count});g.bid={team:t.id,amount:amt};g.count=0;bidMul=1;Sfx.bid();save();
   renderPlate(true);renderInfo();updateTeamFlags();renderDock();
 }
 function customBid(i){const v=parseInt(cbidVal,10);if(!v)return toast('Введите сумму в поле «Сумма»');placeBid(i,v)}
@@ -1007,7 +1247,7 @@ function revealItem(id){
   if(!g.revealed.length)hideStamp();
   g.revealed.push(id);g.phase='reveal';
   const n=itemNodes[id];n.classList.add('rv');n.classList.remove('pop');void n.offsetWidth;n.classList.add('pop');
-  countTo(n.querySelector('.tag'),0,+it.value||0,650,'$');Sfx.ding(g.revealed.length);
+  countTo(n.querySelector('.tag'),0,+it.value||0,650,RUB);Sfx.ding(g.revealed.length);
   save();renderInfo();renderDock();
   if(g.revealed.length>=cur().items.length){setBusy(true);setTimeout(finishReveal,1000)}
 }
@@ -1035,17 +1275,17 @@ function jump(d){const g=S.game;if(g.phase!=='closed'||busy)return;const ni=g.in
 function ranking(){return S.teams.map(t=>({t,total:t.balance+t.revenue,n:S.game.history.filter(h=>h.team===t.id).length})).sort((a,b)=>b.total-a.total)}
 function showFinal(){
   const f=$('#final'),r=ranking();
-  f.innerHTML=`<h2>Итоги битвы</h2><div class="subt">${S.game.history.length} контейнеров разыграно · старт ${S.settings.capital}$</div><div class="f-rows">${r.map((x,i)=>`
+  f.innerHTML=`<h2>Итоги битвы</h2><div class="subt">${S.game.history.length} контейнеров разыграно · старт ${money(S.settings.capital)}</div><div class="f-rows">${r.map((x,i)=>`
     <div class="f-row ${i===0?'win':''}" data-place="${i}" style="--tc:${x.t.color}"><div class="pl">${i+1}</div>
     <div class="nm">${i===0?'<span class="crown">Победители</span><br>':''}${esc(x.t.name)}<small>${x.n} конт. · ${esc(x.t.members.filter(Boolean).join(' / '))}</small></div>
-    <div class="c"><small>Баланс</small>${x.t.balance}$</div><div class="c"><small>Выручка</small>${x.t.revenue}$</div><div class="c tot"><small>Итого</small><span class="tv">${x.total}$</span></div></div>`).join('')}</div>`;
+    <div class="c"><small>Баланс</small>${money(x.t.balance)}</div><div class="c"><small>Выручка</small>${money(x.t.revenue)}</div><div class="c tot"><small>Итого</small><span class="tv">${money(x.total)}</span></div></div>`).join('')}</div>`;
   f.classList.add('show');
   for(let k=0;k<S.game.finalShown;k++)f.querySelector(`.f-row[data-place="${r.length-1-k}"]`)?.classList.add('show');
 }
 function finalNext(){
   const g=S.game,r=ranking();if(g.finalShown>=r.length)return;
   const place=r.length-1-g.finalShown,row=$(`.f-row[data-place="${place}"]`);if(!row)return;
-  row.classList.add('show');countTo(row.querySelector('.tv'),0,r[place].total,1100,'$');g.finalShown++;save();renderDock();
+  row.classList.add('show');countTo(row.querySelector('.tv'),0,r[place].total,1100,RUB);g.finalShown++;save();renderDock();
   if(place===0){Sfx.fanfare();setTimeout(()=>confetti([r[0].t.color,'#f2c230','#ffffff','#c9d1d9']),300)}else Sfx.ding(r.length-place);
 }
 function confetti(colors){
@@ -1305,19 +1545,20 @@ async function applyRemote(st){
   if(!p){buildScene();setDoor(isOpen);renderAll();if(g.phase==='sold'){const t=g.buyer?T(g.buyer):null;showStamp(t?'ПРОДАНО':'НЕ ПРОДАН',t?t.name:'ставок нет',t?t.color:'#9aa6b2')}
     if(g.phase==='summary')renderSummary();if(g.phase==='final')showFinal();RS=st;return}
   if(contChanged)buildScene();
-  else st.cont&&st.cont.items.forEach(i=>{const n=itemNodes[i.id];if(n&&i.value!=null&&!n.classList.contains('rv'))n.querySelector('.tag').textContent=i.value+'$'});
-  if(!wasOpen&&isOpen){S.game={...g,phase:'closed'};renderAll();await vOpen();S.game=g}
+  else st.cont&&st.cont.items.forEach(i=>{const n=itemNodes[i.id];if(n&&i.value!=null&&!n.classList.contains('rv'))n.querySelector('.tag').textContent=money(i.value)});
+  if(pg.phase==='closed'&&g.phase==='legend'&&!contChanged){renderAll();engrave(st.cont)}
+  if(!wasOpen&&isOpen){S.game={...g,phase:'legend'};renderAll();await vOpen();S.game=g}
   renderAll();
   if(g.phase==='auction'&&g.bid&&(!pg.bid||pg.bid.amount!==g.bid.amount||pg.bid.team!==g.bid.team))renderPlate(true);
   if(g.phase==='sold'&&pg.phase!=='sold'){const t=g.buyer?T(g.buyer):null;showStamp(t?'ПРОДАНО':'НЕ ПРОДАН',t?t.name:'ставок нет',t?t.color:'#9aa6b2');shake()}
   if(g.phase!=='sold'&&pg.phase==='sold')hideStamp();
   const was=pg.index===g.index?(pg.revealed||[]):[];
-  g.revealed.filter(id=>!was.includes(id)).forEach(id=>{const n=itemNodes[id],it=st.cont&&st.cont.items.find(i=>i.id===id);if(!n||!it)return;n.classList.add('rv');n.classList.remove('pop');void n.offsetWidth;n.classList.add('pop');countTo(n.querySelector('.tag'),0,+it.value||0,650,'$')});
+  g.revealed.filter(id=>!was.includes(id)).forEach(id=>{const n=itemNodes[id],it=st.cont&&st.cont.items.find(i=>i.id===id);if(!n||!it)return;n.classList.add('rv');n.classList.remove('pop');void n.offsetWidth;n.classList.add('pop');countTo(n.querySelector('.tag'),0,+it.value||0,650,RUB)});
   if(g.phase==='summary'&&pg.phase!=='summary'){markTop();renderSummary()}
-  if(g.phase==='final'){if(pg.phase!=='final')showFinal();else{const r=ranking();for(let k=pg.finalShown;k<g.finalShown;k++){const pl=r.length-1-k,row=$(`.f-row[data-place="${pl}"]`);if(!row)continue;row.classList.add('show');countTo(row.querySelector('.tv'),0,r[pl].total,1100,'$');if(pl===0)setTimeout(()=>confetti([r[0].t.color,'#f2c230','#ffffff','#c9d1d9']),300)}}}
+  if(g.phase==='final'){if(pg.phase!=='final')showFinal();else{const r=ranking();for(let k=pg.finalShown;k<g.finalShown;k++){const pl=r.length-1-k,row=$(`.f-row[data-place="${pl}"]`);if(!row)continue;row.classList.add('show');countTo(row.querySelector('.tv'),0,r[pl].total,1100,RUB);if(pl===0)setTimeout(()=>confetti([r[0].t.color,'#f2c230','#ffffff','#c9d1d9']),300)}}}
   RS=st;
 }
-async function vOpen(){shake();$('#door').classList.add('up');await wait(1050);const dk=$('#dark');dk.className='dark';void dk.offsetWidth;dk.classList.add('on');await wait(850);$('#exterior').classList.add('gone');$('#interior').classList.remove('far');await wait(1100);dk.className='dark lit'}
+async function vOpen(){if(!$('#stencil').classList.contains('done')){engTok++;const st=$('#stencil');st.className='stencil eg done';st.innerHTML=engraveHTML(cur())}shake();$('#door').classList.add('up');await wait(1050);const dk=$('#dark');dk.className='dark';void dk.offsetWidth;dk.classList.add('on');await wait(850);$('#exterior').classList.add('gone');$('#interior').classList.remove('far');await wait(2000);dk.className='dark lit'}
 async function vClose(){$('#exterior').classList.remove('gone');$('#interior').classList.add('far');await wait(950);$('#door').classList.remove('up');await wait(1950);shake();$('#dark').className='dark'}
 
 // ===== dock =====
@@ -1328,11 +1569,11 @@ function renderDock(locked){
   if(!g.started)mid=`<span class="dock-info">Битва контейнеров</span><button class="btn primary" data-a="menu">Настроить и начать</button>`;
   else if(locked||busy)mid=`<span class="dock-info">…</span>`;
   else switch(g.phase){
-    case'closed':mid=`<button class="btn icon" data-a="prev" ${g.index===0?'disabled':''}>${SVG.prev}</button>${info}<button class="btn icon" data-a="next" ${g.index>=N-1?'disabled':''}>${SVG.next}</button><span class="sep"></span><button class="btn primary" data-a="primary">Открыть контейнер <span class="kbd">Пробел</span></button>`;break;
+    case'closed':mid=`<button class="btn icon" data-a="prev" ${g.index===0?'disabled':''}>${SVG.prev}</button>${info}<button class="btn icon" data-a="next" ${g.index>=N-1?'disabled':''}>${SVG.next}</button><span class="sep"></span><button class="btn primary" data-a="primary">Показать легенду <span class="kbd">Пробел</span></button>`;break;
+    case'legend':mid=`${info}<button class="btn primary" data-a="primary">Открыть контейнер <span class="kbd">Пробел</span></button>`;break;
     case'preview':mid=`${info}<button class="btn" data-a="legend">Легенда <span class="kbd">L</span></button><button class="btn primary" data-a="primary">Начать торги <span class="kbd">Пробел</span></button>`;break;
     case'auction':{const nb=nextBid();
-      mid=S.teams.map((t,i)=>{const lead=g.bid&&g.bid.team===t.id;return `<button class="btn team" style="--tc:${t.color}" data-a="bid" data-i="${i}" ${avail(t)>=nb&&!lead?'':'disabled'}><span class="k">${i+1}</span>${esc(t.name)} <span class="nx">${nb}$</span></button>`}).join('')
-      +`<span class="sep"></span><div class="cbid"><input id="cbidIn" type="number" placeholder="Сумма" value="${esc(cbidVal)}" step="${c.step}">${S.teams.map((t,i)=>`<button class="sw" style="--tc:${t.color}" data-a="cbid" data-i="${i}" title="Своя ставка: ${esc(t.name)} (Shift+${i+1})"></button>`).join('')}</div>`
+      mid=`<div class="steps" title="На сколько шагов поднять ставку. Впишите число и нажмите команду"><span>Шагов</span><button data-a="mulm">−</button><input id="stepsIn" type="number" min="1" max="999" value="${bidMul}"><button data-a="mulp">+</button><em>× ${money(c.step)}</em></div><span class="sep"></span>`+S.teams.map((t,i)=>{const lead=g.bid&&g.bid.team===t.id;return `<button class="btn team" style="--tc:${t.color}" data-a="bid" data-i="${i}" ${avail(t)>=nb&&!lead?'':'disabled'}><span class="k">${i+1}</span>${esc(t.name)} <span class="nx">${money(nb)}</span></button>`}).join('')
       +`<span class="sep"></span><button class="btn" data-a="legend">Легенда</button><button class="btn" data-a="undo" ${g.bidStack.length?'':'disabled'}>Отменить ставку <span class="kbd">Z</span></button><button class="btn danger" data-a="nosale">Не продан</button><button class="btn primary" data-a="primary" ${g.bid?'':'disabled'}>${['Раз','Два','Три — продано!'][g.count]||'Продано'} <span class="kbd">Пробел</span></button>`;break}
     case'sold':case'reveal':{const left=c.items.length-g.revealed.length;
       mid=`${info}${g.phase==='sold'?`<button class="btn" data-a="cancelsale">Отменить продажу</button>`:''}<button class="btn" data-a="revealall" ${left?'':'disabled'}>Оценить всё</button><button class="btn primary" data-a="primary" ${left?'':'disabled'}>Оценить вещь · осталось ${left} <span class="kbd">Пробел</span></button><span class="dock-info">или клик по вещи</span>`;break}
@@ -1347,16 +1588,18 @@ function renderDock(locked){
     <button class="btn" data-a="menu">Меню <span class="kbd">Esc</span></button></div>`;
 }
 function toggleLegend(){const g=S.game;if(!OPEN.includes(g.phase))return;g.legend=!g.legend;save();$('#manifest').classList.toggle('show',g.legend)}
-function toggleDock(){const h=$('#dock').classList.toggle('hidden');$('#dockShow').classList.toggle('show',h)}
+function toggleDock(){const h=$('#dock').classList.toggle('hidden');$('#dockShow').classList.toggle('show',h);fit()}
 function toggleSound(){S.settings.sound=!S.settings.sound;save();if(S.settings.sound)Sfx.init();renderDock();toast(S.settings.sound?'Звук включён':'Звук выключен')}
 function toggleFs(){try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом окне — откройте страницу отдельно'))}catch(e){toast('Полный экран недоступен')}}
 function act(a,i){
   i=i!=null?+i:null;
   ({primary,prev:()=>jump(-1),next:()=>jump(1),legend:toggleLegend,bid:()=>placeBid(i),cbid:()=>customBid(i),undo:undoBid,nosale:noSale,cancelsale:cancelSale,revealall:revealAll,
-    newgame:newGame,sound:toggleSound,fs:toggleFs,hide:toggleDock,menu:()=>openMenu()})[a]?.();
+    mulm:()=>setMul(bidMul-1),mulp:()=>setMul(bidMul+1),newgame:newGame,sound:toggleSound,fs:toggleFs,hide:toggleDock,menu:()=>openMenu()})[a]?.();
 }
 $('#dock').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;Sfx.init();act(b.dataset.a,b.dataset.i);b.blur()});
-$('#dock').addEventListener('input',e=>{if(e.target.id==='cbidIn')cbidVal=e.target.value});
+$('#dock').addEventListener('input',e=>{if(e.target.id==='stepsIn'&&e.target.value!=='')setMul(e.target.value,true)});
+$('#dock').addEventListener('change',e=>{if(e.target.id==='stepsIn')setMul(e.target.value)});
+$('#dock').addEventListener('keydown',e=>{if(e.target.id==='stepsIn'&&/^(Digit|Numpad)[1-9]$/.test(e.code)&&e.altKey){e.preventDefault()}if(e.target.id==='stepsIn'&&e.key==='Enter')e.target.blur()});
 $('#dockShow').addEventListener('click',toggleDock);
 
 document.addEventListener('keydown',e=>{
@@ -1366,9 +1609,10 @@ document.addEventListener('keydown',e=>{
   if(e.target.matches('input,textarea,select')){if(e.key==='Escape')e.target.blur();return}
   Sfx.init();const c=e.code;
   if(c==='Space'){e.preventDefault();primary()}
-  else if(/^(Digit|Numpad)[1-9]$/.test(c)){const i=+c.slice(-1)-1;e.shiftKey?customBid(i):placeBid(i)}
+  else if(/^(Digit|Numpad)[1-9]$/.test(c)){placeBid(+c.slice(-1)-1)}
   else if(c==='KeyZ'||c==='Backspace'){e.preventDefault();undoBid()}
   else if(c==='KeyL')toggleLegend();
+  else if(c==='Equal'||c==='NumpadAdd'||c==='ArrowUp'){e.preventDefault();setMul(bidMul+1)}else if(c==='Minus'||c==='NumpadSubtract'||c==='ArrowDown'){e.preventDefault();setMul(bidMul-1)}
   else if(c==='KeyH')toggleDock();
   else if(c==='KeyM')toggleSound();
   else if(c==='KeyF')toggleFs();
@@ -1380,7 +1624,7 @@ let menuTab='game',edC=0,iconRow=null,photoJ=null,photoKey=null;
 function openMenu(tab){if(tab)menuTab=tab;edC=Math.min(edC,S.containers.length-1);$('#menu').hidden=false;renderMenu();hpbUpdate()}
 function closeMenu(){$('#menu').hidden=true;applyChanges();hpbUpdate()}
 function applyChanges(){
-  const g=S.game;if(!S.containers.length)S.containers.push(mkContainer(['Новый контейнер','',500,100,'',[['box','Коробка',100,'M']]]));
+  const g=S.game;if(!S.containers.length)S.containers.push(mkContainer(['Новый контейнер','','Легенда контейнера…',[['box','Коробка',1000,5000,'M']]]));
   g.index=Math.min(g.index,S.containers.length-1);
   const ids=new Set((cur()?.items||[]).map(i=>i.id));g.revealed=g.revealed.filter(id=>ids.has(id));
   buildTeams();buildScene();renderAll();if(g.phase==='final')showFinal();
@@ -1406,7 +1650,7 @@ function renderTab(){
 }
 function tabGame(){return `<div class="grid2" style="gap:34px">
   <div><div class="sec">Как проходит игра</div><div class="note" style="font-size:15px;color:#c8d1da;line-height:1.65">
-  <p>У каждой команды стартовый капитал <b>${S.settings.capital}$</b>. Всего ${S.containers.length} контейнеров.</p><br>
+  <p>У каждой команды стартовый капитал <b>${money(S.settings.capital)}</b>. Всего ${S.containers.length} контейнеров.</p><br>
   <p><b>1.</b> Ведущий открывает ворота — команды видят вещи внутри и накладную с легендой. Цены скрыты.</p>
   <p><b>2.</b> Торги: стартовая цена и шаг указаны на табличке. Ставки — кнопками команд или клавишами 1–${S.teams.length}. «Раз — два — три» закрывает лот.</p>
   <p><b>3.</b> Оценка: ведущий по одной открывает реальную стоимость вещей. Сумма уходит в «Выручку» команды-покупателя, цена покупки списывается с «Баланса».</p>
@@ -1414,8 +1658,8 @@ function tabGame(){return `<div class="grid2" style="gap:34px">
   <p class="note">Камеры подключаются во вкладке «Камеры»: вебки этого компьютера или участники по ссылке. Игру выводите в OBS через захват окна браузера. Прогресс сохраняется в этом браузере.</p></div></div>
   <div><div class="sec">Ведущий</div><div class="row-flex" style="margin-bottom:14px"><button class="btn primary" data-m="tab" data-k="cams">Комната и камеры</button><button class="btn" data-m="player">Войти как участник</button></div><label class="fld"><span>Подпись в слоте ведущего</span><input class="inp" data-f="host" value="${esc(S.hostName)}"></label>
   <div class="sec" style="margin-top:26px">Горячие клавиши</div><div class="help">
-  <kbd>Пробел</kbd><span>Главное действие: открыть ворота → начать торги → раз/два/три → оценить вещь → дальше</span>
-  <kbd>1 … ${S.teams.length}</kbd><span>Ставка команды (+шаг)</span><kbd>Shift + цифра</kbd><span>Своя ставка из поля «Сумма» на пульте</span>
+  <kbd>Пробел</kbd><span>Главное действие: легенда на воротах → открыть ворота → начать торги → раз/два/три → оценить вещь → дальше</span>
+  <kbd>1 … ${S.teams.length}</kbd><span>Ставка команды</span><kbd>+ / − или ↑ / ↓</kbd><span>Сколько шагов в следующей ставке (или впишите число в поле «Шагов»)</span>
   <kbd>Z</kbd><span>Отменить последнюю ставку</span><kbd>L</kbd><span>Показать / убрать накладную с легендой</span>
   <kbd>H</kbd><span>Спрятать пульт — чистая картинка для стрима</span><kbd>F</kbd><span>Полный экран</span><kbd>M</kbd><span>Звук</span><kbd>Esc</kbd><span>Это меню</span></div></div></div>`}
 function tabCams(){
@@ -1448,7 +1692,7 @@ function tabCams(){
   <div class="slots">${slot('host',S.hostName&&S.hostName!=='Ведущий'?'Ведущий · '+S.hostName:'Ведущий','#f2c230')}${S.teams.map(t=>[0,1].map(n=>slot(`${t.id}:${n}`,`${t.name} · ${(t.members||[])[n]||'участник '+(n+1)}`,t.color)).join('')).join('')}</div>`;
 }
 function tabTeams(){const n=S.teams.length,st=S.game.started;return `<div class="grid3">
-  <label class="fld"><span>Стартовый капитал, $</span><input class="inp" type="number" data-f="capital" value="${S.settings.capital}"></label>
+  <label class="fld"><span>Стартовый капитал, ₽</span><input class="inp" type="number" data-f="capital" value="${S.settings.capital}"></label>
   <div class="fld"><span>Количество команд</span><div class="row-flex"><button class="btn" data-m="tdel" ${n<=2?'disabled':''}>−</button><b style="font:600 24px Oswald;min-width:24px;text-align:center">${n}</b><button class="btn" data-m="tadd" ${n>=6?'disabled':''}>+</button></div></div>
   <div class="note" style="align-self:end">${st?'Капитал применится при следующем «Начать заново». Ниже можно вручную поправить баланс и выручку.':'Капитал выдаётся всем командам при старте игры.'}</div></div>
   <div class="tcards">${S.teams.map((t,i)=>`<div class="tcard" style="--tc:${t.color}">
@@ -1457,33 +1701,35 @@ function tabTeams(){const n=S.teams.length,st=S.game.started;return `<div class=
     <div class="grid2"><label class="fld"><span>Участник 1</span><input class="inp" data-t="m0" data-i="${i}" value="${esc(t.members[0]||'')}"></label><label class="fld"><span>Участник 2</span><input class="inp" data-t="m1" data-i="${i}" value="${esc(t.members[1]||'')}"></label></div>
     ${st?`<div class="grid2"><label class="fld"><span>Баланс</span><input class="inp" type="number" data-t="balance" data-i="${i}" value="${t.balance}"></label><label class="fld"><span>Выручка</span><input class="inp" type="number" data-t="revenue" data-i="${i}" value="${t.revenue}"></label></div>`:''}
   </div>`).join('')}</div>`}
+const ctvHTML=c=>`${money(c.items.reduce((a,b)=>a+(+b.value||0),0))} <span class="note" style="font:400 12px Rubik">в среднем ~${money(niceRound(expTotal(c)))}</span>`;
 function tabContainers(){
   const c=S.containers[edC];const tv=x=>x.items.reduce((a,b)=>a+(+b.value||0),0);
-  return `<div class="ce"><div><div class="clist">${S.containers.map((x,i)=>{const h=histOf(i),t=h&&h.team?T(h.team):null;return `<button class="citem ${i===edC?'on':''}" data-m="csel" data-i="${i}"><span class="n">${pad(i+1)}</span><span class="t">${esc(x.title)}<br><span class="v">старт ${x.start}$ · стоимость ${tv(x)}$</span></span>${t?`<i class="dot" style="--pc:${t.color}"></i>`:''}</button>`}).join('')}</div>
+  return `<div class="ce"><div><div class="clist">${S.containers.map((x,i)=>{const h=histOf(i),t=h&&h.team?T(h.team):null;return `<button class="citem ${i===edC?'on':''}" data-m="csel" data-i="${i}"><span class="n">${pad(i+1)}</span><span class="t">${esc(x.title)}<br><span class="v">старт ${money(x.start)} · стоимость ${money(tv(x))}</span></span>${t?`<i class="dot" style="--pc:${t.color}"></i>`:''}</button>`}).join('')}</div>
   <button class="btn" style="width:100%;justify-content:center;margin-top:8px" data-m="cadd">+ Добавить контейнер</button></div>
   ${c?`<div><div class="row-flex" style="justify-content:space-between;margin-bottom:12px"><div class="sec" style="margin:0">Контейнер ${pad(edC+1)}</div><div class="row-flex">
     <button class="btn icon" data-m="cup" ${edC===0?'disabled':''} title="Выше">${SVG.prev.replace('M15 6l-6 6 6 6','M6 15l6-6 6 6')}</button><button class="btn icon" data-m="cdown" ${edC>=S.containers.length-1?'disabled':''} title="Ниже">${SVG.down}</button><button class="btn danger" data-m="cdel">Удалить</button></div></div>
     <div class="grid2"><label class="fld"><span>Название</span><input class="inp" data-c="title" value="${esc(c.title)}"></label><label class="fld"><span>Откуда</span><input class="inp" data-c="origin" value="${esc(c.origin)}"></label></div>
-    <div class="grid3" style="margin-top:12px"><label class="fld"><span>Стартовая цена, $</span><input class="inp" type="number" data-c="start" value="${c.start}"></label><label class="fld"><span>Шаг, $</span><input class="inp" type="number" data-c="step" value="${c.step}"></label><div class="fld"><span>Реальная стоимость</span><div style="font:600 24px Oswald;padding-top:4px" id="ctv">${tv(c)}$</div></div></div>
+    <div class="grid3" style="margin-top:12px"><label class="fld"><span>Стартовая цена, ₽</span><input class="inp" type="number" id="cst" data-c="start" value="${c.start}"></label><label class="fld"><span>Шаг, ₽</span><input class="inp" type="number" id="csp" data-c="step" value="${c.step}"></label><div class="fld"><span>Стоимость в этой игре</span><div style="font:600 22px Oswald;padding-top:4px" id="ctv">${ctvHTML(c)}</div></div></div>
+    <div class="row-flex" style="margin-top:10px"><label class="mini"><input type="checkbox" data-c="auto" ${c.auto!==false?'checked':''}> Старт и шаг считаются сами от стоимости вещей</label><button class="btn" data-m="creroll">Перебросить цены</button></div>
     <label class="fld" style="margin-top:12px"><span>Легенда</span><textarea class="inp" data-c="legend">${esc(c.legend)}</textarea></label>
     <div class="sec" style="margin-top:18px">Вещи внутри</div>
-    <div class="ir" style="background:none;border:none;padding:0 6px;font:500 12px Oswald;letter-spacing:.08em;text-transform:uppercase;color:#7f8b97"><span>Вид</span><span>Название</span><span>Стоимость $</span><span>Размер</span><span></span><span></span></div>
+    <div class="ir" style="background:none;border:none;padding:0 6px;font:500 12px Oswald;letter-spacing:.08em;text-transform:uppercase;color:#7f8b97"><span>Вид</span><span>Название</span><span>Цена б/у от, ₽</span><span>до, ₽</span><span>Размер</span><span></span><span></span></div>
     <div class="items-ed">${c.items.map((it,j)=>`<div class="ir">
       <button class="ib" data-m="ipick" data-j="${j}" title="Выбрать рисунок">${it.img?`<img src="${it.img}" alt="">`:iconSVG(it.icon)}</button>
       <input class="inp" data-it="name" data-j="${j}" value="${esc(it.name)}">
-      <input class="inp" type="number" data-it="value" data-j="${j}" value="${it.value}">
+      <input class="inp" type="number" data-it="min" data-j="${j}" value="${it.min}" title="Сейчас: ${money(it.value)}"><input class="inp" type="number" data-it="max" data-j="${j}" value="${it.max}" title="Сейчас: ${money(it.value)}">
       <select class="inp" data-it="size" data-j="${j}">${[['S','Маленький'],['M','Средний'],['L','Большой']].map(([v,l])=>`<option value="${v}" ${it.size===v?'selected':''}>${l}</option>`).join('')}</select>
       <button class="ph" data-m="iphoto" data-j="${j}">${it.img?'Без фото':'Фото'}</button>
       <button class="x" data-m="idel" data-j="${j}" title="Удалить">✕</button>
-      ${iconRow===j?`<div class="igrid">${Object.entries(ICONS).map(([k,v])=>`<button class="${k===it.icon&&!it.img?'on':''}" data-m="iset" data-j="${j}" data-k="${k}">${iconSVG(k)}${v[0]}</button>`).join('')}</div>`:''}
+      ${iconRow===j?`<div class="igrid">${Object.entries(ART).map(([k,v])=>`<button class="${k===it.icon&&!it.img?'on':''}" data-m="iset" data-j="${j}" data-k="${k}">${iconSVG(k)}${v[0]}</button>`).join('')}</div>`:''}
     </div>`).join('')}</div>
-    <div class="row-flex" style="margin-top:10px"><button class="btn" data-m="iadd" ${c.items.length>=10?'disabled':''}>+ Добавить вещь</button><span class="note">Рисунок выбирается кликом по картинке. «Фото» — своя картинка (лучше PNG без фона). До 10 вещей.</span></div>
+    <div class="row-flex" style="margin-top:10px"><button class="btn" data-m="iadd" ${c.items.length>=10?'disabled':''}>+ Добавить вещь</button><span class="note">Цена каждой вещи выпадает случайно в своём диапазоне при каждой новой игре. Рисунок — клик по картинке, «Фото» — своя картинка (лучше PNG без фона).</span></div>
   </div>`:''}</div>`}
 function tabHistory(){
   const h=[...S.game.history].sort((a,b)=>a.idx-b.idx);
   if(!h.length)return `<div class="note" style="font-size:15px">Пока ни один контейнер не разыгран.</div>`;
   return `<table class="tbl"><thead><tr><th>№</th><th>Контейнер</th><th>Купили</th><th>Цена</th><th>Стоимость</th><th>Итог</th></tr></thead><tbody>${h.map(x=>{const t=x.team?T(x.team):null,d=x.value!=null&&t?x.value-x.price:null;
-    return `<tr><td>${pad(x.idx+1)}</td><td>${esc(x.title)}</td><td>${t?`<span class="chip" style="--tc:${t.color}"><i></i>${esc(t.name)}</span>`:'<span class="note">не продан</span>'}</td><td>${t?x.price+'$':'—'}</td><td>${x.value!=null?x.value+'$':'…'}</td><td class="${d==null?'':d>=0?'pos':'neg'}">${d==null?'—':(d>=0?'+':'−')+Math.abs(d)+'$'}</td></tr>`}).join('')}</tbody></table>`}
+    return `<tr><td>${pad(x.idx+1)}</td><td>${esc(x.title)}</td><td>${t?`<span class="chip" style="--tc:${t.color}"><i></i>${esc(t.name)}</span>`:'<span class="note">не продан</span>'}</td><td>${t?money(x.price):'—'}</td><td>${x.value!=null?money(x.value):'…'}</td><td class="${d==null?'':d>=0?'pos':'neg'}">${d==null?'—':(d>=0?'+':'−')+money(Math.abs(d))}</td></tr>`}).join('')}</tbody></table>`}
 function tabSettings(){const s=S.settings;const ck=(k,t,d)=>`<label class="chk"><input type="checkbox" data-s="${k}" ${s[k]?'checked':''}><span><b>${t}</b><span class="note">${d}</span></span></label>`;
   return `<div class="grid2">${ck('sound','Звуки','Ворота, удар молотка, касса — всё синтезируется в браузере.')}
   ${ck('showNames','Подписи вещей','Названия под предметами в контейнере.')}
@@ -1497,7 +1743,7 @@ function tabSettings(){const s=S.settings;const ck=(k,t,d)=>`<label class="chk">
 
 async function newGame(force){
   if(!force&&S.game.started&&!(await ask('Начать игру заново? Балансы, выручка и история обнулятся. Команды и контейнеры останутся.','Начать заново')))return;
-  S.teams.forEach(t=>{t.balance=+S.settings.capital||0;t.revenue=0});S.game=freshGame();S.game.started=true;save();
+  rollAll();S.teams.forEach(t=>{t.balance=+S.settings.capital||0;t.revenue=0});S.game=freshGame();S.game.started=true;save();
   $('#menu').hidden=true;$('#final').classList.remove('show');setBusy(false);
   buildTeams();setDoor(false);buildScene();renderAll();
   const ex=$('#exterior');setTimeout(()=>{ex.classList.remove('flicker');void ex.offsetWidth;ex.classList.add('flicker');Sfx.thud()},80);
@@ -1509,6 +1755,7 @@ MENU.addEventListener('click',async e=>{
     case'tab':menuTab=b.dataset.k;iconRow=null;renderMenu();break;
     case'csrc':{const k=b.dataset.k,cf=camCfg(k);cf.src=b.dataset.v;save();syncAllCams();renderTab();
       if(cf.src==='local'&&!Cam.blocked()&&!Cam.devices.some(d=>d.label)){const r=await Cam.ask();if(r!==true)toast(camErr(r));renderTab()}break}
+    case'creroll':rollContainer(c);save();renderTab();break;
     case'cimg':photoKey=b.dataset.k;$('#fileIn').value='';$('#fileIn').click();break;
     case'croom':createRoom();renderTab();break;
     case'croomnew':if(await ask('Сделать новый код? Участникам нужно будет войти заново.','Новый код')){Object.keys(S.room.seats||{}).forEach(freeSeat);S.room.code=newRoomCode();S.room.seats={};save();buildTeams();syncAllCams();renderTab()}break;
@@ -1525,18 +1772,18 @@ MENU.addEventListener('click',async e=>{
     case'tdel':if(await ask(`Удалить команду «${esc(S.teams[S.teams.length-1].name)}»?`,'Удалить')){S.teams.pop();save();renderTab();buildTeams();renderAll()}break;
     case'tcolor':S.teams[i].color=b.dataset.c;save();renderTab();break;
     case'csel':edC=i;iconRow=null;renderTab();break;
-    case'cadd':S.containers.push(mkContainer(['Новый контейнер','',500,100,'Легенда контейнера…',[['box','Коробка',100,'M']]]));edC=S.containers.length-1;save();renderTab();break;
-    case'cdel':if(await ask(`Удалить контейнер «${esc(c.title)}»?`,'Удалить')){S.containers.splice(edC,1);edC=Math.max(0,edC-1);if(!S.containers.length)S.containers.push(mkContainer(['Новый контейнер','',500,100,'',[['box','Коробка',100,'M']]]));save();renderTab()}break;
+    case'cadd':S.containers.push(mkContainer(['Новый контейнер','','Легенда контейнера…',[['box','Коробка',1000,5000,'M']]]));edC=S.containers.length-1;save();renderTab();break;
+    case'cdel':if(await ask(`Удалить контейнер «${esc(c.title)}»?`,'Удалить')){S.containers.splice(edC,1);edC=Math.max(0,edC-1);if(!S.containers.length)S.containers.push(mkContainer(['Новый контейнер','','Легенда контейнера…',[['box','Коробка',1000,5000,'M']]]));save();renderTab()}break;
     case'cup':case'cdown':{const k=m==='cup'?-1:1,a=S.containers;[a[edC],a[edC+k]]=[a[edC+k],a[edC]];edC+=k;save();renderTab();break}
     case'ipick':iconRow=iconRow===j?null:j;renderTab();break;
     case'iset':c.items[j].icon=b.dataset.k;c.items[j].img=null;iconRow=null;save();renderTab();break;
-    case'iadd':c.items.push({id:uid(),icon:'box',name:'Новая вещь',value:100,size:'M',img:null});save();renderTab();break;
+    case'iadd':{const it={id:uid(),icon:'box',name:'Новая вещь',min:1000,max:5000,size:'M',skew:'',value:0,img:null};rollItem(it);c.items.push(it);autoStart(c)}save();renderTab();break;
     case'idel':c.items.splice(j,1);iconRow=null;save();renderTab();break;
     case'iphoto':if(c.items[j].img){c.items[j].img=null;save();renderTab()}else{photoJ=j;$('#fileIn').value='';$('#fileIn').click()}break;
     case'exp':$('#expTa').value=exportJSON();break;
     case'copy':{const v=exportJSON();$('#expTa').value=v;try{await navigator.clipboard.writeText(v);toast('Скопировано')}catch(err){$('#expTa').select();toast('Выделено — нажмите Ctrl+C')}break}
     case'imp':try{const p=JSON.parse($('#impTa').value);if(!Array.isArray(p.containers))throw 0;
-        S.containers=p.containers.map(x=>({id:x.id||uid(),title:x.title||'',origin:x.origin||'',start:+x.start||0,step:+x.step||100,legend:x.legend||'',items:(x.items||[]).map(it=>({id:it.id||uid(),icon:ICONS[it.icon]?it.icon:'box',name:it.name||'',value:+it.value||0,size:SZ[it.size]?it.size:'M',img:it.img||null}))}));
+        S.containers=p.containers.map(x=>({id:x.id||uid(),title:x.title||'',origin:x.origin||'',start:+x.start||0,step:+x.step||100,auto:x.auto!==false,sf:x.sf||[.25,.5],legend:x.legend||'',items:(x.items||[]).map(it=>({min:+it.min||+it.value||0,max:+it.max||+it.value||0,skew:it.skew||'',id:it.id||uid(),icon:ART[it.icon]?it.icon:'box',name:it.name||'',value:+it.value||0,size:SZ[it.size]?it.size:'M',img:it.img||null}))}));
         if(Array.isArray(p.teams)&&p.teams.length>=2)S.teams=p.teams.slice(0,6).map((t,k)=>({id:t.id||uid(),name:t.name||'Команда',color:t.color||TEAM_COLORS[k],members:t.members||['',''],balance:+S.settings.capital,revenue:0}));
         if(p.settings)Object.assign(S.settings,p.settings);if(p.hostName)S.hostName=p.hostName;
         edC=0;save();toast('Загружено');renderMenu()}catch(err){toast('Не получилось прочитать текст')}break;
@@ -1549,8 +1796,8 @@ MENU.addEventListener('input',e=>{
   if(d.f==='host')S.hostName=x.value;
   else if(d.f==='capital')S.settings.capital=parseInt(x.value,10)||0;
   else if(d.t){const t=S.teams[+d.i];if(d.t==='name')t.name=x.value;else if(d.t==='m0'||d.t==='m1'){t.members=t.members||['',''];t.members[+d.t[1]]=x.value}else t[d.t]=parseInt(x.value,10)||0}
-  else if(d.c){c[d.c]=(d.c==='start'||d.c==='step')?(parseInt(x.value,10)||0):x.value}
-  else if(d.it){const it=c.items[+d.j];it[d.it]=d.it==='value'?(parseInt(x.value,10)||0):x.value;const tv=$('#ctv');if(tv)tv.textContent=c.items.reduce((a,b)=>a+(+b.value||0),0)+'$'}
+  else if(d.c){if(d.c==='auto'){c.auto=x.checked;if(c.auto)autoStart(c);renderTab()}else if(d.c==='start'||d.c==='step'){c[d.c]=parseInt(x.value,10)||0;c.auto=false;const a=$('[data-c="auto"]');if(a)a.checked=false}else c[d.c]=x.value}
+  else if(d.it){const it=c.items[+d.j];if(d.it==='min'||d.it==='max'){it[d.it]=parseInt(x.value,10)||0;rollItem(it);autoStart(c)}else it[d.it]=x.value;const tv=$('#ctv');if(tv)tv.innerHTML=ctvHTML(c);const ss=$('#cst');if(ss&&c.auto!==false)ss.value=c.start;const sp=$('#csp');if(sp&&c.auto!==false)sp.value=c.step}
   else if(d.s){S.settings[d.s]=x.type==='checkbox'?x.checked:x.value}
   else return;
   save();
@@ -1568,6 +1815,7 @@ function exportJSON(){return JSON.stringify({hostName:S.hostName,settings:S.sett
 
 // ===== boot =====
 function boot(){
+  document.body.insertAdjacentHTML('afterbegin',buildDefs());
   if(hashJoin())PLAYER=true;
   fit();const g=S.game;
   if(g.phase==='closing'){g.phase='summary'}
